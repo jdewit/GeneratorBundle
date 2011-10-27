@@ -1,0 +1,18 @@
+{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% block centerColHeader %}" }}
+    {{ "{% if not ajax %}" }}
+        <h1>Edit {{ entity }}: {{ "{{ "~ entity_lc ~".id }}" }}</h1>
+    {{ "{% endif %}" }}
+{{ "{% endblock %}" }}
+{{ "{% block centerColContent %}" }}
+    <div {{ "{% if ajax %}" }} class="formDialog" {{ "{% endif %}" }} title="New {{ entity_lc }}" style="width: 600px;">    
+        <form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
+        {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
+            {{ "{% if not ajax %}" }}
+                <div>
+                    <input type="submit" class="button" value="Update {{ entity }}"/>
+                </div>
+            {{ "{% endif %}" }}
+        </form>
+    </div>            
+{{ "{% endblock %}" }}
