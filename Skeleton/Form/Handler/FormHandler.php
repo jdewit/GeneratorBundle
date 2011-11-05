@@ -4,8 +4,9 @@ namespace {{ bundle_namespace }}\Form\Handler;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
-use {{ bundle_namespace }}\Entity\Interface\{{ entity }};
-use {{ bundle_namespace }}\Entity\Manager\Interface\{{ entity }}ManagerInterface;
+use {{ bundle_namespace }}\Entity\{{ entity }};
+use {{ bundle_namespace }}\Entity\{{ entity }}Interface;
+use {{ bundle_namespace }}\Entity\Manager\{{ entity }}ManagerInterface;
 
 class {{ entity }}FormHandler
 {

@@ -39,23 +39,26 @@ abstract class GenerateAvroCommand extends DoctrineCommand
 
     protected function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
-        //$fields = (array) $metadata->fieldNames;
         $fields = array();
         $fieldMappings = $metadata->fieldMappings;
 
+        // add field mappings
         foreach ($fieldMappings as $fieldName => $relation) {
-            $fields[$fieldName] =  array(
-                'fieldName' => $relation['fieldName'],
-                'type' => $relation['type'],
-                'length' => $relation['length']
-            );
-        }
-            
-        // Remove the primary key field if it's not managed manually
-        if (!$metadata->isIdentifierNatural()) {
-            $fields = array_diff($fields, $metadata->identifier);
+            if ($relation['type'] == 'string') { 
+                $fields[$fieldName] =  array(
+                    'fieldName' => $relation['fieldName'],
+                    'type' => $relation['type'],
+                    'length' => $relation['length']
+                );
+            } else {
+                $fields[$fieldName] =  array(
+                    'fieldName' => $relation['fieldName'],
+                    'type' => $relation['type'],
+                );
+            }
         }
 
+        // add associations
         foreach ($metadata->associationMappings as $fieldName => $relation) {
             if ($relation['type'] == ClassMetadataInfo::MANY_TO_ONE) {
                 $fields[$fieldName] = array(
@@ -83,6 +86,11 @@ abstract class GenerateAvroCommand extends DoctrineCommand
                 );
             }
         }
+
+        // Remove manually managed fields
+        unset($fields['id']);
+        unset($fields['createdAt']);
+        unset($fields['updatedAt']);
 
         return $fields;
     }    

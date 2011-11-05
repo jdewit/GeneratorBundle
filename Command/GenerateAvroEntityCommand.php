@@ -73,11 +73,15 @@ EOT
         $writeManager = true;
         if (file_exists($bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
             $output->writeln($entity.' already exists.');
-            if ($dialog->askConfirmation($output, $dialog->getQuestion('Merge', 'yes', '?'), true)) {
-                                $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundleName).'\\'.$entity;
+            if ($dialog->askConfirmation($output, $dialog->getQuestion('Merge with existing entity? ', 'yes', '?'), true)) {
+                $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundleName).'\\'.$entity;
                 $metadata = $this->getEntityMetadata($entityClass);
                 $oldFields = $this->getFieldsFromMetadata($metadata[0]);
-            } else {
+                //remove manually managed fields
+                unset($oldFields['id']);
+                unset($oldFields['createdAt']);
+                unset($oldFields['updatedAt']);
+            } elseif (!$dialog->askConfirmation($output, $dialog->getQuestion('Overwrite existing entity? ', 'yes', '?'), true)) {
                 $output->writeln('<error>Command aborted</error>');
 
                 return 1;

@@ -1,4 +1,4 @@
-{{ "{% extends ajax ? '::ajaxLayout.html.twig' : '::layout.html.twig' %}" }}
+{{ "{% extends app.request.isXmlHttpRequest ? '::ajaxLayout.html.twig' : '::layout.html.twig' %}" }}
 
 {{ "{% block centerColHeader %}" }}{{ "{% endblock %}" }}
 {{ "{% block centerColContent %}" }}{{ "{% endblock %}" }}

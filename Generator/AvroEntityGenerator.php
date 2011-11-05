@@ -63,7 +63,7 @@ class AvroEntityGenerator extends Generator
             ));
         }        
         
-        $this->output->write('Generating '.$this->bundleName.'/Entity/Interface/'.$this->entity.'Interface.php: ');                
+        $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Interface.php: ');                
         try {
             $this->generateEntityInterface($parameters);
             $this->output->writeln('<info>Ok</info>');
@@ -88,7 +88,7 @@ class AvroEntityGenerator extends Generator
                 ));
             }  
 
-            $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/Interface/'.$this->entity.'ManagerInterface.php: ');       
+            $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'ManagerInterface.php: ');       
             try {
                 $this->generateEntityManagerInterface($parameters);
                 $this->output->writeln('<info>Ok</info>');
@@ -121,7 +121,7 @@ class AvroEntityGenerator extends Generator
      */
     private function generateEntityInterface($parameters)
     {
-        $filename = $this->bundlePath.'/Entity/Interface/'.$this->entity.'Interface.php';
+        $filename = $this->bundlePath.'/Entity/'.$this->entity.'Interface.php';
 
         $this->renderFile('Entity/entityInterface.php', $filename, $parameters);        
     }
@@ -146,7 +146,7 @@ class AvroEntityGenerator extends Generator
      */
     private function generateEntityManagerInterface($parameters)
     {
-        $filename = $this->bundlePath.'/Entity/Manager/Interface/'.$this->entity.'ManagerInterface.php';
+        $filename = $this->bundlePath.'/Entity/Manager/'.$this->entity.'ManagerInterface.php';
 
         $this->renderFile('Entity/managerInterface.php', $filename, $parameters);
     }

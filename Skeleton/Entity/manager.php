@@ -2,7 +2,7 @@
 
 namespace {{ bundle_namespace }}\Entity\Manager;
 
-use {{ bundle_namespace }}\Entity\Interface\{{ entity }}ManagerInterface;
+use {{ bundle_namespace }}\Entity\{{ entity }}\Manager\ManagerInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -22,10 +22,7 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     }
 
     /**
-     * Returns an empty {{ entity_lc }} instance.
-     *
-     * @param $name
-     * @return ${{ entity }}
+     * {@inheritDoc}
      */
     public function create{{ entity }}($name)
     {
@@ -35,11 +32,8 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     }
        
     /**
-     * deletes a {{ entity }}
-     * 
-     * @param ${{ entity_lc }}Interface
-     * @return void
-     */
+     * {@inheritDoc}
+     */  
     public function delete{{ entity }}({{ entity }}Interface ${{ entity_lc }})
     {
         $this->em->remove(${{ entity }});
@@ -55,11 +49,20 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     }
 
     /**
-     * Finds one {{ entity_lc }} by the given criteria.
-     *
-     * @param array $criteria
-     * @return {{ entity }}Interface
-    */
+     * {@inheritDoc}
+     */
+    public function find{{ entity }}($id)
+    {
+        ${{ entity_lc }} = $this->repository->find($id);
+        if (!${{ entity_lc }}) {
+            throw new NotFoundHttpException("{{ entity }} not found");
+        }
+        return ${{ entity_lc }};
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function find{{ entity }}By(array $criteria)
     {
         ${{ entity_lc }} = $this->repository->findOneBy($criteria);
@@ -70,20 +73,15 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     }
 
     /**
-     * Finds {{ entity_lc }}s by the given criteria.
-     *
-     * @param array $criteria
-     * @return \Traversable
-    */
+     * {@inheritDoc}
+     */
     public function find{{ entity }}sBy(array $criteria)
     {
         return $this->repository->findBy($criteria);
     }
     
     /**
-     * Finds all {{ entity_lc }}'s.
-     *
-     * @return \Traversable
+     * {@inheritDoc}
      */
     public function findAll{{ entity }}s()
     {
@@ -91,11 +89,7 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     }
     
     /**
-     * Updates a {{ entity_lc }}
-     *
-     * @param ${{ entity_lc }}Interface
-     * @param Boolean $andFlush Whether to flush the changes (default true)
-     * @return void
+     * {@inheritDoc}
      */
     public function update{{ entity }}({{ entity }}Interface ${{ entity_lc }}, $andFlush = true)
     {

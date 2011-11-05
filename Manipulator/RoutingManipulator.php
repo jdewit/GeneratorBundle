@@ -11,6 +11,8 @@
 
 namespace Avro\GeneratorBundle\Manipulator;
 
+use Symfony\Component\Yaml\Parser;
+
 /**
  * Changes the PHP code of a YAML routing file.
  *
@@ -27,10 +29,9 @@ class RoutingManipulator extends Manipulator
      *
      * @param string $file The YAML routing file path
      */
-    public function __construct($filename, $format, $bundleName)
+    public function __construct($filename, $bundleName)
     {
         $this->filename = $filename;
-        $this->format = $format;
         $this->bundleName = $bundleName;
     }
 
@@ -78,8 +79,21 @@ class RoutingManipulator extends Manipulator
         $doc->save($this->filename);        
     }
     
-    protected function updateYml()
+    /*
+     * update the applications app/config/routing.yml file
+     * 
+     * adds the bundles routing file as a resource
+     */
+    public function updateAppRoutingYml()
     {
+        $parser = new Parser();
+        $routingArray = $parser->parse(file_get_contents($this->filename));
+        
+        // only update if node does not exist
+        if (in_array($this->bundleName, $routingArray)) {
+            throw new \RuntimeException('Bundle exists.');
+        }
+                
         $current = file_get_contents($this->filename);
         $code = $this->bundleName.':';
         $code .= "\n";
@@ -91,6 +105,7 @@ class RoutingManipulator extends Manipulator
             throw new \RuntimeException('Could not write to routing.yml');
         }
 
-        return true;        
+        return true;          
+        
     }
 }

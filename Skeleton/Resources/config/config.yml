@@ -1,3 +1,3 @@
-{{ bundle_alias }}:
-    db_driver: {{ db_driver }}
-    model_manager_name: null
+imports:
+    - { resource: '@{{ bundle_name }}/Resources/config/services.yml' }
+

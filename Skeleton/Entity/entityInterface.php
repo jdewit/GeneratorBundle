@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ bundle_namespace }}\Entity\Interface;
+namespace {{ bundle_namespace }}\Entity;
 
 /*
  * @author Joris de <joris.w.dewit@gmail.com>

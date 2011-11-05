@@ -20,6 +20,5 @@
         return array(
             'form' => $form->createview(),
             '{{ entity_lc }}' => ${{ entity_lc }},
-            'ajax' => $this->container->get('request')->isXmlHttpRequest(),
         );
     }

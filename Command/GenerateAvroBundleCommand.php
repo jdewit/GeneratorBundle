@@ -36,7 +36,7 @@ class GenerateAvroBundleCommand extends ContainerAwareCommand
         $this
             ->setDefinition(array(
                 new InputOption('vendor', '', InputOption::VALUE_REQUIRED, 'The vendor name of the bundle to create'),
-                new InputOption('basename', '', InputOption::VALUE_REQUIRED, 'The bundle name'),
+                new InputOption('basename', '', InputOption::VALUE_REQUIRED, 'The bundle basename'),
                 new InputOption('db-driver', '', InputOption::VALUE_REQUIRED, 'The bundles database driver (orm, couchdb, mongodb)', 'orm'),
             ))
             ->setDescription('Generates a bundle')
@@ -58,28 +58,66 @@ EOT
      * @throws \RuntimeException         When bundle can't be executed
      */
     protected function execute(InputInterface $input, OutputInterface $output)
-    {
-        $dialog = $this->getDialogHelper();
+    {        
         $container = $this->getContainer();
+        $dialog = $this->getDialogHelper();
+        $dialog->writeSection($output, 'Welcome to the Avro bundle generator');
+
+        // namespace
+        $output->writeln(array(
+            '',
+            'This command helps you generate bundles easily.',
+            '',
+            'Enter the vendor name for the bundle. (ie. FOS, Sensio, etc)'
+        ));
+
+        // vendor
+        $vendor = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle vendor', $input->getOption('vendor')), array('Avro\GeneratorBundle\Command\Validators', 'validateVendor'), false, $input->getOption('vendor'));
+        $vendor = Validators::validateVendor($vendor);
+
+        // bundle name
+        $basename = $input->getOption('basename');
+        $output->writeln(array(
+            '',
+            'Enter the basename of the bundle. (ie. UserBundle, CalendarBundle, etc)'
+        ));
+        $basename = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle basename', $basename), array('Avro\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $basename);
+        $bundleName = Validators::validateBundleName($vendor.$basename);
+
+        //bundleNamespace
+        $bundleNamespace = Validators::validateBundleNamespace($vendor.'\\'.$basename);
+
+        //dir
+        if ($dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), true)) {
+             $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/vendor/bundles/'.$vendor.'/'.$basename;       
+        } else {
+             $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src/'.$vendor.'/'.$basename;
+        }
+        
+        // dbDriver
+        // TODO: mongodb and couchdb support
+        $dbDriver = $input->getOption('db-driver');
+        $output->writeln(array(
+            '',
+            'Choose the database driver for the bundle. (orm)',
+        ));
+        $dbDriver = $dialog->askAndValidate($output, $dialog->getQuestion('Database Driver', $dbDriver), array('Avro\GeneratorBundle\Command\Validators', 'validateDbDriver'), false, $dbDriver);
+        $dbDriver = Validators::validateDbDriver($dbDriver);       
+        // summary
+        $output->writeln(array(
+                '',
+                'You are going to generate a new bundle called '.$vendor.$bundleName
+        ));
+        
+        // update routing.yml
+        $updateConfig = $dialog->askConfirmation($output, $dialog->getQuestion('Update your apps config file? ', 'yes', '?'), true);
+            
         
         if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
             $output->writeln('<error>Command aborted</error>');
 
             return 1;
         }
-
-        foreach (array('vendor', 'basename', 'appConfig') as $option) {
-            if (null === $input->getOption($option)) {
-                throw new \RuntimeException(sprintf('The "%s" option must be provided.', $option));
-            }
-        }
-
-        $vendor = Validators::validateVendor($input->getOption('vendor'));
-        $basename = $input->getOption('basename');
-        $bundleName = Validators::validateBundleName($vendor.$basename);
-        $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/vendor/bundles/'.$vendor.'/'.$basename;
-        $bundleNamespace = Validators::validateBundleNamespace($vendor.'\\'.$basename);
-        $dbDriver = Validators::validateDbDriver($input->getOption('db-driver'));
 
         // TODO:
         $format = 'xml';
@@ -107,23 +145,22 @@ EOT
         $output->write('Generating bundle code: ');
         
         $bundleGenerator = new AvroBundleGenerator($container, $output);
-        $bundleGenerator->generate($vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver);
-
+        $bundleGenerator->generate($vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig);
+        
         $output->writeln(array(
             '<info>Done</info>',
             ''
         ));
         
-
-        $output->writeln(array(
-            'Be sure to configure your bundle so that you can use it in your application',
-            'You can use the command generate:avro:appConfig to ',
-            'automatically configure your application with your new bundle',
-            ''
-        ));            
-        
-        
         $dialog->writeSection($output, 'Bundle Generated Successfully!'); 
+        
+        $output->writeln(array(
+            '',
+            'add this line to the "imports" node in your config.yml file',
+            "- { resource: '@".$bundleName."/Resources/config/config.yml' }",
+            '',
+            
+        ));
         
         $output->writeln(array(
             '',
@@ -133,47 +170,6 @@ EOT
         ));
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $dialog = $this->getDialogHelper();
-        $dialog->writeSection($output, 'Welcome to the Avro bundle generator');
-
-        // namespace
-        $output->writeln(array(
-            '',
-            'This command helps you generate 3rd party bundles easily.',
-            '',
-            'Enter the vendor name for the bundle. (ie. FOS, Sensio, etc)'
-        ));
-
-        $vendor = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle vendor', $input->getOption('vendor')), array('Avro\GeneratorBundle\Command\Validators', 'validateVendor'), false, $input->getOption('vendor'));
-        $input->setOption('vendor', $vendor);
-
-        // bundle name
-        $bundleName = $input->getOption('basename');
-        $output->writeln(array(
-            '',
-            'Enter the name of the bundle. (ie. UserBundle, CalendarBundle, etc)'
-        ));
-        $bundleName = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle name', $bundleName), array('Avro\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $bundleName);
-        $input->setOption('basename', $bundleName);
-
-        // dbDriver
-        // TODO: mongodb and couchdb support
-        $dbDriver = $input->getOption('db-driver');
-        $output->writeln(array(
-            '',
-            'Choose the database driver for the bundle. (orm)',
-        ));
-        $dbDriver = $dialog->askAndValidate($output, $dialog->getQuestion('Database Driver', $dbDriver), array('Avro\GeneratorBundle\Command\Validators', 'validateDbDriver'), false, $dbDriver);
-        $input->setOption('db-driver', $dbDriver);          
-               
-        // summary
-        $output->writeln(array(
-                '',
-                'You are going to generate a new bundle called '.$vendor.$bundleName
-        ));
-    }
     
     protected function getDialogHelper()
     {
