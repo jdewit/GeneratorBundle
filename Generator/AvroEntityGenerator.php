@@ -37,17 +37,18 @@ class AvroEntityGenerator extends Generator
         $this->entity = $entity;
         $this->entityLC = strtolower($entity);
         $this->fields = $fields;
-        
         $parameters = array(
             'entity' => $this->entity,
             'entity_lc' => $this->entityLC,
             'entity_class' => $this->bundleNamespace.'\\Entity\\'.$this->entity,
             'fields' => $this->fields,
+            'bundle_basename' => $this->bundleBasename,
             'bundle_name' => $this->bundleName,
             'bundle_path' => $this->bundlePath,
             'bundle_namespace' => $this->bundleNamespace,
             'bundle_vendor' => $this->bundleVendor,
-            'bundle_alias' => $this->bundleAlias,          
+            'bundle_alias' => $this->bundleAlias,     
+            'bundle_corename' => $this->bundleCorename,     
             'db_driver' => $this->dbDriver
         );
 

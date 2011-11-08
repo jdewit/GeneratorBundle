@@ -28,9 +28,9 @@ class Generator
     protected $registry;
     protected $filesystem;
     protected $output;
-    protected $skeletonDir;
     protected $bundleAlias;
     protected $bundleAliasCC;
+    protected $bundleCoreName;
     protected $bundleBasename;
     protected $bundleName;
     protected $bundleNamespace; 
@@ -38,7 +38,7 @@ class Generator
     protected $bundleVendor;
     protected $dbDriver;
     protected $message;
-    
+    protected $thirdParty = true; 
 
     public function __construct($container, OutputInterface $output, BundleInterface $bundle = null)
     {
@@ -46,18 +46,19 @@ class Generator
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
-        $this->skeletonDir = __DIR__.'/../Skeleton';
-        
         if ($bundle !== null) {
             $this->bundlePath = $bundle->getPath();
+            if (strstr($this->bundlePath, 'vendor/bundles') == false) {
+                $this->thirdParty = false;
+            }
             $this->bundleNamespace = $bundle->getNamespace();   
             $this->bundleName = $bundle->getName();
             $this->bundleVendor = substr($this->bundleNamespace, 0, strpos($this->bundleNamespace, '\\'));
             $this->bundleBasename = str_replace('\\', '', substr($this->bundleNamespace, strpos($this->bundleNamespace, '\\')));
             $this->bundleAlias = strtolower($this->bundleVendor.'_'.str_replace('Bundle', '', $this->bundleBasename));   
             $this->bundleAliasCC = $this->bundleVendor.str_replace('Bundle', '', $this->bundleBasename); 
-            $this->dbDriver = 'orm';
-            //$this->dbDriver = $this->getDbDriver($this->bundlePath, $this->bundleAlias);
+            $this->bundleCorename = str_replace(strtolower($this->bundleVendor).'_','',$this->bundleAlias);
+            $this->dbDriver = $this->getDbDriver($this->bundlePath, $this->bundleAlias);
         }    
 // debug        
 //        $output->writeln('bundlePath ='.$this->bundlePath.' bundleNamespace ='.$this->bundleNamespace.' bundleName = '.$this->bundleName.' bundleVendor ='.$this->bundleVendor.' bundleBasename ='.$this->bundleBasename.' bundleAlias = '.$this->bundleAlias.' bundleAliasCC = '.$this->bundleAliasCC.' dbDriver = '.$this->dbDriver);
@@ -74,17 +75,18 @@ class Generator
      */
     protected function renderFile($template, $filename, $parameters, $append = false)
     {   
-//        if ($append == false) {
-//            if (file_exists($filename)) {
-//                throw new \RuntimeException(sprintf('Unable to generate %s as it already exists.', $filename));
-//            }       
-//        }
-        
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
         }
 
-        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($this->skeletonDir), array(
+        if ($this->thirdParty) {
+            $skeletonDir = __DIR__.'/../Skeleton/thirdParty';
+        } else { 
+            $skeletonDir = __DIR__.'/../Skeleton/application';
+        }
+
+
+        $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($skeletonDir), array(
             'debug'            => true,
             'cache'            => false,
             'strict_variables' => true,

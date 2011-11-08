@@ -87,11 +87,14 @@ EOT
         //bundleNamespace
         $bundleNamespace = Validators::validateBundleNamespace($vendor.'\\'.$basename);
 
+        //third party?
+        $thirdParty = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), false);
+            
         //dir
-        if ($dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), true)) {
-             $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/vendor/bundles/'.$vendor.'/'.$basename;       
+        if ($thirdParty) {
+            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src/'.$vendor.'/'.$basename;
         } else {
-             $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src/'.$vendor.'/'.$basename;
+            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/vendor/bundles/'.$vendor.'/'.$basename;       
         }
         
         // dbDriver
@@ -145,7 +148,7 @@ EOT
         $output->write('Generating bundle code: ');
         
         $bundleGenerator = new AvroBundleGenerator($container, $output);
-        $bundleGenerator->generate($vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig);
+        $bundleGenerator->generate($thirdParty, $vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig);
         
         $output->writeln(array(
             '<info>Done</info>',

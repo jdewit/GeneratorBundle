@@ -41,14 +41,18 @@ abstract class GenerateAvroCommand extends DoctrineCommand
     {
         $fields = array();
         $fieldMappings = $metadata->fieldMappings;
-
         // add field mappings
         foreach ($fieldMappings as $fieldName => $relation) {
             if ($relation['type'] == 'string') { 
+                if (array_key_exists('length', $relation)) {
+                    $length = $relation['length'];
+                } else {
+                    $length = 255;
+                }
                 $fields[$fieldName] =  array(
                     'fieldName' => $relation['fieldName'],
                     'type' => $relation['type'],
-                    'length' => $relation['length']
+                    'length' => $length
                 );
             } else {
                 $fields[$fieldName] =  array(

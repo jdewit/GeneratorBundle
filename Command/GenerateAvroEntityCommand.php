@@ -92,10 +92,13 @@ EOT
         }        
         
         // fields
-        $fields = $this->addFields($input, $output, $dialog);      
-
+        $fields = $this->addFields($input, $output, $dialog, $entity);      
         if(false !== $oldFields) {
-            $fields = array_merge_recursive($oldFields, $fields);
+            if (!empty($fields)) { 
+                $fields = array_merge_recursive($oldFields, $fields);
+            } else {
+                $fields = $oldFields;
+            }
         }        
 
         // dbDriver
@@ -124,7 +127,7 @@ EOT
         $dialog->writeSection($output, $entity.' entity generated succesfully!');
     }
 
-    private function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog)
+    private function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog, $entity)
     {
         $fields = $input->getOption('fields');
         $output->writeln(array(
@@ -139,6 +142,7 @@ EOT
         $types[] = "manyToOne";
         $types[] = "manyToMany";
         $types[] = "oneToMany";
+        $types[] = "oneToOne";
         $count = 20;
         foreach ($types as $i => $type) {
             if ($count > 50) {
@@ -193,34 +197,26 @@ EOT
                 break;
             }
 
-            $defaultType = 'string';
 
-            if (substr($name, -3) == '_at') {
-                $defaultType = 'datetime';
-            } else if (substr($name, -3) == '_id') {
-                $defaultType = 'integer';
+            $data['type'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
+
+            if ($type == "oneToOne") {
+                $data['targetEntity'] = $entity;
             }
-
-            $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', $defaultType), $fieldValidator, false, $defaultType);
-
-            $data = array('fieldName' => $name, 'type' => $type);
-            
             if ($type == "manyToOne" || $type == "oneToMany" || $type == "manyToMany") {
-                $targetEntity = $dialog->ask($output, 'Enter the target entity: (ie. Acme\TestBundle\Entity\Post)');            
-                $data['targetEntity'] = $targetEntity;
+                $data['targetEntity'] = $dialog->ask($output, 'Enter the target entity (ie. Acme\TestBundle\Entity\Post): ');            
             }
+
             if ($type == "oneToMany" || $type == "manyToMany") {
-                $mappedBy = $dialog->ask($output, 'mappedBy: (ie. post)');            
-                $data['mappedBy'] = $mappedBy;
-            }            
-            if ($type == "oneToMany" || $type == "manyToMany") {
-                $cascade = $dialog->ask($output, 'cascade?: (ie. persist)', 'persist');            
-                $data['cascade'] = $cascade;
-            }
-            if ($type == "oneToMany" || $type == "manyToMany") {
-                $orphanRemoval = $dialog->ask($output, 'orphan removal?: (ie. true)', 'true');            
-                $data['orphanRemoval'] = $orphanRemoval;
-            }            
+                $data['isOwningSide'] = $dialog->ask($output, 'Is this the owning side? ', 'true');            
+            
+                if ($data['owningSide'] == true) {
+                    $data['mappedBy'] = $dialog->ask($output, 'mappedBy: (ie. post): '); 
+                } else {
+                    $data['inversedBy'] = $dialog->ask($output, 'inversedBy: (ie. tags): ');  
+                }
+            
+            }             
 
             if ($type == 'string') {
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);

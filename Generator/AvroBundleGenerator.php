@@ -24,12 +24,14 @@ use Avro\GeneratorBundle\Manipulator\KernelManipulator;
  */
 class AvroBundleGenerator extends Generator
 {        
-    public function generate($vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig)
+    public function generate($thirdParty, $vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig)
     {
+        $this->thirdParty = $thirdParty;
         $this->filesystem = $this->container->get('filesystem');
         $this->bundleName = $bundleName;
         
         $parameters = array(
+            'third_party' => $this->thirdParty;
             'bundle_vendor' => $vendor,
             'bundle_namespace' => $bundleNamespace,
             'bundle_name' => $bundleName,
@@ -95,16 +97,21 @@ class AvroBundleGenerator extends Generator
         $this->filesystem->mkdir($dir.'/Form');
         $this->filesystem->mkdir($dir.'/Form/Type');
         $this->filesystem->mkdir($dir.'/Form/Handler');
-        
-        switch ($parameters['db_driver']):
-            case 'orm':
-                $this->filesystem->mkdir($dir.'/Entity');  
-            break;
-            case 'mongodb':
-                $this->filesystem->mkdir($dir.'/Document');
-            break;
-        endswitch;
-        
+
+        if ($this->thirdParty) {
+            $this->filesystem->mkdir($dir.'/Model');
+            $this->filesystem->mkdir($dir.'/Document');
+            $this->filesystem->mkdir($dir.'/Entity');  
+        } else {
+            switch ($parameters['db_driver']):
+                case 'orm':
+                    $this->filesystem->mkdir($dir.'/Entity');  
+                break;
+                case 'mongodb':
+                    $this->filesystem->mkdir($dir.'/Document');
+                break;
+            endswitch;
+        }
         $this->filesystem->mkdir($dir.'/Resources/doc');
         $this->filesystem->mkdir($dir.'/Resources/translations');
         $this->filesystem->mkdir($dir.'/Resources/public/scss');
