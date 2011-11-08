@@ -1,3 +1,0 @@
-imports:
-    - { resource: '@{{ bundle_name }}/Resources/config/services.yml' }
-
