@@ -38,6 +38,7 @@ class AvroEntityGenerator extends Generator
         $this->entityLC = strtolower($entity);
         $this->fields = $fields;
         $parameters = array(
+            'third_party' => $this->thirdParty,
             'entity' => $this->entity,
             'entity_lc' => $this->entityLC,
             'entity_class' => $this->bundleNamespace.'\\Entity\\'.$this->entity,
@@ -52,34 +53,22 @@ class AvroEntityGenerator extends Generator
             'db_driver' => $this->dbDriver
         );
 
-        $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'.php: ');        
-        try {
-            $this->generateEntity($parameters);
-            $this->output->writeln('<info>Ok</info>');
-        } catch (\RuntimeException $e) {
-            $this->output->writeln(array(
-                '<error>Fail</error>',
-                $e->getMessage(),
-                ''
-            ));
-        }        
-        
-        $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Interface.php: ');                
-        try {
-            $this->generateEntityInterface($parameters);
-            $this->output->writeln('<info>Ok</info>');
-        } catch (\RuntimeException $e) {
-            $this->output->writeln(array(
-                '<error>Fail</error>',
-                $e->getMessage(),
-                ''
-            ));
-        }  
-        
-        if ($writeManager) {
-            $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'Manager.php: ');        
+        if ($this->thirdParty == true) {
+            $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'.php: ');        
             try {
-                $this->generateEntityManager($parameters);
+                $this->generateEntity($parameters);
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }        
+            
+            $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Interface.php: ');                
+            try {
+                $this->generateEntityInterface($parameters);
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -88,10 +77,36 @@ class AvroEntityGenerator extends Generator
                     ''
                 ));
             }  
+            
+            if ($writeManager) {
+                $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'Manager.php: ');        
+                try {
+                    $this->generateEntityManager($parameters);
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                }  
 
-            $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'ManagerInterface.php: ');       
+                $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'ManagerInterface.php: ');       
+                try {
+                    $this->generateEntityManagerInterface($parameters);
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                } 
+            }
+        } else {
+            $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'.php: ');        
             try {
-                $this->generateEntityManagerInterface($parameters);
+                $this->generateEntity($parameters);
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -99,7 +114,34 @@ class AvroEntityGenerator extends Generator
                     $e->getMessage(),
                     ''
                 ));
-            } 
+            }        
+            
+            if ($writeManager) {
+                $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'Manager.php: ');        
+                try {
+                    $this->generateEntityManager($parameters);
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                }  
+
+                $this->output->write('Generating '.$this->bundleName.'/Entity/Manager/'.$this->entity.'ManagerInterface.php: ');       
+                try {
+                    $this->generateEntityManagerInterface($parameters);
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                } 
+
+            }
         }
     }
 

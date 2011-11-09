@@ -31,7 +31,7 @@ class AvroBundleGenerator extends Generator
         $this->bundleName = $bundleName;
         
         $parameters = array(
-            'third_party' => $this->thirdParty;
+            'third_party' => $thirdParty,
             'bundle_vendor' => $vendor,
             'bundle_namespace' => $bundleNamespace,
             'bundle_name' => $bundleName,
@@ -91,6 +91,8 @@ class AvroBundleGenerator extends Generator
         $this->renderFile('Resources/config/config.yml', $dir.'/Resources/config/config.yml', $parameters);
         $this->renderFile('README.md', $dir.'/README.md', $parameters);
         $this->renderFile('Resources/meta/LICENSE', $dir.'/Resources/meta/LICENSE', $parameters);
+        
+        $this->renderFile('DependencyInjection/Extension.php', $dir.'/DependencyInjection/'.$parameters['bundle_alias_cc'].'extension.php', $parameters);
         
         //generate file structure
         $this->filesystem->mkdir($dir.'/Controller');

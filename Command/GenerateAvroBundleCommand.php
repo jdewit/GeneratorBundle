@@ -88,13 +88,13 @@ EOT
         $bundleNamespace = Validators::validateBundleNamespace($vendor.'\\'.$basename);
 
         //third party?
-        $thirdParty = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), false);
-            
+        $thirdParty = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), true);
+
         //dir
         if ($thirdParty) {
-            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src/'.$vendor.'/'.$basename;
-        } else {
             $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/vendor/bundles/'.$vendor.'/'.$basename;       
+        } else {
+            $dir = dirname($this->getContainer()->getParameter('kernel.root_dir')).'/src/'.$vendor.'/'.$basename;
         }
         
         // dbDriver
