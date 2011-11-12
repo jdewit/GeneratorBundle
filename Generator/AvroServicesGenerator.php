@@ -44,7 +44,6 @@ class AvroServicesGenerator extends Generator
         $parts = explode('\\', $entity);
         
         $parameters = array(
-            'dir' => $this->skeletonDir,
             'entity' => $this->entity,
             'entity_lc' => $this->entityLC,
             'fields' => $this->fields,
@@ -59,7 +58,7 @@ class AvroServicesGenerator extends Generator
         );
 
        
-        $this->output->write('Updating '.$this->bundleName.'/Resources/config/services.yml');
+        $this->output->write('Updating '.$this->bundleName.'/Resources/config/services.yml: ');
         try {
             $this->updateServices($parameters);
             $this->output->writeln('<info>Ok</info>');
@@ -77,9 +76,9 @@ class AvroServicesGenerator extends Generator
         $parser = new Parser();
 
         $currentFile = $this->bundlePath.'/Resources/config/services.yml';
-        $currentFileArray = $parser->parse($currentFile);
+        $currentFileArray = $parser->parse(file_get_contents($currentFile));
         
-        if (!empty($currentFileArray['services'][$this->bundleAlias.'.'.$this->entityLC.'.form.type'])) {         
+        if (!empty($currentFileArray['services'][$this->bundleAlias.'.'.$this->entityLC.'_manager'])) {         
             return true;
         }
         

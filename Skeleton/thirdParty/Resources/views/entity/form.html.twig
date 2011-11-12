@@ -1,9 +1,0 @@
-<div>        
-{%- for field, metadata in fields %}
-    <div>
-        {{ "{{ form_label(form."~ field ~") }}" }}
-        {{ "{{ form_widget(form."~ field ~") }}" }}    
-    </div>
-{%- endfor %} 
-    {{ "{{ form_rest(form) }}" }}
-</div>

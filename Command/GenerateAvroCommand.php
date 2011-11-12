@@ -16,8 +16,9 @@ use Symfony\Bundle\DoctrineBundle\Command\DoctrineCommand;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Avro\GeneratorBundle\Command\Helper\DialogHelper;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-abstract class GenerateAvroCommand extends DoctrineCommand
+abstract class GenerateAvroCommand extends ContainerAwareCommand
 {
     protected function parseShortcutNotation($shortcut)
     {
@@ -39,63 +40,36 @@ abstract class GenerateAvroCommand extends DoctrineCommand
 
     protected function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
-        $fields = array();
         $fieldMappings = $metadata->fieldMappings;
-        // add field mappings
-        foreach ($fieldMappings as $fieldName => $relation) {
-            if ($relation['type'] == 'string') { 
-                if (array_key_exists('length', $relation)) {
-                    $length = $relation['length'];
-                } else {
-                    $length = 255;
-                }
-                $fields[$fieldName] =  array(
-                    'fieldName' => $relation['fieldName'],
-                    'type' => $relation['type'],
-                    'length' => $length
-                );
-            } else {
-                $fields[$fieldName] =  array(
-                    'fieldName' => $relation['fieldName'],
-                    'type' => $relation['type'],
-                );
+        $associationMappings = $metadata->associationMappings;
+        foreach ($associationMappings as $mapping) {
+            // convert association type from integer to text
+            switch ($mapping['type']) {
+                case "1":
+                    $associationMappings[$mapping['fieldName']]['type'] = 'oneToOne';
+                break;
+                case "2":
+                    $associationMappings[$mapping['fieldName']]['type'] = 'manyToOne'; 
+                break;
+                case "4":
+                    $associationMappings[$mapping['fieldName']]['type'] = 'oneToMany'; 
+                    // remove s from fieldName
+                    substr_replace($mapping['fieldName'],"",-1);
+                break;
+                case "8":
+                    $associationMappings[$mapping['fieldName']]['type'] = 'manyToMany';
+                    // remove s from fieldName
+                    $associationMappings[$mapping['fieldName']]['fieldName'] = substr_replace($mapping['fieldName'],"",-1);
+                break;
             }
         }
-
-        // add associations
-        foreach ($metadata->associationMappings as $fieldName => $relation) {
-            if ($relation['type'] == ClassMetadataInfo::MANY_TO_ONE) {
-                $fields[$fieldName] = array(
-                    'fieldName' => $relation['fieldName'],
-                    'type' => $relation['type'],
-                    'mappedBy' => $relation['mappedBy']                    
-                );    
-            }    
-            if ($relation['type'] == ClassMetadataInfo::MANY_TO_MANY) {
-                $fields[$fieldName] = array(
-                    'fieldName' => $relation['fieldName'],
-                    'type' => $relation['type'],
-                    'mappedBy' => $relation['mappedBy'],
-                    'cascade' => $relation['cascade'],
-                    'orphanRemoval' => $relation['orphanRemoval']                    
-                );
-            }
-            if ($relation['type'] == ClassMetadataInfo::ONE_TO_MANY) {
-                $fields[$fieldName] = array(
-                    'fieldName' => $relation['fieldName'],
-                    'type' => $relation['type'],
-                    'mappedBy' => $relation['mappedBy'],
-                    'cascade' => $relation['cascade'],
-                    'orphanRemoval' => $relation['orphanRemoval']                    
-                );
-            }
-        }
-
-        // Remove manually managed fields
+        $fields = array_merge($fieldMappings, $associationMappings);
+      // print_r($fields); exit;
+        //Remove manually managed fields
         unset($fields['id']);
         unset($fields['createdAt']);
         unset($fields['updatedAt']);
-
+      
         return $fields;
     }    
     

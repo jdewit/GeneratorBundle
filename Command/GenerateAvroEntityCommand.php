@@ -16,13 +16,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Command\Command;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\DBAL\Types\Type;
 use Avro\GeneratorBundle\Command\Helper\DialogHelper;
 use Avro\GeneratorBundle\Command\Validators;
 use Avro\GeneratorBundle\Generator\AvroEntityGenerator;
-
 /**
  * Generates entity code in a bundle.
  *
@@ -132,8 +130,7 @@ EOT
         $fields = $input->getOption('fields');
         $output->writeln(array(
             '',
-            'Instead of starting with a blank entity, you can add some fields now.',
-            'Note that the primary key will be added automatically (named <comment>id</comment>).',
+            'Add some fields to your entity',
             '',
         ));
         $output->write('<info>Available types:</info> ');
@@ -186,43 +183,48 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields) {
+            $data['fieldName'] = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
                 }
 
                 return $name;
             });
-            if (!$name) {
+
+            if (empty($data['fieldName'])) {
                 break;
             }
 
-
-            $data['type'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
+            $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
+            $data['type'] = $type;
 
             if ($type == "oneToOne") {
                 $data['targetEntity'] = $entity;
             }
             if ($type == "manyToOne" || $type == "oneToMany" || $type == "manyToMany") {
-                $data['targetEntity'] = $dialog->ask($output, 'Enter the target entity (ie. Acme\TestBundle\Entity\Post): ');            
-            }
+                $data['targetEntity'] = $dialog->ask($output, 'Enter the target entity (ie. Acme\TestBundle\Entity\Post): ');  
 
-            if ($type == "oneToMany" || $type == "manyToMany") {
-                $data['isOwningSide'] = $dialog->ask($output, 'Is this the owning side? ', 'true');            
-            
-                if ($data['owningSide'] == true) {
-                    $data['mappedBy'] = $dialog->ask($output, 'mappedBy: (ie. post): '); 
-                } else {
-                    $data['inversedBy'] = $dialog->ask($output, 'inversedBy: (ie. tags): ');  
+                $data['owningSide'] = $dialog->askConfirmation($output, $dialog->getQuestion('Is this the owning side?', 'yes', '?'), true); 
+
+                if ($type == 'oneToMany' || $type == 'manyToMany') {
+                    if ($data['owningSide'] == true) {
+                        $data['mappedBy'] = $dialog->ask($output, 'Enter mappedBy: (ie. post): '); 
+                    } else {
+                        $data['inversedBy'] = $dialog->ask($output, 'Enter inversedBy: (ie. tags): ');  
+                    }
                 }
-            
             }             
 
             if ($type == 'string') {
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);
             }
 
-            $fields[$name] = $data;
+            if ($type != 'oneToOne' || $type == 'manyToOne' || $type == 'manyToMany') {
+                $data['nullable'] = $dialog->askConfirmation($output, $dialog->getQuestion('nullable?: ', 'yes', '?'), true); 
+
+            }
+
+            $fields[$data['fieldName']] = $data;
         }
 
         return $fields;

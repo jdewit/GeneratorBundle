@@ -1,0 +1,5 @@
+services:
+    generator.twig.extension:
+        class: Avro\GeneratorBundle\Twig\GeneratorExtension
+        tags:
+            -  { name: twig.extension } 

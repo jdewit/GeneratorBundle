@@ -89,7 +89,19 @@ class AvroViewGenerator extends Generator
                 ''
             ));
         }  
-        
+
+        $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/show.html.twig: ');
+        try {     
+            $this->generateShowView($parameters);
+            $this->output->writeln('<info>Ok</info>');
+        } catch (\RuntimeException $e) {
+            $this->output->writeln(array(
+                '<error>Fail</error>',
+                $e->getMessage(),
+                ''
+            ));
+        } 
+
         $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/form.html.twig: ');
         try {     
             $this->generateFormView($parameters);
@@ -150,6 +162,18 @@ class AvroViewGenerator extends Generator
         $filename = $this->bundlePath.'/Resources/views/'.$this->entity.'/edit.html.twig';    
 
         $this->renderFile('Resources/views/entity/edit.html.twig', $filename, $parameters);
+    }
+
+    /**
+     * Generates the show.html.twig template in the final bundle.
+     * 
+     * @param array $parameters The parameters needed to generate the fi
+     */
+    private function generateShowView($parameters)
+    {
+        $filename = $this->bundlePath.'/Resources/views/'.$this->entity.'/show.html.twig';    
+
+        $this->renderFile('Resources/views/entity/show.html.twig', $filename, $parameters);
     }
 
     /**

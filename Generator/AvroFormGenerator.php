@@ -44,7 +44,6 @@ class AvroFormGenerator extends Generator
         $parts = explode('\\', $entity);
         
         $parameters = array(
-            'dir' => $this->skeletonDir,
             'entity' => $this->entity,
             'entity_lc' => $this->entityLC,
             'fields' => $this->fields,

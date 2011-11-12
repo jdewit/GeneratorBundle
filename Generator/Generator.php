@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
+use Avro\GeneratorBundle\Twig\GeneratorExtension;
 
 /**
  * Generator is the base class for all generators.
@@ -79,11 +80,7 @@ class Generator
             mkdir(dirname($filename), 0777, true);
         }
 
-        if ($this->thirdParty) {
-            $skeletonDir = __DIR__.'/../Skeleton/thirdParty';
-        } else { 
-            $skeletonDir = __DIR__.'/../Skeleton/application';
-        }
+        $skeletonDir = __DIR__.'/../Skeleton';
 
 
         $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($skeletonDir), array(
@@ -92,6 +89,7 @@ class Generator
             'strict_variables' => true,
             'autoescape'       => false,
         ));
+        $twig->addExtension(new GeneratorExtension());
 
         if ($append == true) {
             file_put_contents($filename, $twig->render($template, $parameters, FILE_APPEND));
@@ -101,7 +99,7 @@ class Generator
     }
 
     /*
-     * Get dbDriver for the bundle
+     * Get dbDriver from the bundle config
      * 
      * @param string $bundlePath the bundles path
      * @param string $bundleAlias the bundles alias
@@ -113,9 +111,13 @@ class Generator
         $configPath = $bundlePath.'/Resources/config/config.yml';
         $parser = new Parser();
         $config = $parser->parse(file_get_contents($configPath));
-        $dbDriver = $config[$bundleAlias]['db_driver'];
-        
-        return $dbDriver;
+        if (array_key_exists($bundleAlias, $config)) {
+            if (array_key_exists('db_driver', $config[$bundleAlias])) {
+                return $config[$bundleAlias]['db_driver'];
+            }
+        }
+        //return default
+        return $this->dbDriver;
     }
     
 }
