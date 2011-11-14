@@ -38,7 +38,7 @@ class {{ entity }} implements {{ entity }}Interface
     /**
      * @var \{{ field.targetEntity }}
      *
-     * @ORM\ManyToOne(targetEntity="{{ field.targetEntity }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %})
+     * @ORM\ManyToOne(targetEntity="{{ field.targetEntity }}")
      */
     protected ${{ field.fieldName }};
 

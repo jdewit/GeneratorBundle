@@ -11,24 +11,16 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * {{ entity }} controller.
  *
- * @Route("/{{ entity_lc }}")
+ * @Route("/{{ bundle_corename }}/{{ entity_lc }}")
  */
 class {{ entity }}Controller extends ContainerAware
 {
-    {%- if 'list' in actions %}
-        {%- include 'Controller/actions/list.php' %}
-    {%- endif %}
-    
-    {%- if 'new' in actions %}
-        {%- include 'Controller/actions/new.php' %}
-    {%- endif %}
-
-    {%- if 'edit' in actions %}
-        {%- include 'Controller/actions/edit.php' %}
-    {%- endif %}
-
-    {%- if 'delete' in actions %}
-        {%- include 'Controller/actions/delete.php' %}
-    {%- endif %}
+    {% for action in actions %}
+        {% if action == 'list' or action == 'show' or action == 'edit' or action == 'new' or action == 'delete' %}
+            {%- include 'Controller/actions/'~ action ~'.php' %}
+        {% else %}
+            {%- include 'Controller/actions/custom.php' %}
+        {% endif %}
+    {% endfor %}
        
 }

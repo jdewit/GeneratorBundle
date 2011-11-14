@@ -119,7 +119,7 @@ EOT
         $dialog->writeSection($output, 'Generating code for '. $bundleName );
                        
         //Generate Bundle/Entity files
-        $avroEntityGenerator = new AvroEntityGenerator($container, $output, $bundle);    
+        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
         $avroEntityGenerator->generate($entity, $fields, $writeManager);  
         
         $dialog->writeSection($output, $entity.' entity generated succesfully!');

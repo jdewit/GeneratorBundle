@@ -22,90 +22,108 @@ class RoutingManipulator extends Manipulator
 {
     private $filename;
     private $format;
-    private $bundleName;
     
     /**
      * Constructor.
      *
      * @param string $file The YAML routing file path
      */
-    public function __construct($filename, $bundleName)
+    public function __construct($filename, $format = 'yml')
     {
         $this->filename = $filename;
-        $this->bundleName = $bundleName;
+        $this->format = $format;
     }
 
-    /**
-     * Adds a routing resource at the top of the existing ones.
-     *
-     * @return Boolean true if it worked, false otherwise
-     *
-     * @throws \RuntimeException If it didnt work
-     */
-    public function update()
-    {
-        switch ($this->format):
-            case 'xml':
-                $this->updateXml();
-            break;
-            case 'yml':
-                $this->updateYml();
-            break;
-            case 'php':
-                // TODO:
-            break;
-        endswitch;
-    }
-    
-    protected function updateXml()
-    {
-        $doc = new \DOMDocument();        
-        $doc->preserveWhiteSpace = false;
-        $doc->formatOutput = true;
-        $doc->load($this->filename);
-        //$routes = $doc->getElementById('routes')->item(0);
-        //$routes = $doc->createElement('t');
-        //$routes = $doc->firstChild;
-        //$doc->appendChild($routes);
-        $newRoute = $doc->createElement('import');
-        $newRoute->setAttribute('resource', sprintf('@%s/Resources/config/routing.xml', $this->bundleName));
-        $doc->documentElement->appendChild($newRoute);
-       
-        $xml = $doc->saveXML();
-        
-        //reload to format properly
-        $doc->loadXML($xml);
-        $doc->saveXML();
-        $doc->save($this->filename);        
-    }
-    
     /*
-     * update the applications app/config/routing.yml file
+     * update the applications routing file
      * 
      * adds the bundles routing file as a resource
+     *
+     * @param $format The applications routing file format
      */
-    public function updateAppRoutingYml()
+    public function updateAppRouting($bundleName)
     {
-        $parser = new Parser();
-        $routingArray = $parser->parse(file_get_contents($this->filename));
-        
-        // only update if node does not exist
-        if (in_array($this->bundleName, $routingArray)) {
-            throw new \RuntimeException('Bundle exists.');
-        }
+        switch ($this->format) {
+            case 'yml':
+                $parser = new Parser();
+                $routingArray = $parser->parse(file_get_contents($this->filename));
                 
-        $current = file_get_contents($this->filename);
-        $code = $this->bundleName.':';
-        $code .= "\n";
-        $code .= sprintf("    resource: \"@%s/Resources/config/routing.yml\"", $this->bundleName);
-        $code .= "\n \n";
-        $code .= $current;
+                // only update if node does not exist
+                if (in_array($bundleName, $routingArray)) {
+                    return true;
+                }
+                        
+                $current = file_get_contents($this->filename);
+                $code = $bundleName.':';
+                $code .= "\n";
+                $code .= sprintf("    resource: \"@%s/Resources/config/routing.yml\"", $bundleName);
+                $code .= "\n \n";
+                $code .= $current;
 
-        if (false === file_put_contents($this->filename, $code)) {
-            throw new \RuntimeException('Could not write to routing.yml');
+                if (false === file_put_contents($this->filename, $code)) {
+                    throw new \RuntimeException('Could not write to routing.yml');
+                }
+                
+            break;
+            case 'xml':
+                $doc = new \DOMDocument();        
+                $doc->preserveWhiteSpace = false;
+                $doc->formatOutput = true;
+                $doc->load($this->filename);
+                //$routes = $doc->getElementById('routes')->item(0);
+                //$routes = $doc->createElement('t');
+                //$routes = $doc->firstChild;
+                //$doc->appendChild($routes);
+                $newRoute = $doc->createElement('import');
+                $newRoute->setAttribute('resource', sprintf('@%s/Resources/config/routing.xml', $this->bundleName));
+                $doc->documentElement->appendChild($newRoute);
+               
+                $xml = $doc->saveXML();
+                
+                //reload to format properly
+                $doc->loadXML($xml);
+                $doc->saveXML();
+                $doc->save($this->filename);  
+            break;
         }
 
         return true;          
         
+    }
+
+    /*
+     * update a bundles routing file
+     *
+     * @param $bundleName
+     * @param $bundleAlias
+     * @param $entity
+     * @param $format 
+     *
+     */
+    public function updateBundleRouting($bundleName, $bundleAlias, $entity)
+    {
+        switch ($this->format) {
+            case 'yml':
+                $current = file_get_contents($this->filename);
+        
+                $parser = new Parser();
+                $array = $parser->parse($current);
+                
+                if (empty($array[$bundleAlias.'_'.$entity])) {
+                    $code = $bundleAlias.'_'.$entity.':';
+                    $code .= "\n";
+                    $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $bundleName, $entity);
+                    $code .= "\n";
+                    $code .= sprintf("    type:     annotation ");
+                    $code .= "\n \n";
+                    $code .= $current;
+
+                    if (false === file_put_contents($this->filename, $code)) {
+                        throw new \RuntimeException('Could not write to routing.yml');
+                    }
+                }
+
+            break;
+        }
     }
 }

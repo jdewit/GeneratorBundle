@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Util\Filesystem;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Avro\GeneratorBundle\Generator\Generator;
+use Avro\GeneratorBundle\Manipulator\RoutingManipulator;
 
 /**
  * Generates a Avro controller.
@@ -26,7 +27,6 @@ class AvroControllerGenerator extends Generator
 {
     protected $entity;
     protected $entityLC;
-    protected $fields;
     
     /**
      * Generates the entity class if it does not exist.
@@ -34,25 +34,53 @@ class AvroControllerGenerator extends Generator
      * @param string $entity The entity relative class name
      * @param array $fields The entity fields
      */
-    public function generate($entity, array $fields)
+    public function generate($entity)
     {
-        $this->entity = $entity;
-        $this->entityLC = strtolower($entity);
-        $this->fields = $fields;
+        if ($entity) {
+            $this->entity = $entity;
+            $this->entityLC = strtolower($entity);
+        } else {
+            $this->output->writeln(array(
+                '',
+                'Enter the controllers name. (ex. admin)',
+            ));
+            $this->entityLC = strtolower($this->dialog->ask($this->output, '<info>Controller name:</info> '));
+            $this->entity = ucfirst($this->entityLC);
+        }
+        
+        $this->output->writeln('');
+        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate default controller actions? [list, show, new, edit, delete]', 'yes', '?'), true)) {
+            $actions =  array('list', 'show', 'new', 'edit', 'delete');
+        } else {
+            while(true) {
+                $this->output->writeln(array(
+                    '',
+                    'Enter the controllers actions. Just press enter when finished.'
+                ));
+                $action = $this->dialog->ask($this->output, '<info>Controller action:</info> '); 
+                if (empty($action)) {
+                    break;
+                }
+                $actions[] = $action;
+            }
+        }
+
+        $routingFormat = $this->dialog->ask($this->output, $this->dialog->getQuestion('Enter the bundles routing file format', 'yml', ':'), 'yml');
         
         $parameters = array(
             'entity' => $this->entity,
             'entity_lc' => $this->entityLC,
-            'fields' => $this->fields,
             'bundle_name' => $this->bundleName,
+            'bundle_corename' => $this->bundleCorename,
             'bundle_path' => $this->bundlePath,
             'bundle_namespace' => $this->bundleNamespace,  
             'bundle_alias' => $this->bundleAlias,          
             'db_driver' => $this->dbDriver,
-            'actions' => array('list', 'new', 'edit', 'delete')
+            'actions' => $actions,
         );
 
-        
+
+
         $this->output->write('Generating '.$this->bundleName.'/Controller/'.$this->entity.'Controller.php: ');
         try {
             $this->generateControllerClass($parameters);
@@ -65,9 +93,9 @@ class AvroControllerGenerator extends Generator
             ));
         }      
 
-        $this->output->write('Adding controller routing to '.$this->bundleName.'/app/config/routing.yml: ');
+        $this->output->write('Adding controller routing to '.$this->bundleName.'/app/config/routing.'.$routingFormat.': ');
         try {
-            $this->UpdateRouting($parameters);
+            $this->UpdateRouting($routingFormat);
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -93,22 +121,11 @@ class AvroControllerGenerator extends Generator
         $this->renderFile('Controller/controller.php', $filename, $parameters);
     }
 
-    protected function updateRouting()
+    protected function updateRouting($format)
     {
-        $filename = $this->bundlePath.'/Resources/config/routing.yml';
-        $current = file_get_contents($filename);
-        $code = $this->bundleAlias.'_'.$this->entity.':';
-        $code .= "\n";
-        $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $this->bundleName, $this->entity);
-        $code .= "\n";
-        $code .= sprintf("    type:     annotation ");
-        $code .= "\n \n";
-        $code .= $current;
+        $filename = $this->bundlePath.'/Resources/config/routing.'.$format;
 
-        if (false === file_put_contents($filename, $code)) {
-            throw new \RuntimeException('Could not write to routing.yml');
-        }
-
-        return true;        
+        $routingManipulator = new RoutingManipulator($filename, $format);
+        $routingManipulator->updateBundleRouting($this->bundleName, $this->bundleAlias, $this->entity);
     }
 }

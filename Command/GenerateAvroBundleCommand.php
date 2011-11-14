@@ -147,7 +147,7 @@ EOT
         $output->writeln('');
         $output->write('Generating bundle code: ');
         
-        $bundleGenerator = new AvroBundleGenerator($container, $output);
+        $bundleGenerator = new AvroBundleGenerator($container, $dialog, $output);
         $bundleGenerator->generate($thirdParty, $vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig);
         
         $output->writeln(array(

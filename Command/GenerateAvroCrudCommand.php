@@ -64,22 +64,22 @@ class GenerateAvroCrudCommand extends GenerateAvroCommand
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
         //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $output, $bundle);
-        $avroControllerGenerator->generate($entity, $fields);
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
+        $avroControllerGenerator->generate($entity);
 
         //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $output, $bundle);
+        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle);
         $avroViewGenerator->generate($entity, $fields);        
         
         //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $output, $bundle);
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
         $avroFormGenerator->generate($entity, $fields);
 
         //Update services.yml
-        $avroServicesGenerator = new AvroServicesGenerator($container, $output, $bundle);
+        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle);
         $avroServicesGenerator->generate($entity, $fields);        
         
-        $output->writeln('Form created');
+        $output->writeln('CRUD created succesfully!');
     }
 
 }

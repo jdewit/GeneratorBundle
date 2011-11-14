@@ -26,6 +26,7 @@ use Avro\GeneratorBundle\Twig\GeneratorExtension;
 class Generator
 {
     protected $container;
+    protected $dialog;
     protected $registry;
     protected $filesystem;
     protected $output;
@@ -41,9 +42,10 @@ class Generator
     protected $message;
     protected $thirdParty = true; 
 
-    public function __construct($container, OutputInterface $output, BundleInterface $bundle = null)
+    public function __construct($container, $dialog, OutputInterface $output, BundleInterface $bundle = null)
     {
         $this->container = $container;
+        $this->dialog = $dialog;
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;

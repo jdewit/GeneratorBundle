@@ -12,21 +12,18 @@ class {{ entity }}FormType extends AbstractType
 {% for field in fields %}
 {% if field.type == 'string' %}
             ->add('{{ field.fieldName }}', 'text', array(
-                'label' => '{{ field.fieldName|camelCaseToTitle }}',
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
                 )
             ))          
 {% elseif field.type == 'text' %}
             ->add('{{ field.fieldName }}', 'textarea', array(
-                'label' => '{{ field.fieldName|camelCaseToTitle }}',
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
                 )
             ))          
 {% elseif field.type == 'datetime' %}
             ->add('{{ field.fieldName }}', 'date', array(
-                'label' => '{{ field.fieldName|camelCaseToTitle }}',
                 'attr' => array(
                     'class' => 'date',
                     'title' => 'Select a date for the {{ entity_lc }}'
@@ -37,7 +34,6 @@ class {{ entity }}FormType extends AbstractType
             ))
 {% elseif field.type == 'manyToOne' %}
             ->add('{{ field.fieldName }}', 'entity', array(
-                'label' => '{{ field.fieldName|camelCaseToTitle }}',
                 'class' =>'{{ field.targetEntity }}',
                 'attr' => array(
                     'title' => 'Choose a {{ field.fieldName }} for the {{ entity_lc }}'  
@@ -45,25 +41,21 @@ class {{ entity }}FormType extends AbstractType
             ))  
 {% elseif field.type == 'oneToMany' %}
             ->add('{{ field.fieldName }}s', 'collection', array(
-                'label' => '{{ field.fieldName|camelCaseToTitle }}',
                 'type' => new \{{ bundle_namespace }}\Form\Type\{{ field.fieldName|capitalizeFirst }}FormType(),
                 'allow_add' => true,
                 'allow_delete' => true,
             ))
 {% elseif field.type == 'manyToMany' %}
             ->add('{{ field.fieldName }}s', 'collection', array(
-                'label' => '{{ field.fieldName|camelCaseToTitle }}',
                 'type' => new \{{ bundle_namespace }}\Form\Type\{{ field.fieldName|capitalizeFirst }}FormType(),
                 'allow_add' => true,
                 'allow_delete' => true,
             ))
 {% elseif field.type == 'boolean' %}  
             ->add('{{ field.fieldName }}', 'checkbox', array(
-                   'label' => '{{ field.fieldName|camelCaseToTitle }}',
             ))   
 {% else %}
             ->add('{{ field.fieldName }}', '{{ field.type }}', array(
-                   'label' => '{{ field.fieldName|camelCaseToTitle }}',
             ))            
 {% endif %}
 {% endfor %}

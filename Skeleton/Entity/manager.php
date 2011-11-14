@@ -13,14 +13,16 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     protected $em;
     protected $class;
     protected $repository;
+    protected $context;
 
-    public function __construct(EntityManager $em, $class)
+    public function __construct(EntityManager $em, $class, $context)
     {
         $this->em = $em;
         $this->repository = $em->getRepository($class);
 
         $metadata = $em->getClassMetadata($class);
         $this->class = $metadata->name;
+        $this->context = $context;
     }
 
     /**
@@ -29,8 +31,10 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     public function create{{ entity }}($name)
     {
         $class = $this->getClass();
+        
+        ${{ entity_lc }} = new $class($name);
 
-        return new $class($name);
+        return ${{ entity_lc }};
     }
        
     /**

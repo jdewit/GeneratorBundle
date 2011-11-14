@@ -10,7 +10,7 @@ interface {{ entity }}ManagerInterface
      * Returns an empty {{ entity_lc }} instance.
      *
      * @param string $name
-     * @return {{ entity }}Interface
+     * @return {{ entity_lc }}Interface
      */
     function create{{ entity }}($name);
 
