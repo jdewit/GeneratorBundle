@@ -46,7 +46,7 @@ class {{ entity }} implements {{ entity }}Interface
     /**
      * @var ArrayCollection
      * 
-     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %}{% if field.orphanRemoval %}, orphanRemoval="true"{% endif %})
+     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}"{% if field.orphanRemoval is defined %}, orphanRemoval="true"{% endif %})
      */
     protected ${{ field.fieldName }}s;
 
@@ -79,7 +79,7 @@ class {{ entity }} implements {{ entity }}Interface
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime"{% if field.nullable %}, nullable="true"{% endif %})
      */
     protected ${{ field.fieldName }};
 

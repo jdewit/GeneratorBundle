@@ -39,10 +39,15 @@ interface {{ entity }}Interface
      */
     function set{{ field.fieldName|capitalizeFirst }}s(\{{ field.targetEntity }}Interface ${{ field.fieldName }}s);
     
-    /*
+    /**
      * Add {{ field.fieldName }}
      */
-    function add{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }}Interface ${{ field.fieldName }});
+    function add{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }}Interface ${{ field.fieldName }});i
+    
+    /**
+     * Remove {{ field.fieldName }}
+     */
+    function remove{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }}Interface ${{ field.fieldName }});
 {% else %}
     /**
      * Get {{ field.fieldName }}

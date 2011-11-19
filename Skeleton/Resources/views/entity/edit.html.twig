@@ -1,9 +1,7 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <div class="header ui-state-active">
-        <h1>Edit {{ entity }}</h1>
-    </div>
-    <div class="content">    
+    <h1 class="headline">Edit {{ entity }}</h1>
+    <div id="pageContent">    
         <form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
             {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
             <div>

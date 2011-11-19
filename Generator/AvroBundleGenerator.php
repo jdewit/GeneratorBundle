@@ -131,9 +131,11 @@ class AvroBundleGenerator extends Generator
     protected function updateAppRouting()
     {
         $filename = $this->container->getParameter('kernel.root_dir').'/config/routing.yml';
-        
+
+        $format = 'yml';
+
         $routingManipulator = new RoutingManipulator($filename, $this->bundleName);
-        $routingManipulator->updateAppRoutingYml();
+        $routingManipulator->updateAppRouting($format);
      
     }
 }

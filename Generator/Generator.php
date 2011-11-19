@@ -38,7 +38,7 @@ class Generator
     protected $bundleNamespace; 
     protected $bundlePath;
     protected $bundleVendor;
-    protected $dbDriver;
+    protected $dbDriver = 'orm';
     protected $message;
     protected $thirdParty = true; 
 
@@ -113,12 +113,13 @@ class Generator
         $configPath = $bundlePath.'/Resources/config/config.yml';
         $parser = new Parser();
         $config = $parser->parse(file_get_contents($configPath));
-        if (array_key_exists($bundleAlias, $config)) {
-            if (array_key_exists('db_driver', $config[$bundleAlias])) {
-                return $config[$bundleAlias]['db_driver'];
+        if (is_array($config)) {
+            if (array_key_exists($bundleAlias, $config)) {
+                if (array_key_exists('db_driver', $config[$bundleAlias])) {
+                    return $config[$bundleAlias]['db_driver'];
+                }
             }
         }
-        //return default
         return $this->dbDriver;
     }
     
