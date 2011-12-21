@@ -129,18 +129,6 @@ class AvroEntityGenerator extends Generator
                     ));
                 }  
 
-                $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'ManagerInterface.php: ');       
-                try {
-                    $this->generateEntityManagerInterface($parameters);
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                } 
-
             }
         }
     }

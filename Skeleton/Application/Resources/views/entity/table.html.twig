@@ -1,0 +1,28 @@
+<table id="tableSorter" class="span-24 border">
+    <thead class="border-bottom">
+        <tr class="ui-state-default">
+            <th class="sort">Id</th>
+            {% for field in fields %}
+                <th class="sort">{{ field.fieldName }}</th>
+            {% endfor %}
+            <th>&nbsp</th>
+        </tr>
+    </thead>
+    <tbody class="lines">
+    {{ "{% for "~ entity_lc ~" in "~ entity_lc ~"s %}" }}
+        <tr class="showOnHover">
+            <td><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}" class="view image">{{ "{{ "~ entity_lc ~".id }}" }}</a></td>
+            {% for field in fields %}
+                <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
+            {% endfor %}
+            <td>
+                <a class="edit" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}">edit</a>
+            </td>
+        </tr>
+    {{ "{% else %}" }}
+        <tr>
+            <td></td><td>0 {{ entity_lc }}s Found</td>
+        </tr>
+    {{" {% endfor %}" }}
+    </tbody>
+</table>

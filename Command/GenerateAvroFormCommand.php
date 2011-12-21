@@ -48,25 +48,6 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
     {
         $container = $this->getContainer();
         $dialog = $this->getDialogHelper();
-        
-        $entity = Validators::validateEntityName($input->getArgument('entity'));
-        list($bundle, $entity) = $this->parseShortcutNotation($entity);
-
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
-        $metadata = $this->getEntityMetadata($entityClass);
-        $fields = $this->getFieldsFromMetadata($metadata);
-        $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
-
-        //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $output, $bundle);
-        $avroFormGenerator->generate($entity, $fields);
-
-        $output->writeln('Form created');
-    }
-    
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Avro form generator!');
 
         while (true) {
@@ -90,15 +71,17 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
 
             break;         
         }
-        $input->setOption('entity', $bundle.':'.$entity);
-        
-        // confirm
-        $output->writeln(array(
-            '',
-            $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
-            '',
-            sprintf("You are going to generate code for \"<info>%s:%s</info>\" Doctrine2 entity.", $bundle, $entity),
-            '',
-        ));
-    }    
+
+        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
+        $metadata = $this->getEntityMetadata($entityClass);
+        $fields = $this->getFieldsFromMetadata($metadata[0]);
+        $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
+
+        //Generate Form files
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
+        $avroFormGenerator->generate($entity, $fields);
+
+        $output->writeln('Form created');
+    }
+    
 }

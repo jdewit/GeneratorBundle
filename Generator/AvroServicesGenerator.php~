@@ -58,7 +58,7 @@ class AvroServicesGenerator extends Generator
         );
 
        
-        $this->output->write('Creating '.$this->bundleName.'/Resources/config/'.$entity_lc.'.yml: ');
+        $this->output->write('Updating '.$this->bundleName.'/Resources/config/services.yml: ');
         try {
             $this->updateServices($parameters);
             $this->output->writeln('<info>Ok</info>');
@@ -70,26 +70,13 @@ class AvroServicesGenerator extends Generator
             ));
         }  
 }
-
-    protected function createService($parameters)
-    {
-        $targetFile = $this->bundlePath.'/Resources/config/'.$this->entityLC.'.yml';
-
-        if (file_exists($targetFile)) {
-            $this->updateService($parameters);
-       
-            return true;
-        }
         
-        $this->renderFile('Resources/config/services/servicesPartial.yml', $targetFile, $parameters);
-
-    }
-
-    protected function updateService($parameters, $targetFile)
+    protected function updateServices($parameters)
     {
         $parser = new Parser();
 
-        $currentFileArray = $parser->parse(file_get_contents($targetFile));
+        $currentFile = $this->bundlePath.'/Resources/config/services.yml';
+        $currentFileArray = $parser->parse(file_get_contents($currentFile));
         
         if (!empty($currentFileArray['services'][$this->bundleAlias.'.'.$this->entityLC.'_manager'])) {         
             return true;
@@ -110,7 +97,8 @@ class AvroServicesGenerator extends Generator
         
         if (false === file_put_contents($currentFile, $code)) {
             throw new \RuntimeException('Could not write to services.yml');
-        }                
+        }
+                
         return true;        
     }   
 

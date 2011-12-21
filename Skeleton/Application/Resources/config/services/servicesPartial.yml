@@ -1,0 +1,21 @@
+#{{ entity_lc }}      
+    {{ bundle_alias }}.{{ entity_lc }}_manager:
+        class: {{ bundle_namespace }}\Entity\{{ entity }}Manager
+        arguments: ["@doctrine.orm.entity_manager", {{ bundle_namespace }}\Entity\{{ entity }}, "@security.context"]
+        
+    {{ bundle_alias }}.{{ entity_lc }}.form.type:
+        class: {{ bundle_namespace }}\Form\Type\{{ entity }}FormType
+        tags: 
+            - { name: form.type, alias: {{ bundle_alias }}_{{ entity_lc }} }
+        arguments: ["@security.context"]
+       
+    {{ bundle_alias }}.{{ entity_lc }}.form:
+        factory_method: createNamed 
+        factory_service: form.factory
+        class: Symfony\Component\Form\Form
+        arguments: ["@{{ bundle_alias }}.{{ entity_lc }}.form.type", {{ bundle_alias }}_{{ entity_lc }}]
+        
+    {{ bundle_alias }}.{{ entity_lc }}.form.handler:
+        class: {{ bundle_namespace }}\Form\Handler\{{ entity }}FormHandler
+        scope: request
+        arguments: ["@{{ bundle_alias }}.{{ entity_lc }}.form", "@request", "@{{ bundle_alias }}.{{ entity_lc }}_manager"]

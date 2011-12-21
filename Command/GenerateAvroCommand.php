@@ -41,6 +41,9 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
     protected function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
         $fieldMappings = $metadata->fieldMappings;
+        foreach ($fieldMappings as $mapping) {
+            $fieldMappings[$mapping['fieldName']]['nullable'] = true;
+        }
         $associationMappings = $metadata->associationMappings;
         foreach ($associationMappings as $mapping) {
             // convert association type from integer to text
@@ -64,7 +67,7 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
             }
         }
         $fields = array_merge($fieldMappings, $associationMappings);
-      // print_r($fields); exit;
+       //print_r($fields); exit;
         //Remove manually managed fields
         unset($fields['id']);
         unset($fields['createdAt']);

@@ -1,0 +1,21 @@
+{% if 'list' in actions %}
+{{ route_name_prefix }}_list:
+    pattern:  /list
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:list" }
+{% endif %}
+
+{% if 'new' in actions %}
+{{ route_name_prefix }}_new:
+    pattern:  /new
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:new" }
+
+{% if 'edit' in actions %}
+{{ route_name_prefix }}_edit:
+    pattern:  /edit/{id}
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:edit" }
+
+{% if 'delete' in actions %}
+{{ route_name_prefix }}_delete:
+    pattern:  /delete/{id}
+    defaults: { _controller: "{{ bundle }}:{{ entity }}:delete" }
+{% endif %}

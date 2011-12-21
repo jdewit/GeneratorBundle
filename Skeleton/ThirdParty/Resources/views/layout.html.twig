@@ -1,0 +1,13 @@
+{{ "{% extends app.request.isXmlHttpRequest ? '::ajaxLayout.html.twig' : '::layout.html.twig' %}" }}
+
+{% block center %}
+    <div id="centerColHeader" class="ui-widget-header ui-state-active">
+        {{ "{% block centerColHeader %}" }}{{ "{% endblock %}" }}
+    </div>
+    <div id="centerColContent" >
+        {{ "{% block centerColContent %}" }}{{ "{% endblock %}" }}
+    </div>
+{% endblock %}
+
+
+
