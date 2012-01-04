@@ -70,7 +70,7 @@ class {{ entity }}
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length={{ field.length }}{% if field.nullable %}, nullable="true"{% endif %})
+     * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable="true"{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -105,6 +105,13 @@ class {{ entity }}
      * @ORM\Column(type="datetime", nullable="true")
      */
     protected $updatedAt;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", nullable="true")
+     */
+    protected $isDeleted = false;
 
     /**
      * @var \DateTime
@@ -166,7 +173,7 @@ class {{ entity }}
      *
      * @param {{ field.type }} ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }}Interface ${{ field.fieldName }})
+    public function set{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
@@ -275,6 +282,26 @@ class {{ entity }}
     }
 
     /**
+     * Get isDeleted
+     * 
+     * @return boolean 
+     */
+    public function getIsDeleted()
+    {
+        return $this->isDeleted;
+    }
+    
+    /**
+     * Set isDeleted
+     *
+     * @param boolean $isDeleted
+     */
+    public function setIsDeleted($isDeleted)
+    {
+        $this->isDeleted = $isDeleted;
+    }  
+
+    /**
      * Set deletedAt
      *
      * @param datetime $deletedAt
@@ -294,5 +321,14 @@ class {{ entity }}
         return $this->deletedAt;
     }
 
+    /**
+     * string output
+     */
+    public function __toString()
+    {
+{% for field in fields %}
+        return $this->{{ field.fieldName }};
+{% endfor %}
+    } 
 }
 

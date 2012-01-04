@@ -58,9 +58,9 @@ class AvroServicesGenerator extends Generator
         );
 
        
-        $this->output->write('Creating '.$this->bundleName.'/Resources/config/'.$entity_lc.'.yml: ');
+        $this->output->write('Creating '.$this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml: ');
         try {
-            $this->updateServices($parameters);
+            $this->updateService($parameters);
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -71,22 +71,21 @@ class AvroServicesGenerator extends Generator
         }  
 }
 
-    protected function createService($parameters)
+    protected function createService($parameters, $targetFile)
     {
-        $targetFile = $this->bundlePath.'/Resources/config/'.$this->entityLC.'.yml';
+        $this->renderFile('Resources/config/services/servicesPartial.yml', $targetFile, $parameters);
+    }
 
-        if (file_exists($targetFile)) {
-            $this->updateService($parameters);
+    protected function updateService($parameters)
+    {
+        $targetFile = $this->bundlePath.'/Resources/config/services/'.$this->entityLC.'.yml';
+        
+        if (!file_exists($targetFile)) {
+            $this->createService($parameters, $targetFile);
        
             return true;
         }
-        
-        $this->renderFile('Resources/config/services/servicesPartial.yml', $targetFile, $parameters);
 
-    }
-
-    protected function updateService($parameters, $targetFile)
-    {
         $parser = new Parser();
 
         $currentFileArray = $parser->parse(file_get_contents($targetFile));

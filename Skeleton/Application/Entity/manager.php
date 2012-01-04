@@ -31,8 +31,6 @@ class {{ entity }}Manager
         $class = $this->getClass();
         
         ${{ entity_lc }} = new $class($name);
-        ${{ entity_lc }}->setIsActive(true);
-
 
         return ${{ entity_lc }};
     }
@@ -42,6 +40,8 @@ class {{ entity }}Manager
      */  
     public function delete{{ entity }}({{ entity }} ${{ entity_lc }}, $andFlush = true)
     {
+
+        ${{ entity_lc }}->setIsDeleted(true);
         ${{ entity_lc }}->setDeletedAt( new \Datetime('now') );
         $this->em->persist(${{ entity_lc }});
         //$this->em->remove(${{ entity }});

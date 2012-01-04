@@ -72,7 +72,9 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
         unset($fields['id']);
         unset($fields['createdAt']);
         unset($fields['updatedAt']);
-      
+        unset($fields['isDeleted']);
+        unset($fields['deletedAt']);
+
         return $fields;
     }    
     

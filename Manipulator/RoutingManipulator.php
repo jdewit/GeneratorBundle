@@ -110,7 +110,7 @@ class RoutingManipulator extends Manipulator
                 $array = $parser->parse($current);
                 
                 if (empty($array[$bundleAlias.'_'.$entity])) {
-                    $code = $bundleAlias.'_'.$entity.':';
+                    $code = $bundleAlias.'_'.strtolower($entity).':';
                     $code .= "\n";
                     $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $bundleName, $entity);
                     $code .= "\n";

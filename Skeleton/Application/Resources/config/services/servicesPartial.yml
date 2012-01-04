@@ -1,4 +1,5 @@
-#{{ entity_lc }}      
+#{{ entity_lc }}     
+services:
     {{ bundle_alias }}.{{ entity_lc }}_manager:
         class: {{ bundle_namespace }}\Entity\{{ entity }}Manager
         arguments: ["@doctrine.orm.entity_manager", {{ bundle_namespace }}\Entity\{{ entity }}, "@security.context"]
