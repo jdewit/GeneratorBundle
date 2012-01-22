@@ -49,8 +49,8 @@ class AvroControllerGenerator extends Generator
         }
         
         $this->output->writeln('');
-        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate default controller actions? [list, show, new, edit, delete]', 'yes', '?'), true)) {
-            $actions =  array('list', 'show', 'new', 'edit', 'delete');
+        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate default controller actions? [list, show, new, edit, delete, batch]', 'yes', '?'), true)) {
+            $actions =  array('list', 'show', 'new', 'edit', 'delete', 'batch', 'getJson');
         } else {
             while(true) {
                 $this->output->writeln(array(

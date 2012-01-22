@@ -23,7 +23,7 @@ class {{ entity }}FormHandler
     public function process({{ entity }} ${{ entity_lc }} = null)
     {
         if (null === ${{ entity_lc }}) {
-            ${{ entity_lc }} = $this->{{ entity_lc }}Manager->create{{ entity }}('');
+            ${{ entity_lc }} = $this->{{ entity_lc }}Manager->create();
         }
 
         $this->form->setData(${{ entity_lc }});
@@ -43,6 +43,6 @@ class {{ entity }}FormHandler
 
     protected function onSuccess({{ entity }} ${{ entity_lc }})
     {
-        $this->{{ entity_lc }}Manager->update{{ entity }}(${{ entity_lc }});
+        $this->{{ entity_lc }}Manager->update(${{ entity_lc }});
     }
 }

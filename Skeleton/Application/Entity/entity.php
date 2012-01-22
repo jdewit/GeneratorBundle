@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Joris de <joris.w.dewit@gmail.com>
  * 
  * @ORM\Entity
- * @ORM\Table(name="{{ bundle_corename }}_{{ entity_lc }}s")
+ * @ORM\Table(name="{{ bundle_corename }}_{{ entity_lc }}")
  * @ORM\HasLifecycleCallbacks
  */
 class {{ entity }} 
@@ -45,10 +45,9 @@ class {{ entity }}
     /**
      * @var ArrayCollection
      * 
-     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}"{% if field.orphanRemoval is defined %}, orphanRemoval="true"{% endif %})
+     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}", orphanRemoval="true", cascade={"all"})
      */
-    protected ${{ field.fieldName }}s;
-
+    protected ${{ field.fieldName }};
 {% elseif field.type == "manyToMany" %}
 {% if field.isOwningSide %}
     /** 
@@ -92,6 +91,13 @@ class {{ entity }}
 
 {% endif %}
 {% endfor %}    
+    /**
+     * @var \Application\UserBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\UserBundle\Entity\User")
+     */
+    protected $owner;
+
     /**
      * @var \DateTime
      *
@@ -139,9 +145,9 @@ class {{ entity }}
     public function __construct() 
     {
 {%- for field in fields %}
-    {% if (field.type == "oneToMany") or (field.type == "manyToMany") %} 
-        $this->{{ field.fieldName }}s = new ArrayCollection();
-    {% endif %}   
+{% if (field.type == "oneToMany") or (field.type == "manyToMany") %} 
+        $this->{{ field.fieldName }} = new ArrayCollection();
+{% endif %}   
 {%- endfor %}
 
     }
@@ -177,25 +183,26 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
+
 {% elseif (field.type == "oneToMany" or field.type == "manyToMany") %}
     /**
      * Get {{ field.fieldName }}
      * 
      * @return {{ field.targetEntity }} 
      */
-    public function get{{ field.fieldName|capitalizeFirst }}s()
+    public function get{{ field.fieldName|capitalizeFirst }}()
     {
-        return $this->{{ field.fieldName }}s;
+        return $this->{{ field.fieldName }};
     }
 
     /**
-     * Set {{ field.fieldName }}s
+     * Set {{ field.fieldName }}
      *
-     * @param ArrayCollection ${{ field.fieldName }}s
+     * @param ArrayCollection ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName|capitalizeFirst }}s(\{{ field.targetEntity }}Interface ${{ field.fieldName|lower }}s)
+    public function set{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName|lower }})
     {
-        $this->{{ field.fieldName }}s = ${{ field.fieldName }}s;
+        $this->{{ field.fieldName }} = ${{ field.fieldName }};
     } 
     
     /**
@@ -203,9 +210,9 @@ class {{ entity }}
      *
      * @param \{{ field.targetEntity }} ${{ field.fieldName  }}   
      */
-    public function add{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }}Interface ${{ field.fieldName }})
+    public function add{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
     {
-        $this->{{ field.fieldName }}s->add(${{ field.fieldName }});
+        $this->{{ field.fieldName }}->add(${{ field.fieldName }});
         ${{ field.fieldName }}->set{{ field.mappedBy | capitalizeFirst }}($this);
     }  
 
@@ -214,10 +221,11 @@ class {{ entity }}
      *
      * @param \{{ field.targetEntity }} ${{ field.fieldName  }} 
      */
-    public function remove{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }}Interface ${{ field.fieldName }})
+    public function remove{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
     {
-        $this->{{ field.fieldName }}s->removeElement(${{ field.fieldName }});
+        $this->{{ field.fieldName }}->removeElement(${{ field.fieldName }});
     }
+
 {% else %}
     /**
      * Get {{ field.fieldName }}
@@ -238,9 +246,29 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }    
+
 {% endif %}       
 {% endfor %}
-    
+    /**
+     * Get owner
+     * 
+     * @return Application\UserBundle\Entity\User 
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * Set owner
+     *
+     * @param manyToOne $owner
+     */
+    public function setOwner(\Application\UserBundle\Entity\User $owner)
+    {
+        $this->owner = $owner;
+    }  
+
     /**
     * Set createdAt
     *

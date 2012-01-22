@@ -9,10 +9,10 @@
     {
         switch ($filter):
             case 'All':
-                ${{ entity_lc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_lc }}_manager')->findAll{{ entity }}s();           
+                ${{ entity_lc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_lc }}_manager')->findAll();           
             break;
             case 'Deleted':
-                ${{ entity_lc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_lc }}_manager')->find{{ entity }}sBy(array('isActive' => false));            
+                ${{ entity_lc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_lc }}_manager')->findAllDeleted();            
             break;            
         endswitch;      
 

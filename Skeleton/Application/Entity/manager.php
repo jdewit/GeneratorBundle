@@ -1,53 +1,24 @@
 <?php
-
 namespace {{ bundle_namespace }}\Entity;
-
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class {{ entity }}Manager 
 {
     protected $em;
     protected $class;
     protected $repository;
-    protected $context;
+    protected $owner;
 
-    public function __construct(EntityManager $em, $class, $context)
+    public function __construct(EntityManager $em, $class, SecurityContextInterface $context)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository($class);
-
         $metadata = $em->getClassMetadata($class);
         $this->class = $metadata->name;
-        $this->context = $context;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function create{{ entity }}($name)
-    {
-        $class = $this->getClass();
-        
-        ${{ entity_lc }} = new $class($name);
-
-        return ${{ entity_lc }};
-    }
-       
-    /**
-     * {@inheritDoc}
-     */  
-    public function delete{{ entity }}({{ entity }} ${{ entity_lc }}, $andFlush = true)
-    {
-
-        ${{ entity_lc }}->setIsDeleted(true);
-        ${{ entity_lc }}->setDeletedAt( new \Datetime('now') );
-        $this->em->persist(${{ entity_lc }});
-        //$this->em->remove(${{ entity }});
-        if ($andFlush) {
-            $this->em->flush();
-        }
+        $this->repository = $em->getRepository($class);
+        $this->owner = $context->getToken()->getUser()->getOwner();
     }
 
     /**
@@ -59,69 +30,158 @@ class {{ entity }}Manager
     }
 
     /**
-     * {@inheritDoc}
+     * Create {{ entity_lc }}
      */
-    public function find{{ entity }}($id)
+    public function create()
     {
-        ${{ entity_lc }} = $this->repository->find($id);
-        if (!${{ entity_lc }}) {
-            throw new NotFoundHttpException("{{ entity }} not found");
-        }
+        $class = $this->getClass();
+        
+        ${{ entity_lc }} = new $class();
+        ${{ entity_lc }}->setOwner($this->owner);
+
         return ${{ entity_lc }};
     }
-
+           
     /**
-     * {@inheritDoc}
+     * Update {{ entity_lc }}
      */
-    public function find{{ entity }}By(array $criteria)
-    {
-        $criteria['deletedAt'] = false; 
-       
-        ${{ entity_lc }} = $this->repository->findOneBy($criteria);
-        if (!${{ entity_lc }}) {
-            throw new NotFoundHttpException("{{ entity }} not found");
-        }
-        return ${{ entity_lc }};
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function find{{ entity }}sBy(array $criteria)
-    {
-        $criteria['deletedAt'] = false; 
-        
-        return $this->repository->findBy($criteria);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public function findAll{{ entity }}s()
-    {
-        $criteria['deletedAt'] = false; 
-        
-        return $this->repository->findBy($criteria);
-    }
-
-    /**
-     * Find all deleted {{ entity }}'s
-     */
-    public function findAllDeleted{{ entity }}s()
-    {
-        $criteria['deletedAt'] = true;
-
-        return $this->repository->findBy($criteria);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public function update{{ entity }}({{ entity }} ${{ entity_lc }}, $andFlush = true)
+    public function update({{ entity }} ${{ entity_lc }}, $andFlush = true)
     {
         $this->em->persist(${{ entity_lc }});
         if ($andFlush) {
             $this->em->flush();
         }
     }
+
+    /**
+     * Soft delete one {{ entity_lc }}
+     */  
+    public function softDelete({{ entity }} ${{ entity_lc }})
+    {
+        ${{ entity_lc }}->setIsDeleted(true);
+        ${{ entity_lc }}->setDeletedAt( new \Datetime('now') );
+       
+        $this->em->persist(${{ entity_lc }});
+        $this->em->flush();
+    }
+
+    /**
+     * Permanently delete one {{ entity_lc }}
+     */  
+    public function delete({{ entity }} ${{ entity_lc }})
+    {
+        $this->em->remove(${{ entity }});
+        $this->em->flush();
+    }
+
+    /**
+     * Find {{ entity_lc }}s as array
+     *
+     * @param array $parameters
+     * @param $first
+     */
+    public function findAsArray($parameters = array(), $first = false)
+    {   
+        $qb = $this->em->createQueryBuilder()->select('e')->from($this->class, 'e')->where('e.owner = ?1')->setParameter('1', $this->owner);
+
+        foreach ($parameters as $key => $value) {
+            $qb->andWhere('e.'.$key.' = :'.$key)->setParameter($key, $value);
+        }
+        $result = $qb->getQuery()->getArrayResult();
+
+        if ($first) {
+            return $result[0];
+        } else {
+            return $result; 
+        }
+    }
+
+    /** 
+     * Find {{ entity_lc }} as array with id as key
+     */
+    public function findAsKeyedArray($criteria = array()) 
+    {
+        ${{ entity_lc }}s = $this->findBy($criteria);
+
+        $array = array();
+        foreach( ${{ entity_lc }}s as ${{ entity_lc }} ) {
+            $array[ ${{ entity_lc }}->getId() ] = $this->toArray( ${{ entity_lc }} );
+        }
+        
+        return $array;
+    }
+
+    /**
+     * Find one {{ entity_lc }} by id
+     */
+    public function find($id)
+    {
+        ${{ entity_lc }} = $this->repository->find($id);
+
+        return ${{ entity_lc }};
+    }
+
+    /**
+     * Find one {{ entity_lc }} by criteria
+     *
+     * @parameter $criteria
+     */
+    public function findOneBy($criteria = array())
+    {
+        $criteria['owner'] = $this->owner->getId();
+        $criteria['isDeleted'] = false;
+        
+        return  $this->repository->findOneBy($criteria);
+    }
+
+    /**
+     * Find {{ entity_lc }}s by criteria
+     *
+     * @parameter $criteria
+     */
+    public function findBy($criteria = array())
+    {
+        $criteria['owner'] = $this->owner->getId();
+        $criteria['isDeleted'] = false;
+
+        return $this->repository->findBy($criteria);
+    }
+    
+    /**
+     * Find all {{ entity_lc }}s 
+     *
+     */
+    public function findAll($criteria = array())
+    {
+        $criteria['owner'] = $this->owner->getId();
+        $criteria['isDeleted'] = false;
+
+        return $this->repository->findBy($criteria);
+    }
+
+    /**
+     * Find all deleted {{ entity }}'s
+     */
+    public function findAllDeleted()
+    {
+        $criteria['owner'] = $this->owner->getId();
+        $criteria['isDeleted'] = true;
+
+        return $this->repository->findBy($criteria);
+    }
+
+    /**
+     * Convert {{ entity_lc }} entity to array
+     */
+    public function toArray(${{ entity_lc }})
+    {
+        $array = array(
+{% for field in fields %}
+            '{{ field.fieldName }}' => ${{ entity_lc }}->get{{ field.fieldName|capitalizeFirst }}(),
+{% endfor %}
+        );
+
+        return $array;
+    }
+
 }

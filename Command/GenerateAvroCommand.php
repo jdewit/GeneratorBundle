@@ -70,6 +70,7 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
        //print_r($fields); exit;
         //Remove manually managed fields
         unset($fields['id']);
+        unset($fields['owner']);
         unset($fields['createdAt']);
         unset($fields['updatedAt']);
         unset($fields['isDeleted']);

@@ -1,12 +1,15 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <div class="header ui-state-active">
-        <h1>{{ entity }}</h1>
-    </div>
-    <div class="content">  
+    <h1>{{ entity }}</h1>
+    <hr />
+    <table>
+        <tbody>
 {% for field in fields %}
-        <div>{{ field.fieldName|camelCaseToTitle }}: {{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</div>
+        <tr>
+            <td>{{ field.fieldName|camelCaseToTitle }}:</td>
+            <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
+        </tr>
 {% endfor %}
-    </div>            
+    </table>            
 {{ "{% endblock %}" }}
 

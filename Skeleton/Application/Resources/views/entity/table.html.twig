@@ -1,28 +1,41 @@
-<table id="tableSorter" class="span-24 border">
-    <thead class="border-bottom">
-        <tr class="ui-state-default">
-            <th class="sort">Id</th>
-            {% for field in fields %}
-                <th class="sort">{{ field.fieldName }}</th>
-            {% endfor %}
-            <th>&nbsp</th>
-        </tr>
-    </thead>
-    <tbody class="lines">
-    {{ "{% for "~ entity_lc ~" in "~ entity_lc ~"s %}" }}
-        <tr class="showOnHover">
-            <td><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}" class="view image">{{ "{{ "~ entity_lc ~".id }}" }}</a></td>
-            {% for field in fields %}
-                <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
-            {% endfor %}
-            <td>
-                <a class="edit" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}">edit</a>
-            </td>
-        </tr>
-    {{ "{% else %}" }}
-        <tr>
-            <td></td><td>0 {{ entity_lc }}s Found</td>
-        </tr>
-    {{" {% endfor %}" }}
-    </tbody>
-</table>
+<form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_batch') }}" }}" >  
+    <table id="tableSorter" class="zebra-striped">
+        <thead class="ui-state-default">
+            <tr>
+                <th class="{sorter: false}" title="Select All"><input id="checkAll" type="checkbox"/></th>
+{% for field in fields %}
+                <th>{{ field.fieldName|capitalize }}</th>
+{% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {{ "{% for "~ entity_lc ~" in "~ entity_lc ~"s %}" }}
+                <tr>
+                    <td><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_lc ~".id }}" }}"/></td>
+                    <td><a class="edit" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}">edit</a></td>
+                    <td><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}" class="view image">{{ "{{ "~ entity_lc ~".id }}" }}</a></td>
+                    {% for field in fields %}
+                        <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
+                    {% endfor %}
+                </tr>
+            {{ "{% else %}" }}
+                <tr>
+                    <td colspan="0">0 {{ entity_lc }}s Found</td>
+                </tr>
+            {{" {% endfor %}" }}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="0">
+                    <span class="icon tableArrow"></span>
+                   {{ "{% if filter != 'Deleted' %}" }}
+                        <button type="submit" name="form_action" value="Delete" class="btn confirm" title="Are you sure you want to delete these {{ entity_lc }}s?">Delete</button>
+                    {{ "{% else %}" }}
+                        <button type="submit" name="form_action" value="Restore" class="btn confirm" title="Are you sure you want to restore these {{ entity_lc }}s?">Restore</button>
+                    {{ "{% endif %}" }}
+                </td>
+            </tr>
+        </tfoot>
+
+    </table>
+</form>

@@ -1,12 +1,16 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <h1 class="headline">Edit {{ entity }}</h1>
-    <div class="content">    
-        <form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
-            {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
-            <div>
-                <input type="submit" class="button" title="Update the {{ entity_lc }}" value="Update {{ entity }}"/>
-            </div>
-        </form>
-    </div>            
+    <h1>Edit {{ entity }}</h1>
+    <hr />
+    <form id="{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_form') }}" class="horizontal-form" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
+        {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
+        <div class="form-actions">
+            <input type="submit" class="btn large primary" title="Update the {{ entity_lc }}" value="Update {{ entity }}"/>
+            <a class="btn closeDialog" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list') }}" }}">Back to list</a>
+            <a id="delete{{ entity }}" class="btn confirm danger pull-right" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_delete', { 'id': "~ entity_lc ~".id }) }}" }}" title="Are you sure you want to delete this {{ entity_lc }}?">Delete</a>
+        </div>
+    </form>
 {{ "{% endblock %}" }}
+{% block customJS %}
+
+{% endblock %}

@@ -15,8 +15,7 @@
             ${{ entity_lc }} = $form->getData('{{ entity_lc }}');
 
             if ($this->container->get('request')->isXmlHttpRequest()) {
-                ${{ entity }}Array = $this->container->get('{{ bundle_alias }}.{{ entity_lc }}_manager')->toArray(${{ entity_lc }});
-                $response = new Response(json_encode(array('message' => '{{ entity }} created.', 'data' => ${{ entity_lc }}Array)));
+                $response = new Response(json_encode(array('message' => '{{ entity }} created.')));
                 $response->headers->set('Content-Type', 'application/json');
 
                 return $response; 
