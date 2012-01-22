@@ -1,8 +1,0 @@
-{{ bundle_alias }}:
-    {{ entity_lc }}:  
-        {{ entity_lc }}_class:    {{ bundle_namespace }}\Entity\{{ entity }}
-        {{ entity_lc }}_manager:  {{ bundle_alias }}.{{ entity_lc }}_manager.default
-        form:
-            type:               {{ bundle_alias }}_{{ entity_lc }}
-            handler:            {{ bundle_alias }}.{{ entity_lc }}.form.handler.default
-            name:               {{ bundle_alias }}_{{ entity_lc }}_form   
