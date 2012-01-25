@@ -74,28 +74,6 @@ class {{ entity }}Manager
         $this->em->flush();
     }
 
-    /**
-     * Find {{ entity_lc }}s as array
-     *
-     * @param array $parameters
-     * @param $first
-     */
-    public function findAsArray($parameters = array(), $first = false)
-    {   
-        $qb = $this->em->createQueryBuilder()->select('e')->from($this->class, 'e')->where('e.owner = ?1')->setParameter('1', $this->owner);
-
-        foreach ($parameters as $key => $value) {
-            $qb->andWhere('e.'.$key.' = :'.$key)->setParameter($key, $value);
-        }
-        $result = $qb->getQuery()->getArrayResult();
-
-        if ($first) {
-            return $result[0];
-        } else {
-            return $result; 
-        }
-    }
-
     /** 
      * Find {{ entity_lc }} as array with id as key
      */

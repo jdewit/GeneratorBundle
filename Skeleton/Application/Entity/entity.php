@@ -42,12 +42,23 @@ class {{ entity }}
     protected ${{ field.fieldName }};
 
 {% elseif field.type == "oneToMany" %}
+{% if field.isOwningSide %}
+    /**
+     * @var ArrayCollection
+     * 
+     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.inversedBy }}"j
+     */
+    protected ${{ field.fieldName }};
+
+{% else %}
     /**
      * @var ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}", orphanRemoval="true", cascade={"all"})
      */
     protected ${{ field.fieldName }};
+
+{% endif %}
 {% elseif field.type == "manyToMany" %}
 {% if field.isOwningSide %}
     /** 
@@ -56,15 +67,15 @@ class {{ entity }}
      * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}", inversedBy="{{ field.inversedBy }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %})
      * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_lc }}_{{ field.fieldName }}")
      */
+    protected ${{ field.fieldName }};
 {% else %}
     /** 
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %})
      */
+    protected ${{ field.fieldName }};
 {% endif %}
-    protected ${{ field.fieldName }}s;
-
 {% elseif field.type == "string" %}
     /**
      * @var string
@@ -185,6 +196,7 @@ class {{ entity }}
     }     
 
 {% elseif (field.type == "oneToMany" or field.type == "manyToMany") %}
+{% set adjustedFieldName = field.fieldName|slice(0, -1) %} 
     /**
      * Get {{ field.fieldName }}
      * 
@@ -206,14 +218,14 @@ class {{ entity }}
     } 
     
     /**
-     * Add {{ field.fieldName }} to the collection of related items
+     * Add {{ adjustedFieldName }} to the collection
      *
-     * @param \{{ field.targetEntity }} ${{ field.fieldName  }}   
+     * @param \{{ field.targetEntity }} ${{ adjustedFieldName }}   
      */
-    public function add{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
+    public function add{{ adjustedFieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ adjustedFieldName }})
     {
-        $this->{{ field.fieldName }}->add(${{ field.fieldName }});
-        ${{ field.fieldName }}->set{{ field.mappedBy | capitalizeFirst }}($this);
+        $this->{{ field.fieldName }}->add(${{ adjustedFieldName }});
+        ${{ adjustedFieldName }}->set{{ adjustedFieldName|capitalizeFirst }}($this);
     }  
 
     /**
@@ -221,9 +233,9 @@ class {{ entity }}
      *
      * @param \{{ field.targetEntity }} ${{ field.fieldName  }} 
      */
-    public function remove{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
+    public function remove{{ adjustedFieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ adjustedFieldName }})
     {
-        $this->{{ field.fieldName }}->removeElement(${{ field.fieldName }});
+        $this->{{ field.fieldName }}->removeElement(${{ adjustedFieldName }});
     }
 
 {% else %}
