@@ -2,7 +2,7 @@
 {{ "{% block content %}" }}
     <h1>Edit {{ entity }}</h1>
     <hr />
-    <form id="{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_form') }}" class="horizontal-form" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
+    <form id="{{ bundle_alias }}_{{ entity_lc }}_form" class="horizontal-form" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
         {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
         <div class="form-actions">
             <input type="submit" class="btn large primary" title="Update the {{ entity_lc }}" value="Update {{ entity }}"/>

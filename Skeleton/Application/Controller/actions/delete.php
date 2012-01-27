@@ -10,7 +10,7 @@
         $this->container->get('{{ bundle_alias }}.{{ entity }}_manager')->softDelete(${{ entity_lc }});
         
         if ($this->container->get('request')->isXmlHttpRequest()) {
-            $response = new Response(json_encode(array('message' => {{ entity }} deleted.')));
+            $response = new Response(json_encode(array('message' => '{{ entity }} deleted.')));
             $response->headers->set('Content-Type', 'application/json');
 
             return $response; 

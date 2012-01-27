@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 {%- endif -%}
 {%- endif -%}
 {% endfor %}
-
+use JMS\SerializerBundle\Annotation\Exclude;
 
 /**
  * {{ bundle_namespace }}\Entity\{{ entity }}
@@ -42,45 +42,27 @@ class {{ entity }}
     protected ${{ field.fieldName }};
 
 {% elseif field.type == "oneToMany" %}
-{% if field.isOwningSide %}
     /**
      * @var ArrayCollection
      * 
-     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.inversedBy }}"j
+     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}"{% if field.mappedBy %}, mappedBy="{{ field.mappedBy }}"{% endif %}{% if field.inversedBy %}, inversedBy="{{ field.inversedBy }}"{% endif %}{% if field.cascade is not empty %}, cascade={ {% for item in field.cascade %}{% if loop.last %}"{{ item }}"{% else %}"{{ item }}",{% endif %}{% endfor %} }{% endif %}{% if field.orphanRemoval is defined %}{% if field.orphanRemoval %}, orphanRemoval=true {% endif %}{% endif %})
      */
     protected ${{ field.fieldName }};
 
-{% else %}
-    /**
-     * @var ArrayCollection
-     * 
-     * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}", orphanRemoval="true", cascade={"all"})
-     */
-    protected ${{ field.fieldName }};
-
-{% endif %}
 {% elseif field.type == "manyToMany" %}
-{% if field.isOwningSide %}
     /** 
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}", inversedBy="{{ field.inversedBy }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %})
+     * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}"{% if field.mappedBy %}, mappedBy="{{ field.mappedBy }}"{% endif %}{% if field.inversedBy %}, inversedBy="{{ field.inversedBy }}"{% endif %}{% if field.cascade is not empty %}, cascade={ {% for item in field.cascade %}{% if loop.last %}"{{ item }}"{% else %}"{{ item }}",{% endif %}{% endfor %} }{% endif %}{% if field.orphanRemoval is defined %}{% if field.orphanRemoval %}, orphanRemoval=true {% endif %}{% endif %})
      * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_lc }}_{{ field.fieldName }}")
      */
     protected ${{ field.fieldName }};
-{% else %}
-    /** 
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}", mappedBy="{{ field.mappedBy }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %})
-     */
-    protected ${{ field.fieldName }};
-{% endif %}
+
 {% elseif field.type == "string" %}
     /**
      * @var string
      *
-     * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable="true"{% endif %})
+     * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -88,7 +70,7 @@ class {{ entity }}
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime"{% if field.nullable %}, nullable="true"{% endif %})
+     * @ORM\Column(type="datetime"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -96,16 +78,16 @@ class {{ entity }}
     /**
      * @var {{ field.type }}
      *
-     * @ORM\Column(type="{{ field.type }}"{% if field.nullable %}, nullable="true"{% endif %})
+     * @ORM\Column(type="{{ field.type }}"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
-{% endif %}
-{% endfor %}    
+{% endif %}{% endfor %}    
     /**
      * @var \Application\UserBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Application\UserBundle\Entity\User")
+     * @exclude
      */
     protected $owner;
 
@@ -119,21 +101,21 @@ class {{ entity }}
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", nullable="true")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $updatedAt;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(type="boolean", nullable="true")
+     * @ORM\Column(type="boolean", nullable=true)
      */
     protected $isDeleted = false;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(type="datetime", nullable="true")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     protected $deletedAt;
 
@@ -194,7 +176,6 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
-
 {% elseif (field.type == "oneToMany" or field.type == "manyToMany") %}
 {% set adjustedFieldName = field.fieldName|slice(0, -1) %} 
     /**
@@ -212,7 +193,7 @@ class {{ entity }}
      *
      * @param ArrayCollection ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName|lower }})
+    public function set{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     } 
@@ -225,7 +206,9 @@ class {{ entity }}
     public function add{{ adjustedFieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ adjustedFieldName }})
     {
         $this->{{ field.fieldName }}->add(${{ adjustedFieldName }});
-        ${{ adjustedFieldName }}->set{{ adjustedFieldName|capitalizeFirst }}($this);
+{% if field.mappedBy %}
+        ${{ adjustedFieldName }}->set{{ entity }}($this);
+{% endif %}
     }  
 
     /**
@@ -259,8 +242,7 @@ class {{ entity }}
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }    
 
-{% endif %}       
-{% endfor %}
+{% endif %}{% endfor %}
     /**
      * Get owner
      * 

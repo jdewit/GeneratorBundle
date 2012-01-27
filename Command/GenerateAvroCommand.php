@@ -11,8 +11,8 @@
 
 namespace Avro\GeneratorBundle\Command;
 
-use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
-use Symfony\Bundle\DoctrineBundle\Command\DoctrineCommand;
+use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
+use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Avro\GeneratorBundle\Command\Helper\DialogHelper;
@@ -56,13 +56,9 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
                 break;
                 case "4":
                     $associationMappings[$mapping['fieldName']]['type'] = 'oneToMany'; 
-                    // remove s from fieldName
-                    substr_replace($mapping['fieldName'],"",-1);
                 break;
                 case "8":
                     $associationMappings[$mapping['fieldName']]['type'] = 'manyToMany';
-                    // remove s from fieldName
-                    $associationMappings[$mapping['fieldName']]['fieldName'] = substr_replace($mapping['fieldName'],"",-1);
                 break;
             }
         }

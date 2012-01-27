@@ -47,6 +47,14 @@ class {{ entity }}Manager
      */
     public function update({{ entity }} ${{ entity_lc }}, $andFlush = true)
     {
+{% for field in fields %}
+{% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
+        foreach (${{ entity_lc }}->get{{ field.fieldName }}() as ${{ field.fieldName|slice(0, -1) }}) {
+            ${{ field.fieldName|slice(0, -1) }}->setOwner($this->owner);
+            ${{ entity_lc }}->add{{ field.fieldName|slice(0, -1)|capitalizeFirst }}(${{ field.fieldName|slice(0, -1) }});
+        }
+{% endif %}
+{% endfor %}
         $this->em->persist(${{ entity_lc }});
         if ($andFlush) {
             $this->em->flush();

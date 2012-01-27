@@ -203,14 +203,28 @@ EOT
             }
             if ($type == "manyToOne" || $type == "oneToMany" || $type == "manyToMany") {
                 $data['targetEntity'] = $dialog->ask($output, 'Enter the target entity (ie. Acme\TestBundle\Entity\Post): ');  
-
-                $data['owningSide'] = $dialog->askConfirmation($output, $dialog->getQuestion('Is this the owning side?', 'yes', '?'), true); 
-
+                $data['orphanRemoval'] = $dialog->askConfirmation($output, $dialog->getQuestion('Orphan removal?', 'no', '?'), false); 
                 if ($type == 'oneToMany' || $type == 'manyToMany') {
-                    if ($data['owningSide'] == true) {
-                        $data['mappedBy'] = $dialog->ask($output, 'Enter mappedBy: (ie. post): '); 
+                    $bidirectional = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a bi-directional mapping?', 'no', '?'), false); 
+                    $cascade = $dialog->askConfirmation($output, $dialog->getQuestion('Cascade all for this mapping?', 'no', '?'), false); 
+                    if ($cascade) {
+                        $data['cascade'][] = 'all';
                     } else {
-                        $data['inversedBy'] = $dialog->ask($output, 'Enter inversedBy: (ie. tags): ');  
+                        $data['cascade'] = array();
+                    }
+                    if ($bidirectional) {
+                        $data['isOwningSide'] = $dialog->askConfirmation($output, $dialog->getQuestion('Is this the owning side?', 'yes', '?'), true); 
+                        if ($data['isOwningSide']) {
+                            $data['mappedBy'] = $dialog->ask($output, 'Enter mappedBy: (ie. post): '); 
+                            $data['inversedBy'] = false;
+                        } else {
+                            $data['inversedBy'] = $dialog->ask($output, 'Enter inversedBy: (ie. tags): ');  
+                            $data['mappedBy'] = false;
+                        }
+                    } else {
+                        $data['isOwningSide'] = false;
+                        $data['mappedBy'] = false;
+                        $data['inversedBy'] = false;
                     }
                 }
             }             
@@ -219,9 +233,10 @@ EOT
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);
             }
 
-            if ($type != 'oneToOne' || $type == 'manyToOne' || $type == 'manyToMany') {
+            if ($type != 'oneToOne' && $type == 'manyToOne' && $type == 'manyToMany') {
                 $data['nullable'] = $dialog->askConfirmation($output, $dialog->getQuestion('nullable?: ', 'yes', '?'), true); 
-
+            } else {
+                $data['nullable'] = false;
             }
 
             $fields[$data['fieldName']] = $data;

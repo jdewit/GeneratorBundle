@@ -1,13 +1,23 @@
 AvroGeneratorBundle
 ====================
 Generate code similar in structure to the 
-FOSUserBundle. 
+FOSUserBundle. With this bundle you can generate or update all crud code for a specific entity or specific classes.
+
+FYI: Updating overwrites the original file.
 
 Status
 ======
 
-The bundle is a work in progress. The code still needs to get cleaned up a 
+The bundle is a work in progress but is working. 
+Currently it only provides support for Doctrine ORM.
+
+The code still needs to get cleaned up a 
 fair bit and tests still need to be made. Any help would be much appreciated!
+
+Optional Dependencies
+=====================
+
+The view generator creates views with classes for grid960 and twitter bootstrap.
 
 Installation
 ============
@@ -47,19 +57,19 @@ Add to deps file
 Now, run the vendors script to download the bundle:
 
 ``` bash
-$ php bin/vendors install
+$ bin/vendors update
 ```
 
 USAGE
 =====
 
-Generate a bundle with:
+Generate a bundle skeleton with:
 
 ``` bash
 $ php app/console generate:avro:bundle
 ```
 
-Generate an entity with:
+Generate an entity and entityManager with:
 
 ``` bash
 $ php app/console generate:avro:entity
@@ -70,4 +80,28 @@ Generate crud with:
 ``` bash
 $ php app/console generate:avro:crud
 ```
+
+Generate a formType and formHandler with:
+
+``` bash
+$ php app/console generate:avro:form
+```
+
+Generate views with:
+
+``` bash
+$ php app/console generate:avro:view
+```
+Generate a services.yml file with:
+
+``` bash
+$ php app/console generate:avro:service
+```
+
+Generate a formType and formHandler with:
+
+``` bash
+$ php app/console generate:avro:form
+```
+
 
