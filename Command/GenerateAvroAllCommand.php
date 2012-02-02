@@ -82,27 +82,27 @@ EOT
         $dialog->writeSection($output, 'Generating code for '. $bundleName );
                        
         //Generate Bundle/Entity files
-        $avroEntityGenerator = new AvroEntityGenerator($container, $output, $bundle);    
+        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
         $avroEntityGenerator->generate($entity, $fields);
         
         //Generate Bundle/Resources/config files
-        $avroConfigGenerator = new AvroConfigGenerator($container, $output, $bundle);
+        $avroConfigGenerator = new AvroConfigGenerator($container, $dialog, $output, $bundle);
         $avroConfigGenerator->generate($entity, $fields);      
 
         //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $output, $bundle);
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
         $avroControllerGenerator->generate($entity, $fields);
 
         //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $output, $bundle);
+        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle);
         $avroViewGenerator->generate($entity, $fields);
                 
         //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $output, $bundle);
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
         $avroFormGenerator->generate($entity, $fields);
 
         //Generate DependencyInjection files
-        $avroDependencyInjectionGenerator = new AvroDependencyInjectionGenerator($container, $output, $bundle);
+        $avroDependencyInjectionGenerator = new AvroDependencyInjectionGenerator($container, $dialog, $output, $bundle);
         $avroDependencyInjectionGenerator->generate($entity, $fields);     
         
         $dialog->writeSection($output, $entity.' CRUD generated succesfully!');

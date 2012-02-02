@@ -51,7 +51,6 @@ class {{ entity }}Manager
 {% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
         foreach (${{ entity_lc }}->get{{ field.fieldName }}() as ${{ field.fieldName|slice(0, -1) }}) {
             ${{ field.fieldName|slice(0, -1) }}->setOwner($this->owner);
-            ${{ entity_lc }}->add{{ field.fieldName|slice(0, -1)|capitalizeFirst }}(${{ field.fieldName|slice(0, -1) }});
         }
 {% endif %}
 {% endfor %}
