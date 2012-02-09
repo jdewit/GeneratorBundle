@@ -28,8 +28,9 @@ use Avro\GeneratorBundle\Generator\AvroConfigGenerator;
 use Avro\GeneratorBundle\Generator\AvroControllerGenerator;
 use Avro\GeneratorBundle\Generator\AvroViewGenerator;
 use Avro\GeneratorBundle\Generator\AvroFormGenerator;
-use Avro\GeneratorBundle\Generator\AvroDependencyInjectionGenerator;
 use Avro\GeneratorBundle\Generator\AvroReadmeGenerator;
+use Avro\GeneratorBundle\Generator\AvroFeatureGenerator;
+use Avro\GeneratorBundle\Generator\AvroServicesGenerator;
 
 /**
  * Generates entity, controller, form, view, and configuration code in a bundle.
@@ -62,153 +63,118 @@ EOT
         $container = $this->getContainer();
         $dialog = $this->getDialogHelper();
         
-        if ($input->isInteractive()) {
-            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
-                $output->writeln('<error>Command aborted</error>');
-
-                return 1;
-            }
-        }
-        //get user input
-        $entityInput = Validators::validateEntityName($input->getOption('entity'));
-        $fields = $this->parseFields($input->getOption('fields'));
-
-        list($bundleName, $entity) = $this->parseShortcutNotation($entityInput);
-  
-        $bundle = $container->get('kernel')->getBundle($bundleName);
-        
-        $dbDriver = $input->getOption('dbDriver');
-        
-        $dialog->writeSection($output, 'Generating code for '. $bundleName );
-                       
-        //Generate Bundle/Entity files
-        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
-        $avroEntityGenerator->generate($entity, $fields);
-        
-        //Generate Bundle/Resources/config files
-        $avroConfigGenerator = new AvroConfigGenerator($container, $dialog, $output, $bundle);
-        $avroConfigGenerator->generate($entity, $fields);      
-
-        //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
-        $avroControllerGenerator->generate($entity, $fields);
-
-        //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle);
-        $avroViewGenerator->generate($entity, $fields);
-                
-        //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
-        $avroFormGenerator->generate($entity, $fields);
-
-        //Generate DependencyInjection files
-        $avroDependencyInjectionGenerator = new AvroDependencyInjectionGenerator($container, $dialog, $output, $bundle);
-        $avroDependencyInjectionGenerator->generate($entity, $fields);     
-        
-        $dialog->writeSection($output, $entity.' CRUD generated succesfully!');
-    }
-   
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $dialog = $this->getDialogHelper();
-        $dialog->writeSection($output, 'Welcome to the Avro code generator!');
-
-        // namespace
-        $output->writeln(array(
-            '',
-            'Welcome to the Avro Code Generator!', 
-            '',    
-            'This command helps you generate Symfony2 Entity, Controller, Form, View, and Configuration code', 
-            'in a bundle.',
-            '',
-            'First, you need to give the entity name you want to generate.',
-            'You must use the shortcut notation like <comment>AcmeBlogBundle:Post</comment>.',
-            'The generator will produce an abstract entity configurable for ORM or ODM,', 
-            'controller, form, formHandler, views, routing, and configuration',
-            ''
-        ));
-
+        $dialog->writeSection($output, 'Welcome to the Avro create all generator!');
+        $output->writeln('Enter the name of the entity you wish to create. (ie. AcmeTestBundle:Blog');
         while (true) {
-            $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
+            $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Avro\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
 
-            list($bundle, $entity) = $this->parseShortcutNotation($entity);
+            list($bundleName, $entity) = $this->parseShortcutNotation($entity);
 
             try {
-                $b = $this->getContainer()->get('kernel')->getBundle($bundle);
+                $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
             } catch (\Exception $e) {
-                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundle));
-            }
-
-            if (file_exists($b->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
-                $output->writeln($entity.' already exists.');
-                if (!$dialog->askConfirmation($output, $dialog->getQuestion('Overwrite', 'yes', '?'), true)) {
-                    $output->writeln('<error>Command aborted</error>');
-
-                    return 1;
-                }               
+                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundleName));
             }
 
             break;         
         }
-        $input->setOption('entity', $bundle.':'.$entity);
 
-        // fields
-        $input->setOption('fields', $this->addFields($input, $output, $dialog));     
+        $oldFields = false;
+        $writeManager = true;
+        if (file_exists($bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
+            $output->writeln($entity.' already exists.');
+            if ($dialog->askConfirmation($output, $dialog->getQuestion('Merge with existing entity? ', 'yes', '?'), true)) {
+                $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundleName).'\\'.$entity;
+                $metadata = $this->getEntityMetadata($entityClass);
+                $oldFields = $this->getFieldsFromMetadata($metadata[0]);
+                //remove manually managed fields
+                unset($oldFields['id']);
+                unset($oldFields['createdAt']);
+                unset($oldFields['updatedAt']);
+            } elseif (!$dialog->askConfirmation($output, $dialog->getQuestion('Overwrite existing entity? ', 'yes', '?'), true)) {
+                $output->writeln('<error>Command aborted</error>');
+
+                return 1;
+            }  
+            if (!$dialog->askConfirmation($output, $dialog->getQuestion('Overwrite '.$entity.'Manager', 'no', '?'), false)) {
+                $writeManager = false;
+            }            
+        }        
         
+        // fields
+        $fields = $this->addFields($input, $output, $dialog, $entity);      
+        if(false !== $oldFields) {
+            if (!empty($fields)) { 
+                $fields = array_merge_recursive($oldFields, $fields);
+            } else {
+                $fields = $oldFields;
+            }
+        }        
+
         // dbDriver
         $output->writeln(array(
             '',
             'Specify the database you wish to use for your bundle.',
             '',
         ));
-        $dbDriver = $dialog->askAndValidate($output, $dialog->getQuestion('Database format (orm, couchdb, mongodb)', $input->getOption('dbDriver')), array('Avro\GeneratorBundle\Command\Validators', 'validateDbDriver'), false, $input->getOption('dbDriver'));
-        $input->setOption('dbDriver', $dbDriver);        
+        $dbDriver = $dialog->askAndValidate($output, $dialog->getQuestion('Database format (orm, couchdb, mongodb)', $input->getOption('dbDriver')), array('Avro\GeneratorBundle\Command\Validators', 'validateDbDriver'), false, $input->getOption('dbDriver'));     
         
         // confirm
         $output->writeln(array(
             '',
             $this->getHelper('formatter')->formatBlock('Summary before generation', 'bg=blue;fg=white', true),
             '',
-            sprintf("You are going to generate code for \"<info>%s:%s</info>\" Doctrine2 entity.", $bundle, $entity),
+            sprintf("You are going to generate code for \"<info>%s:%s</info>\" Doctrine2 entity.", $bundleName, $entity),
             '',
         ));
+
+        $dialog->writeSection($output, 'Generating code for '. $bundleName );
+                       
+        //Generate Bundle/Entity files
+        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
+        $avroEntityGenerator->generate($entity, $fields, $writeManager);  
+        
+        $dialog->writeSection($output, $entity.' entity generated succesfully!');
+
+        //Generate Controller file
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
+        $avroControllerGenerator->generate($entity);
+
+        //Generate View files
+        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle);
+        $avroViewGenerator->generate($entity, $fields);    
+
+        //Generate Form files
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
+        $avroFormGenerator->generate($entity, $fields);
+        $output->writeln('Form created');
+
+        //Generate Feature files
+        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle);
+        $avroFeatureGenerator->generate($entity, $fields);
+
+        $output->writeln('Features created');
+
+        //Update services.yml
+        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle);
+        $avroServicesGenerator->generate($entity, $fields);     
     }
 
-    private function parseFields($input)
+    private function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog, $entity)
     {
-        if (is_array($input)) {
-            return $input;
-        }
-
-        $fields = array();
-        foreach (explode(' ', $input) as $value) {
-            $elements = explode(':', $value);
-            $name = $elements[0];
-            if (strlen($name)) {
-                $type = isset($elements[1]) ? $elements[1] : 'string';
-                preg_match_all('/(.*)\((.*)\)/', $type, $matches);
-                $type = isset($matches[1][0]) ? $matches[1][0] : $type;
-                $length = isset($matches[2][0]) ? $matches[2][0] : null;
-
-                $fields[$name] = array('fieldName' => $name, 'type' => $type, 'length' => $length);
-            }
-        }
-
-        return $fields;
-    }
-
-    private function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog)
-    {
-        $fields = $this->parseFields($input->getOption('fields'));
+        $fields = $input->getOption('fields');
         $output->writeln(array(
             '',
-            'Instead of starting with a blank entity, you can add some fields now.',
-            'Note that the primary key will be added automatically (named <comment>id</comment>).',
+            'Add some fields to your entity',
             '',
         ));
         $output->write('<info>Available types:</info> ');
 
         $types = array_keys(Type::getTypesMap());
+        $types[] = "manyToOne";
+        $types[] = "manyToMany";
+        $types[] = "oneToMany";
+        $types[] = "oneToOne";
         $count = 20;
         foreach ($types as $i => $type) {
             if ($count > 50) {
@@ -252,34 +218,63 @@ EOT
 
         while (true) {
             $output->writeln('');
-            $name = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields) {
+            $data['fieldName'] = $dialog->askAndValidate($output, $dialog->getQuestion('New field name (press <return> to stop adding fields)', null), function ($name) use ($fields) {
                 if (isset($fields[$name]) || 'id' == $name) {
                     throw new \InvalidArgumentException(sprintf('Field "%s" is already defined.', $name));
                 }
 
                 return $name;
             });
-            if (!$name) {
+
+            if (empty($data['fieldName'])) {
                 break;
             }
 
-            $defaultType = 'string';
+            $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', 'string'), $fieldValidator, false, 'string');
+            $data['type'] = $type;
 
-            if (substr($name, -3) == '_at') {
-                $defaultType = 'datetime';
-            } else if (substr($name, -3) == '_id') {
-                $defaultType = 'integer';
+            if ($type == "oneToOne") {
+                $data['targetEntity'] = $entity;
             }
-
-            $type = $dialog->askAndValidate($output, $dialog->getQuestion('Field type', $defaultType), $fieldValidator, false, $defaultType);
-
-            $data = array('fieldName' => $name, 'type' => $type);
+            if ($type == "manyToOne" || $type == "oneToMany" || $type == "manyToMany") {
+                $data['targetEntity'] = $dialog->ask($output, 'Enter the target entity (ie. Acme\TestBundle\Entity\Post): ');  
+                $data['orphanRemoval'] = $dialog->askConfirmation($output, $dialog->getQuestion('Orphan removal?', 'no', '?'), false); 
+                if ($type == 'oneToMany' || $type == 'manyToMany') {
+                    $bidirectional = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a bi-directional mapping?', 'no', '?'), false); 
+                    $cascade = $dialog->askConfirmation($output, $dialog->getQuestion('Cascade all for this mapping?', 'no', '?'), false); 
+                    if ($cascade) {
+                        $data['cascade'][] = 'all';
+                    } else {
+                        $data['cascade'] = array();
+                    }
+                    if ($bidirectional) {
+                        $data['isOwningSide'] = $dialog->askConfirmation($output, $dialog->getQuestion('Is this the owning side?', 'yes', '?'), true); 
+                        if ($data['isOwningSide']) {
+                            $data['mappedBy'] = $dialog->ask($output, 'Enter mappedBy: (ie. post): '); 
+                            $data['inversedBy'] = false;
+                        } else {
+                            $data['inversedBy'] = $dialog->ask($output, 'Enter inversedBy: (ie. tags): ');  
+                            $data['mappedBy'] = false;
+                        }
+                    } else {
+                        $data['isOwningSide'] = false;
+                        $data['mappedBy'] = false;
+                        $data['inversedBy'] = false;
+                    }
+                }
+            }             
 
             if ($type == 'string') {
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);
             }
 
-            $fields[$name] = $data;
+            if ($type != 'oneToOne' && $type == 'manyToOne' && $type == 'manyToMany') {
+                $data['nullable'] = $dialog->askConfirmation($output, $dialog->getQuestion('nullable?: ', 'yes', '?'), true); 
+            } else {
+                $data['nullable'] = false;
+            }
+
+            $fields[$data['fieldName']] = $data;
         }
 
         return $fields;
