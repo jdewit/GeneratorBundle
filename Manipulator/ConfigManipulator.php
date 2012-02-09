@@ -23,17 +23,15 @@ use Avro\GeneratorBundle\Yaml\Dumper;
 class ConfigManipulator extends Manipulator
 {
     private $file;
-    private $bundleName;
     
     /**
      * Constructor.
      *
      * @param string $file The config.yml file path
      */
-    public function __construct($file, $bundleName)
+    public function __construct($file)
     {
         $this->file = $file;
-        $this->bundleName = $bundleName;
     }
 
     /**
@@ -62,7 +60,7 @@ class ConfigManipulator extends Manipulator
 
     }
     
-    protected function updateConfig()
+    protected function updateConfigFile()
     {
         $parser = new Parser();
         $dumper = new Dumper();
@@ -78,5 +76,25 @@ class ConfigManipulator extends Manipulator
         file_put_contents($this->file, $updatedConfig);
           
     }
-    
+
+    /**
+     * Add a resource to the imports node of a yaml file
+     */
+    public function addResourceToImports($resource)
+    {
+        $parser = new Parser();
+        $dumper = new Dumper();
+
+        // get the applications config.yml and convert to php array      
+        $config = $parser->parse(file_get_contents($this->file));
+        
+        $config['imports'][] = array('resource' => '@'.$resource);
+        
+        $updatedConfig = $dumper->dump($config, 2);
+        
+        //file_put_contents($parameters['bundle_path'].'/Resources/config/config_temp.yml', );
+        file_put_contents($this->file, $updatedConfig);
+          
+    }
+   
 }
