@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Avro\GeneratorBundle\Generator\Generator;
 use Symfony\Component\Yaml\Parser;
 use Avro\GeneratorBundle\Yaml\Dumper;
+use Avro\GeneratorBundle\Manipulator\ConfigManipulator;
 
 /**
  * Generates a services for an entity.
@@ -57,7 +58,29 @@ class AvroServicesGenerator extends Generator
             'db_driver' => $this->dbDriver        
         );
 
-       
+        //add services to bundle config 
+        if (!file_exists($this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml')) {
+            $this->output->writeln(array(
+                '',
+                'Specify the service configuration of your bundle.',
+                '[config.yml is currently only method supported]',
+                '',
+            ));
+
+            $format = $this->dialog->ask($this->output, $this->dialog->getQuestion('Bundle services format?', 'config.yml', ':'), 'config.yml');
+
+            $this->output->write('Configuring service to bundle');
+            try {
+                $this->updateBundleServicesConfig($parameters, $format);
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }  
+        }
         $this->output->write('Creating '.$this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml: ');
         try {
             $this->updateService($parameters);
@@ -69,7 +92,19 @@ class AvroServicesGenerator extends Generator
                 ''
             ));
         }  
-}
+    }
+
+    protected function updateBundleServicesConfig($parameters, $format)
+    {
+        switch ($format) {
+            case 'config.yml':
+                $filename = $this->bundlePath.'/Resources/config/config.yml';
+
+                $configManipulator = new ConfigManipulator($filename);
+                $configManipulator->addToImports($parameters);
+            break;
+        }
+    }
 
     protected function createService($parameters, $targetFile)
     {
