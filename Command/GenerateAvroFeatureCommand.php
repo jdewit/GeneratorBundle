@@ -78,8 +78,11 @@ class GenerateAvroFeatureCommand extends GenerateAvroCommand
         //Generate Form files
         $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle);
         $avroFeatureGenerator->generate($entity, $fields);
-
         $output->writeln('Features created');
+   
+        
+        $output->writeln('Service configuration created succesfully!');
+
     }
     
 }

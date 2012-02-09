@@ -21,6 +21,7 @@ use Doctrine\DBAL\Types\Type;
 use Avro\GeneratorBundle\Command\Helper\DialogHelper;
 use Avro\GeneratorBundle\Command\Validators;
 use Avro\GeneratorBundle\Generator\AvroEntityGenerator;
+
 /**
  * Generates entity code in a bundle.
  *
@@ -121,8 +122,9 @@ EOT
         //Generate Bundle/Entity files
         $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
         $avroEntityGenerator->generate($entity, $fields, $writeManager);  
-        
         $dialog->writeSection($output, $entity.' entity generated succesfully!');
+
+
     }
 
     private function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog, $entity)

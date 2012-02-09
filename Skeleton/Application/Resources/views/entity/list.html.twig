@@ -1,5 +1,6 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
+    <div class="row">
         <h1 class="pull-left">{{ entity }} List</h1>
         <ul class="buttonDropdown pull-left">
             <li class="dropdown">
@@ -10,8 +11,11 @@
                 </ul>
             </li>
         </ul>
-        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" class="btn-primary btn-large pull-right">+ New {{ entity }}</a>
-    <hr/>
-    {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" class="btn btn-primary pull-right">+ New {{ entity }}</a>
+        <hr />
+    </div>
+    <div class="row">
+        {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+    </div>
 {{ "{% endblock %}" }}
 

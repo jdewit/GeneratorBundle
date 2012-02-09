@@ -77,10 +77,6 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
         //Generate Controller file
         $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
         $avroControllerGenerator->generate($entity);
-
-        //Generate View files
-//        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle);
-//        $avroViewGenerator->generate($entity, $fields);        
         
     }
 

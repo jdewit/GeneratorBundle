@@ -64,6 +64,7 @@ class AvroServicesGenerator extends Generator
                 '',
                 'Specify the service configuration of your bundle.',
                 '[config.yml is currently only method supported]',
+                'WARNING: This will overwrite the configuration file.',
                 '',
             ));
 
@@ -71,7 +72,7 @@ class AvroServicesGenerator extends Generator
 
             $this->output->write('Configuring service to bundle');
             try {
-                $this->updateBundleServicesConfig($parameters, $format);
+                $this->updateBundleServicesConfig($format);
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -94,14 +95,12 @@ class AvroServicesGenerator extends Generator
         }  
     }
 
-    protected function updateBundleServicesConfig($parameters, $format)
+    protected function updateBundleServicesConfig($format)
     {
         switch ($format) {
             case 'config.yml':
-                $filename = $this->bundlePath.'/Resources/config/config.yml';
-
-                $configManipulator = new ConfigManipulator($filename);
-                $configManipulator->addToImports($parameters);
+                $configManipulator = new ConfigManipulator($this->bundlePath.'/Resources/config/config.yml');
+                $configManipulator->addResourceToImports($this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml');
             break;
         }
     }
