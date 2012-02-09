@@ -2,12 +2,12 @@
 {{ "{% block content %}" }}
     <h1>Edit {{ entity }}</h1>
     <hr />
-    <form id="{{ bundle_alias }}_{{ entity_lc }}_form" class="horizontal-form" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
+    <form id="{{ bundle_alias }}_{{ entity_lc }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', { 'id': "~ entity_lc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
         {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
         <div class="form-actions">
-            <input type="submit" class="btn large primary" title="Update the {{ entity_lc }}" value="Update {{ entity }}"/>
-            <a class="btn" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list') }}" }}">Cancel</a>
-            <a id="delete{{ entity }}" class="btn confirm danger pull-right" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_delete', { 'id': "~ entity_lc ~".id }) }}" }}" title="Are you sure you want to delete this {{ entity_lc }}?">Delete</a>
+            <input type="submit" class="btn-large btn-primary" title="Update the {{ entity_lc }}" value="Update {{ entity }}"/>
+            <a class="btn closeDialog" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list') }}" }}">Cancel</a>
+            <a id="delete{{ entity }}" class="btn confirm btn-danger pull-right" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_delete', { 'id': "~ entity_lc ~".id }) }}" }}" title="Are you sure you want to delete this {{ entity_lc }}?">Delete</a>
         </div>
     </form>
 {{ "{% endblock %}" }}

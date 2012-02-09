@@ -246,7 +246,7 @@ class {{ entity }}
     /**
      * Get owner
      * 
-     * @return Application\UserBundle\Entity\User 
+     * @return Application\UserBundle\Entity\Owner 
      */
     public function getOwner()
     {
@@ -258,7 +258,7 @@ class {{ entity }}
      *
      * @param manyToOne $owner
      */
-    public function setOwner(\Application\UserBundle\Entity\User $owner)
+    public function setOwner(\Application\UserBundle\Entity\Owner $owner)
     {
         $this->owner = $owner;
     }  

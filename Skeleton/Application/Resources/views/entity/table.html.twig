@@ -1,5 +1,5 @@
 <form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_batch') }}" }}" >  
-    <table id="tableSorter" class="zebra-striped">
+    <table id="tableSorter" class="table-condensed table-striped">
         <thead class="ui-state-default">
             <tr>
                 <th class="{sorter: false}" title="Select All"><input id="checkAll" type="checkbox"/></th>
@@ -12,11 +12,11 @@
             {{ "{% for "~ entity_lc ~" in "~ entity_lc ~"s %}" }}
                 <tr>
                     <td><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_lc ~".id }}" }}"/></td>
-                    <td><a class="edit" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}">edit</a></td>
-                    <td><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}" class="view image">{{ "{{ "~ entity_lc ~".id }}" }}</a></td>
-                    {% for field in fields %}
-                        <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
-                    {% endfor %}
+                    <td><a title="Edit this {{ entity_lc }}" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}" class="view image">{{ "{{ "~ entity_lc ~".id }}" }}</a></td>
+{% for field in fields %}
+                    <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
+{% endfor %}
+                    <td><a title="Edit this {{ entity_lc }}" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_edit', {'id': "~ entity_lc ~".id }) }}" }}"><i class="icon-pencil"></i></a></td>
                 </tr>
             {{ "{% else %}" }}
                 <tr>
