@@ -1,0 +1,28 @@
+{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% block content %}" }}
+    <div class="row">
+        <div class="span12">
+            {{ "{% if not ajax %}" }}
+                <h1>Edit {{ entity }}</h1>
+                <hr />
+            {{ "{% endif %}" }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="span12">
+            {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
+        </div>    
+{{ "{% endblock %}" }}
+{% block customJS %}
+    {{ "{% include '"~ bundle_name ~":"~ entity ~":{{ entity_lc }}Model.html.twig' %}" }}
+
+    function appViewModel() {
+        this.{{ entity_lc }}Model = new {{ entity_lc }}Model({{ "{{ "~ entity_lc ~" | serialize | raw }}" }});
+    };
+
+    ko.applyBindings(new appViewModel());
+    
+    $('#{{ entity_lc }}_form_container').show();
+
+{% endblock %}
+
