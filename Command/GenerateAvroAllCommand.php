@@ -134,8 +134,6 @@ EOT
         $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
         $avroEntityGenerator->generate($entity, $fields, $writeManager);  
         
-        $dialog->writeSection($output, $entity.' entity generated succesfully!');
-
         //Generate Controller file
         $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
         $avroControllerGenerator->generate($entity);
@@ -147,13 +145,10 @@ EOT
         //Generate Form files
         $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
         $avroFormGenerator->generate($entity, $fields);
-        $output->writeln('Form created');
 
         //Generate Feature files
         $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle);
         $avroFeatureGenerator->generate($entity, $fields);
-
-        $output->writeln('Features created');
 
         //Update services.yml
         $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle);

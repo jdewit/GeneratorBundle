@@ -16,6 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 use Avro\GeneratorBundle\Twig\GeneratorExtension;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 /**
  * Generator is the base class for all generators.
@@ -122,5 +124,17 @@ class Generator
         }
         return $this->dbDriver;
     }
-    
+
+    protected function runConsole($command, Array $options = array())
+    {
+        $application = new Application($this->container->get('kernel'));
+        $application->setAutoExit(false);        
+
+        //$options["-e"] = "test";
+        $options["-q"] = null;
+        $options = array_merge($options, array('command' => $command));
+
+        return $application->run(new ArrayInput($options));
+    }
+
 }

@@ -84,5 +84,6 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
 
         return $dialog;
     }    
-    
+
+
 }

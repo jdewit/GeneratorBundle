@@ -100,6 +100,12 @@ EOT
             }
         }        
 
+        if (!is_array($fields)) {
+            $output->writeln('<error>No fields were provided</error>');
+
+            return 1;
+        }
+
         // dbDriver
         $output->writeln(array(
             '',

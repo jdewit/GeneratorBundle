@@ -65,6 +65,7 @@ class AvroControllerGenerator extends Generator
             }
         }
 
+        $this->output->write('');
         $routingFormat = $this->dialog->ask($this->output, $this->dialog->getQuestion('Enter the bundles routing file format', 'yml', ':'), 'yml');
         
         $parameters = array(

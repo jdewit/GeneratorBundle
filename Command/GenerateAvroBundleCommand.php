@@ -68,7 +68,7 @@ EOT
             '',
             'This command helps you generate bundles easily.',
             '',
-            'Enter the vendor name for the bundle. (ie. FOS, Sensio, etc)'
+            'Enter the vendor name for the bundle. (ie. Application, FOS, Sensio, etc)'
         ));
 
         // vendor
@@ -76,11 +76,11 @@ EOT
         $vendor = Validators::validateVendor($vendor);
 
         // bundle name
-        $basename = $input->getOption('basename');
         $output->writeln(array(
             '',
             'Enter the basename of the bundle. (ie. UserBundle, CalendarBundle, etc)'
         ));
+        $basename = $input->getOption('basename');
         $basename = $dialog->askAndValidate($output, $dialog->getQuestion('Bundle basename', $basename), array('Avro\GeneratorBundle\Command\Validators', 'validateBundleName'), false, $basename);
         $bundleName = Validators::validateBundleName($vendor.$basename);
 
@@ -88,7 +88,8 @@ EOT
         $bundleNamespace = Validators::validateBundleNamespace($vendor.'\\'.$basename);
 
         //third party?
-        $thirdParty = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), true);
+        //$thirdParty = $dialog->askConfirmation($output, $dialog->getQuestion('Is this a 3rd party bundle ', 'yes', '?'), true);
+        $thirdParty = false;
 
         //dir
         if ($thirdParty) {
@@ -99,21 +100,23 @@ EOT
         
         // dbDriver
         // TODO: mongodb and couchdb support
-        $dbDriver = $input->getOption('db-driver');
         $output->writeln(array(
             '',
             'Choose the database driver for the bundle. (orm)',
         ));
+
+        $dbDriver = $input->getOption('db-driver');
         $dbDriver = $dialog->askAndValidate($output, $dialog->getQuestion('Database Driver', $dbDriver), array('Avro\GeneratorBundle\Command\Validators', 'validateDbDriver'), false, $dbDriver);
         $dbDriver = Validators::validateDbDriver($dbDriver);       
         // summary
         $output->writeln(array(
                 '',
-                'You are going to generate a new bundle called '.$vendor.$bundleName
+                'You are going to generate a new bundle called '.$bundleName
         ));
         
         // update routing.yml
-        $updateConfig = $dialog->askConfirmation($output, $dialog->getQuestion('Update your apps config file? ', 'yes', '?'), true);
+        //$updateConfig = $dialog->askConfirmation($output, $dialog->getQuestion('Configure your apps config file? ', 'yes', '?'), true);
+        $updateConfig = false;
             
         
         if (!$dialog->askConfirmation($output, $dialog->getQuestion('Do you confirm generation', 'yes', '?'), true)) {
@@ -147,7 +150,7 @@ EOT
         $output->writeln('');
         $output->write('Generating bundle code: ');
         
-        $bundleGenerator = new AvroBundleGenerator($container, $dialog, $output);
+        $bundleGenerator = new AvroBundleGenerator($container, $dialog, $input, $output);
         $bundleGenerator->generate($thirdParty, $vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig);
         
         $output->writeln(array(
@@ -168,7 +171,7 @@ EOT
         $output->writeln(array(
             '',
             'You can now generate CRUD for '.$bundleName.' using the command',
-            'generate:avro:crud',
+            'app/console generate:avro:all',
             ''
         ));
     }

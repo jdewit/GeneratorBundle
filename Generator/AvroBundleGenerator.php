@@ -87,18 +87,18 @@ class AvroBundleGenerator extends Generator
         $this->renderFile('Bundle.php', $dir.'/'.$parameters['bundle_name'].'.php', $parameters);      
         $this->renderFile('Resources/views/layout.html.twig', $dir.'/Resources/views/layout.html.twig', $parameters);
         $this->renderFile('Resources/config/routing.yml', $dir.'/Resources/config/routing.yml', $parameters);
-        $this->renderFile('Resources/config/services.yml', $dir.'/Resources/config/services.yml', $parameters);
         $this->renderFile('Resources/config/config.yml', $dir.'/Resources/config/config.yml', $parameters);
         $this->renderFile('README.md', $dir.'/README.md', $parameters);
         $this->renderFile('Resources/meta/LICENSE', $dir.'/Resources/meta/LICENSE', $parameters);
         
-        $this->renderFile('DependencyInjection/Extension.php', $dir.'/DependencyInjection/'.$parameters['bundle_alias_cc'].'extension.php', $parameters);
+        //$this->renderFile('DependencyInjection/Extension.php', $dir.'/DependencyInjection/'.$parameters['bundle_alias_cc'].'extension.php', $parameters);
         
         //generate file structure
         $this->filesystem->mkdir($dir.'/Controller');
         $this->filesystem->mkdir($dir.'/Form');
         $this->filesystem->mkdir($dir.'/Form/Type');
         $this->filesystem->mkdir($dir.'/Form/Handler');
+        $this->filesystem->mkdir($dir.'/Resources/config/services');
 
         if ($this->thirdParty) {
             $this->filesystem->mkdir($dir.'/Model');
@@ -116,9 +116,10 @@ class AvroBundleGenerator extends Generator
         }
         $this->filesystem->mkdir($dir.'/Resources/doc');
         $this->filesystem->mkdir($dir.'/Resources/translations');
-        $this->filesystem->mkdir($dir.'/Resources/public/scss');
+        $this->filesystem->mkdir($dir.'/Resources/public/css');
         $this->filesystem->mkdir($dir.'/Resources/public/images');
         $this->filesystem->mkdir($dir.'/Resources/public/js');
+        $this->filesystem->mkdir($dir.'/Resources/public/uploads/images');
         
     }
     

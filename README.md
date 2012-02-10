@@ -1,27 +1,31 @@
 AvroGeneratorBundle
 ====================
 Generate code similar in structure to the 
-FOSUserBundle. With this bundle you can generate or update all crud code for a specific entity or specific classes.
+FOSUserBundle. With this bundle you can generate or update 
+all classes related to an entity with just a few commands 
+in the console.
 
-FYI: Updating overwrites the original file.
+This bundle generates code that is customised to my personal 
+preferences so it won't be for everyone. However, I am open 
+to collaborating with others in improving this bundle and 
+making it more suitable for more people. 
+
+FYI: Updating any classes overwrites the original file.
 
 Status
 ======
-
-The bundle is a work in progress but is working. 
+The bundle is a work in progress but is working...most of the time :) 
 Currently it only provides support for Doctrine ORM.
 
 The code still needs to get cleaned up a 
 fair bit and tests still need to be made. Any help would be much appreciated!
 
-Optional Dependencies
-=====================
-
-The view generator creates views with classes for grid960 and twitter bootstrap.
+Dependencies
+============
+The view generator creates views with classes for <a href="http://twitter.github.com/bootstrap/index.html">twitter bootstrap 2.0</a>.
 
 Installation
 ============
-
 Add the `Avro` namespace to your autoloader:
 
 ``` php
@@ -62,6 +66,7 @@ $ bin/vendors update
 
 USAGE
 =====
+Enter the following in the console and follow the directions!
 
 Generate a bundle skeleton with:
 
@@ -75,16 +80,16 @@ Generate an entity and entityManager with:
 $ php app/console generate:avro:entity
 ```
 
-Generate crud with:
+Generate a controller and views with:
 
 ``` bash
 $ php app/console generate:avro:crud
 ```
 
-Generate a formType and formHandler with:
+Generate a controller with:
 
 ``` bash
-$ php app/console generate:avro:form
+$ php app/console generate:avro:controller
 ```
 
 Generate views with:
@@ -92,11 +97,6 @@ Generate views with:
 ``` bash
 $ php app/console generate:avro:view
 ```
-Generate a services.yml file with:
-
-``` bash
-$ php app/console generate:avro:service
-```
 
 Generate a formType and formHandler with:
 
@@ -104,4 +104,21 @@ Generate a formType and formHandler with:
 $ php app/console generate:avro:form
 ```
 
+Generate a services.yml file for formType, formHandler, and entityManager:
 
+``` bash
+$ php app/console generate:avro:service
+```
+
+Generate behat features with:
+
+``` bash
+$ php app/console generate:avro:feature
+```
+
+SOMEDAY FEATURES
+================
+
+- MongoDB support
+- CouchDB support
+- speech activation and/or a pet monkey

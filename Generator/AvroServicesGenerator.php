@@ -65,12 +65,11 @@ class AvroServicesGenerator extends Generator
                 'Specify the service configuration of your bundle.',
                 '[config.yml is currently only method supported]',
                 'WARNING: This will overwrite the configuration file.',
-                '',
             ));
 
             $format = $this->dialog->ask($this->output, $this->dialog->getQuestion('Bundle services format?', 'config.yml', ':'), 'config.yml');
 
-            $this->output->write('Configuring service to bundle');
+            $this->output->write('Updating bundle services config:');
             try {
                 $this->updateBundleServicesConfig($format);
                 $this->output->writeln('<info>Ok</info>');

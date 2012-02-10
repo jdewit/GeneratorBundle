@@ -32,7 +32,7 @@ class AvroEntityGenerator extends Generator
     protected $entityLC;
     protected $fields;
     
-    public function generate($entity, array $fields, $writeManager = true)
+    public function generate($entity, array $fields, $writeManager = true, $updateDB = true)
     {
         $this->entity = $entity;
         $this->entityLC = strtolower($entity);
@@ -131,8 +131,23 @@ class AvroEntityGenerator extends Generator
 
             }
         }
-    }
 
+        // update the database
+        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Update the database', 'yes', '?'), true)) {
+            $this->output->write('Updating database: ');        
+            try {
+                $this->runConsole("doctrine:schema:update", array("--force" => true));
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }  
+        }
+
+    }
     /*
      * Generates the Entity code
      * 
