@@ -82,6 +82,17 @@ class Validators
         return $format;
     }
 
+    static public function validateStyle($style)
+    {
+        $style = strtolower($style);
+
+        if (!in_array($style, array('1', '2'))) {
+            throw new \RuntimeException(sprintf('Style "%s" is not supported.', $style));
+        }
+
+        return $style;
+    }
+
     static public function validateDbDriver($dbDriver)
     {
         $dbDriver = strtolower($dbDriver);

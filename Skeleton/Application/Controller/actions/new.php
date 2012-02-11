@@ -28,7 +28,7 @@
         }
 
         return array(
-            'form' => $form->createview(),
+            '{{ entity_lc }}Form' => $form->createView(),
         );
 
     }

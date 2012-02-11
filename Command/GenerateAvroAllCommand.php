@@ -128,30 +128,32 @@ EOT
             '',
         ));
 
+        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1: default, 2: knockout)', '1'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle')); 
+
         $dialog->writeSection($output, 'Generating code for '. $bundleName );
                        
         //Generate Bundle/Entity files
-        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle);    
+        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle, $style);    
         $avroEntityGenerator->generate($entity, $fields, $writeManager);  
         
         //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $style);
         $avroControllerGenerator->generate($entity);
 
         //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle);
+        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $style);
         $avroViewGenerator->generate($entity, $fields);    
 
         //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $style);
         $avroFormGenerator->generate($entity, $fields);
 
         //Generate Feature files
-        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle);
+        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $style);
         $avroFeatureGenerator->generate($entity, $fields);
 
         //Update services.yml
-        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle);
+        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $style);
         $avroServicesGenerator->generate($entity, $fields);     
     }
 

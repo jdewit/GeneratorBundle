@@ -35,9 +35,9 @@ class GenerateAvroKnockoutCommand extends GenerateAvroCommand
     protected function configure()
     {
         $this
-            ->setName('generate:avro:view')
+            ->setName('generate:avro:knockout')
             ->setAliases(array('generate:avro:knockout'))
-            ->setDescription('Generates knockout views in a bundle.')
+            ->setDescription('Generates knockout views and a viewModel in a bundle.')
             ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)');
     }
 
@@ -60,9 +60,10 @@ class GenerateAvroKnockoutCommand extends GenerateAvroCommand
         $fields = $this->getFieldsFromMetadata($metadata[0]);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
 
+        $style = 'knockout';
         //Generate View files
-        $avroKnockoutGenerator = new AvroKnockoutGenerator($container, $dialog, $output, $bundle);
-        $avroKnockoutGenerator->generate($entity, $fields);        
+        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $style);
+        $avroViewGenerator->generate($entity, $fields);        
         
         $output->writeln('Knockout views created succesfully!');
     }

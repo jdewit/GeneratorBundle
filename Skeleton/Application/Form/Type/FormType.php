@@ -25,6 +25,11 @@ class {{ entity }}FormType extends AbstractType
                 'required' => false,
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
             ))          
 {% elseif field.type == 'text' %}
@@ -33,19 +38,30 @@ class {{ entity }}FormType extends AbstractType
                 'required' => false,
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+
                 )
             ))          
 {% elseif field.type == 'datetime' %}
             ->add('{{ field.fieldName }}', 'date', array(
                 'label' => '{{ field.fieldName|title }}',
                 'required' => false,
-                'attr' => array(
-                    'class' => 'date',
-                    'title' => 'Select a date for the {{ entity_lc }}'
-                ),
                 'widget' => 'single_text',
                 'input' => 'string',
                 'format' => 'dd/MM/yy', //\IntlDateFormatter::FULL
+                'attr' => array(
+                    'class' => 'date',
+                    'title' => 'Select a date for the {{ entity_lc }}'
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+                ),
             ))
 {% elseif field.type == 'manyToOne' %}
             ->add('{{ field.fieldName }}', 'entity', array(
@@ -55,6 +71,12 @@ class {{ entity }}FormType extends AbstractType
                 'query_builder' => function ($repository) use ($owner) { return $repository->createQueryBuilder('e')->where('e.owner = ?1')->setParameter('1', $owner); },
                 'attr' => array(
                     'title' => 'Choose a {{ field.fieldName }} for the {{ entity_lc }}'  
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: selected{{ field.fieldName }}()
+                    "
+{% endif %}
+
                 )
             ))  
 {% elseif field.type == 'oneToMany' %}
@@ -81,8 +103,12 @@ class {{ entity }}FormType extends AbstractType
                 'required' => false,
                 'attr' => array(
                     'title' => '{{ field.fieldName|title }}?'  
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        checked: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
-
             ))   
 {% else %}
             ->add('{{ field.fieldName }}', '{{ field.type }}', array(
@@ -90,6 +116,11 @@ class {{ entity }}FormType extends AbstractType
                 'required' => false,
                  'attr' => array(
                     'title' => '{{ field.fieldName|title }}'  
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
            ))            
 {% endif %}

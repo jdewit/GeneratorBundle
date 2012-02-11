@@ -43,14 +43,16 @@ class Generator
     protected $dbDriver = 'orm';
     protected $message;
     protected $thirdParty = true; 
+    protected $style; 
 
-    public function __construct($container, $dialog, OutputInterface $output, BundleInterface $bundle = null)
+    public function __construct($container, $dialog, OutputInterface $output, BundleInterface $bundle = null, $style = null)
     {
         $this->container = $container;
         $this->dialog = $dialog;
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
+        $this->style = $style;
         if ($bundle !== null) {
             $this->bundlePath = $bundle->getPath();
             if (strstr($this->bundlePath, 'vendor/bundles') == false) {
@@ -65,10 +67,8 @@ class Generator
             $this->bundleCorename = str_replace(strtolower($this->bundleVendor).'_','',$this->bundleAlias);
             $this->dbDriver = $this->getDbDriver($this->bundlePath, $this->bundleAlias);
         }    
-// debug        
-//        $output->writeln('bundlePath ='.$this->bundlePath.' bundleNamespace ='.$this->bundleNamespace.' bundleName = '.$this->bundleName.' bundleVendor ='.$this->bundleVendor.' bundleBasename ='.$this->bundleBasename.' bundleAlias = '.$this->bundleAlias.' bundleAliasCC = '.$this->bundleAliasCC.' dbDriver = '.$this->dbDriver);
-//        exit;
     }
+
     /*
      * Renders a new file
      * 
@@ -85,7 +85,6 @@ class Generator
         }
 
         $skeletonDir = __DIR__.'/../Skeleton/Application';
-
 
         $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($skeletonDir), array(
             'debug'            => true,

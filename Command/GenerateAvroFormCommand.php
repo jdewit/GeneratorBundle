@@ -38,7 +38,8 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
             ->setName('generate:avro:form')
             ->setAliases(array('generate:avro:form'))
             ->setDescription('Generates form code in a bundle.')
-            ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)');
+            ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
+            ->addOption('style', null, InputOption::VALUE_REQUIRED, 'The style of code you would like to generate.');
     }
 
     /**
@@ -54,14 +55,11 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
             $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
 
             list($bundle, $entity) = $this->parseShortcutNotation($entity);
-            $output->writeln($bundle);
-            $output->writeln($entity);
             try {
                 $b = $this->getContainer()->get('kernel')->getBundle($bundle);
             } catch (\Exception $e) {
                 $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundle));
             }
-            $output->writeln($b->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php');
             if (!file_exists($b->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
                 $output->writeln($entity.' not found. Please create it.');
                 $output->writeln('<error>Command aborted</error>');
@@ -76,9 +74,11 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
         $metadata = $this->getEntityMetadata($entityClass);
         $fields = $this->getFieldsFromMetadata($metadata[0]);
         $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
+   
+        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1: default, 2: knockout)', '1'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle')); 
 
         //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle);
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $style);
         $avroFormGenerator->generate($entity, $fields);
 
         $output->writeln('Form created');

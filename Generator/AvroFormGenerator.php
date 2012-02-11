@@ -54,7 +54,8 @@ class AvroFormGenerator extends Generator
             'bundle_basename' => $this->bundleBasename,
             'bundle_alias' => $this->bundleAlias,  
             'bundle_alias_cc' => $this->bundleAliasCC,
-            'db_driver' => $this->dbDriver        
+            'db_driver' => $this->dbDriver,
+            'style' => $this->style        
         );
 
         $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'FormType.php: ');

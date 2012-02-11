@@ -49,8 +49,8 @@ class AvroControllerGenerator extends Generator
         }
         
         $this->output->writeln('');
-        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate default controller actions? [list, show, new, edit, delete, batch]', 'yes', '?'), true)) {
-            $actions =  array('list', 'show', 'new', 'edit', 'delete', 'batch', 'getJson');
+        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate default controller actions? [list, new, edit, delete, batch]', 'yes', '?'), true)) {
+            $actions =  array('list', 'new', 'edit', 'delete', 'batch', 'getJson');
         } else {
             while(true) {
                 $this->output->writeln(array(
@@ -78,6 +78,7 @@ class AvroControllerGenerator extends Generator
             'bundle_alias' => $this->bundleAlias,          
             'db_driver' => $this->dbDriver,
             'actions' => $actions,
+            'style' => $this->style,
         );
 
 

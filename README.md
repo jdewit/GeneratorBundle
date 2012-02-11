@@ -24,6 +24,8 @@ Dependencies
 ============
 The view generator creates views with classes for <a href="http://twitter.github.com/bootstrap/index.html">twitter bootstrap 2.0</a>.
 
+The knockoutjs view generator requires <a href="http://knockoutjs.com">KnockoutJS</a>.
+
 Installation
 ============
 Add the `Avro` namespace to your autoloader:
@@ -96,6 +98,12 @@ Generate views with:
 
 ``` bash
 $ php app/console generate:avro:view
+```
+
+Generate KnockoutJS views and viewModel with:
+
+``` bash
+$ php app/console generate:avro:knockout
 ```
 
 Generate a formType and formHandler with:

@@ -51,21 +51,53 @@ class AvroViewGenerator extends Generator
             'bundle_alias' => $this->bundleAlias,  
             'bundle_alias_cc' => $this->bundleAliasCC,
             'db_driver' => $this->dbDriver,
+            'style' => $this->style,
             'actions' => array('list', 'new', 'edit', 'table', 'form')
         );          
         
-        foreach ($parameters['actions'] as $view) {
-            $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig: ');
-            try {
-                $this->generateView($parameters, $view);
-                $this->output->writeln('<info>Ok</info>');
-            } catch (\RuntimeException $e) {
-                $this->output->writeln(array(
-                    '<error>Fail</error>',
-                    $e->getMessage(),
-                    ''
-                ));
-            }  
+        switch ($this->style) {
+            //knockout
+            case '2':
+                 foreach ($parameters['actions'] as $view) {
+                    $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig: ');
+                    try {
+                        $this->generateKnockoutView($parameters, $view);
+                        $this->output->writeln('<info>Ok</info>');
+                    } catch (\RuntimeException $e) {
+                        $this->output->writeln(array(
+                            '<error>Fail</error>',
+                            $e->getMessage(),
+                            ''
+                        ));
+                    }  
+                }
+                $this->output->write('Generating '.$this->bundleBasename.'/Resources/assets/js/knockoutjs/'.$this->entity.'/'.$view.'.js: ');
+                try {
+                    $this->generateKnockoutViewModel($parameters, $view);
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                }  
+            break;
+            default:
+                foreach ($parameters['actions'] as $view) {
+                    $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig: ');
+                    try {
+                        $this->generateView($parameters, $view);
+                        $this->output->writeln('<info>Ok</info>');
+                    } catch (\RuntimeException $e) {
+                        $this->output->writeln(array(
+                            '<error>Fail</error>',
+                            $e->getMessage(),
+                            ''
+                        ));
+                    }  
+                }
+            break;
         }
         
     }
@@ -83,4 +115,30 @@ class AvroViewGenerator extends Generator
         $this->renderFile('Resources/views/entity/'.$view.'.html.twig', $filename, $parameters);
     }
     
+    /**
+     * Generates knockoutjs views.
+     * 
+     * @param array $parameters The parameters needed to generate the file
+     * @param $view The view to generate
+     */
+    private function generateKnockoutView($parameters, $view)
+    {
+        $filename = $this->bundlePath.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig';
+
+        $this->renderFile('Resources/views/entity/knockoutjs/'.$view.'.html.twig', $filename, $parameters);
+    }
+
+    /**
+     * Generates knockoutjs viewModel.
+     * 
+     * @param array $parameters The parameters needed to generate the file
+     * @param $view The view to generate
+     */
+    private function generateKnockoutViewModel($parameters, $view)
+    {
+        $filename = $this->bundlePath.'/Resources/assets/js/knockoutjs/'.$this->entityLC.'Model.js';
+
+        $this->renderFile('Resources/assets/js/knockoutjs/model.html.twig', $filename, $parameters);
+    }
+
 }
