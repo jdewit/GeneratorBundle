@@ -4,7 +4,7 @@
         <h1 class="pull-left">{{ entity }} List</h1>
         <ul class="buttonDropdown pull-left">
             <li class="dropdown">
-                <a href="#" class="btn" data-toggle="dropdown">{{ "{{ filter }}" }}<b class="caret"></b></a>
+                <a href="#" class="btn" data-toggle="dropdown">{{ "{{ filter }}" }} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{" {{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'All' }) }}" }}">All</a></li>
                     <li><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'Deleted' }) }}" }}">Deleted</a></li>
