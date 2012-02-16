@@ -95,6 +95,11 @@ Generate a bundle skeleton with:
 ``` bash
 $ php app/console generate:avro:bundle
 ```
+Generate THE WORKS with:
+
+``` bash
+$ php app/console generate:avro:all
+```
 
 Generate an entity and entityManager with:
 
