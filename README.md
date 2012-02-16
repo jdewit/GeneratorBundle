@@ -32,19 +32,19 @@ Generates data-binds in the form classes as well as viewModels.
 Dependencies
 ------------
 ###FOS
-    - None
+- None
 
 ###Knockout
-    - <a href="http://knockoutjs.com">KnockoutJS</a>
-    - <a href="http://jquery.com">JQuery</a>
-    - <a href="http://jquery.malsup.com/form/">JQuery Form Plugin</a>
-    - <a href="https://github.com/schmittjoh/JMSSerializerBundle">JMSSerializerBundle</a>
-    - some custom javascript functions, I will create a bundle of these soon
+- <a href="http://knockoutjs.com">KnockoutJS</a>
+- <a href="http://jquery.com">JQuery</a>
+- <a href="http://jquery.malsup.com/form/">JQuery Form Plugin</a>
+- <a href="https://github.com/schmittjoh/JMSSerializerBundle">JMSSerializerBundle</a>
+- some custom javascript functions, I will create a bundle of these soon
 
 Optional Dependencies
 ---------------------
-    - The view generator generates some <a href="http://jqueryui.com">JQueryUI</a> classes
-    - Form fields have classes that work with <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">JQuery Validation</a>
+- The view generator generates some <a href="http://jqueryui.com">JQueryUI</a> classes
+- Form fields have classes that work with <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">JQuery Validation</a>
 
 Installation
 ------------
