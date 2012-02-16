@@ -53,33 +53,24 @@ class GenerateAvroCrudCommand extends GenerateAvroCommand
         $dialog = $this->getDialogHelper();
         
         $dialog->writeSection($output, 'Welcome to the Avro crud generator!');
-        $output->writeln('(ex. AcmeTestBundle:Blog)');
-        $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Avro\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));         
 
-        list($bundle, $entity) = $this->parseShortcutNotation($entity);
-
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
-        $metadata = $this->getEntityMetadata($entityClass);
-        $fields = $this->getFieldsFromMetadata($metadata[0]);
-        $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
-
-        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1: default, 2: knockout)', '1'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle')); 
+        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
 
         //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $style);
-        $avroControllerGenerator->generate($entity);
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroControllerGenerator->generate();
 
         //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $style);
-        $avroViewGenerator->generate($entity, $fields);        
+        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroViewGenerator->generate();        
         
         //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $style);
-        $avroFormGenerator->generate($entity, $fields);
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroFormGenerator->generate();
 
         //Update services.yml
-        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $style);
-        $avroServicesGenerator->generate($entity, $fields);        
+        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroServicesGenerator->generate();        
         
         $output->writeln('CRUD created succesfully!');
     }

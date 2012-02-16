@@ -96,11 +96,11 @@ class RoutingManipulator extends Manipulator
      *
      * @param $bundleName
      * @param $bundleAlias
-     * @param $entity
-     * @param $format 
+     * @param $entityUS
+     * @param $entityCC
      *
      */
-    public function updateBundleRouting($bundleName, $bundleAlias, $entity)
+    public function updateBundleRouting($bundleName, $bundleAlias, $entityUS, $entity)
     {
         switch ($this->format) {
             case 'yml':
@@ -109,8 +109,8 @@ class RoutingManipulator extends Manipulator
                 $parser = new Parser();
                 $array = $parser->parse($current);
                 
-                if (empty($array[$bundleAlias.'_'.$entity])) {
-                    $code = $bundleAlias.'_'.strtolower($entity).':';
+                if (empty($array[$bundleAlias.'_'.$entityUS])) {
+                    $code = $bundleAlias.'_'.$entityUS.':';
                     $code .= "\n";
                     $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $bundleName, $entity);
                     $code .= "\n";

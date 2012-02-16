@@ -4,10 +4,10 @@
         <h1>New {{ entity }}</h1>
     </div>
     <div class="content">  
-        <form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" {{ "{{ form_enctype(form) }}" }}>  
+        <form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_new') }}" }}" {{ "{{ form_enctype(form) }}" }}>  
             {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
             <div>
-                <input type="submit" class="button" title="Create a new {{ entity_lc }}" value="Create {{ entity }}"/>
+                <input type="submit" class="button" title="Create a new {{ entity_cc }}" value="Create {{ entity }}"/>
             </div>
         </form>
     </div>            

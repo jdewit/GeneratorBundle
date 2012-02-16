@@ -25,75 +25,43 @@ use Avro\GeneratorBundle\Manipulator\RoutingManipulator;
  */
 class AvroControllerGenerator extends Generator
 {
-    protected $entity;
-    protected $entityLC;
-    
     /**
      * Generates the entity class if it does not exist.
      *
-     * @param string $entity The entity relative class name
-     * @param array $fields The entity fields
      */
-    public function generate($entity)
+    public function generate()
     {
-        if ($entity) {
-            $this->entity = $entity;
-            $this->entityLC = strtolower($entity);
-        } else {
-            $this->output->writeln(array(
-                '',
-                'Enter the controllers name. (ex. admin)',
-            ));
-            $this->entityLC = strtolower($this->dialog->ask($this->output, '<info>Controller name:</info> '));
-            $this->entity = ucfirst($this->entityLC);
-        }
-        
-        $this->output->writeln('');
-        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate default controller actions? [list, new, edit, delete, batch]', 'yes', '?'), true)) {
-            $actions =  array('list', 'new', 'edit', 'delete', 'batch', 'getJson');
-        } else {
-            while(true) {
-                $this->output->writeln(array(
-                    '',
-                    'Enter the controllers actions. Just press enter when finished.'
-                ));
-                $action = $this->dialog->ask($this->output, '<info>Controller action:</info> '); 
-                if (empty($action)) {
-                    break;
-                }
-                $actions[] = $action;
-            }
-        }
-
         $this->output->write('');
         $routingFormat = $this->dialog->ask($this->output, $this->dialog->getQuestion('Enter the bundles routing file format', 'yml', ':'), 'yml');
         
-        $parameters = array(
-            'entity' => $this->entity,
-            'entity_lc' => $this->entityLC,
-            'bundle_name' => $this->bundleName,
-            'bundle_corename' => $this->bundleCorename,
-            'bundle_path' => $this->bundlePath,
-            'bundle_namespace' => $this->bundleNamespace,  
-            'bundle_alias' => $this->bundleAlias,          
-            'db_driver' => $this->dbDriver,
-            'actions' => $actions,
-            'style' => $this->style,
-        );
-
-
-
-        $this->output->write('Generating '.$this->bundleName.'/Controller/'.$this->entity.'Controller.php: ');
-        try {
-            $this->generateControllerClass($parameters);
-            $this->output->writeln('<info>Ok</info>');
-        } catch (\RuntimeException $e) {
-            $this->output->writeln(array(
-                '<error>Fail</error>',
-                $e->getMessage(),
-                ''
-            ));
-        }      
+        switch ($this->style) {
+            case 'knockout': 
+                $this->output->write('Generating '.$this->bundleName.'/Controller/'.$this->entity.'Controller.php: ');
+                try {
+                    $this->generateKnockoutController();
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                }      
+            break;
+            default:
+                $this->output->write('Generating '.$this->bundleName.'/Controller/'.$this->entity.'Controller.php: ');
+                try {
+                    $this->generateControllerClass();
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                }      
+            break;
+        }
 
         $this->output->write('Adding controller routing to '.$this->bundleName.'/app/config/routing.'.$routingFormat.': ');
         try {
@@ -106,28 +74,40 @@ class AvroControllerGenerator extends Generator
                 ''
             ));
         }          
-        //$this->generateTestClass();
-        //$this->output->writeln('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: <info>OK</info>');
-
-
     }
 
     /**
-     * Generates the controller class only.
+     * Generates a default controller class 
      *
      */
-    private function generateControllerClass($parameters)
+    private function generateControllerClass()
     {
         $filename = $this->bundlePath.'/Controller/'.$this->entity.'Controller.php';
         
-        $this->renderFile('Controller/controller.php', $filename, $parameters);
+        $this->renderFile('Controller/controller.php', $filename);
     }
 
+    /**
+     * Generates a knockoutjs controller.
+     * 
+     */
+    private function generateKnockoutController()
+    {
+        $filename = $this->bundlePath.'/Controller/'.$this->entity.'Controller.php';
+        
+        $this->renderFile('Controller/KnockoutController.php', $filename);
+    }
+
+    /*
+     * Update bundle routing file
+     *
+     * @param $format
+     */
     protected function updateRouting($format)
     {
         $filename = $this->bundlePath.'/Resources/config/routing.'.$format;
 
         $routingManipulator = new RoutingManipulator($filename, $format);
-        $routingManipulator->updateBundleRouting($this->bundleName, $this->bundleAlias, $this->entity);
+        $routingManipulator->updateBundleRouting($this->bundleName, $this->bundleAlias, $this->entityUS, $this->entity);
     }
 }

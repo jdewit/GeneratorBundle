@@ -6,12 +6,12 @@
             <li class="dropdown">
                 <a href="#" class="btn" data-toggle="dropdown">{{ "{{ filter }}" }} <b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{" {{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'All' }) }}" }}">All</a></li>
-                    <li><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'Deleted' }) }}" }}">Deleted</a></li>
+                    <li><a href="{{" {{ path('"~ bundle_alias ~"_"~ entity_us ~"_list', {'filter': 'All' }) }}" }}">All</a></li>
+                    <li><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_list', {'filter': 'Deleted' }) }}" }}">Deleted</a></li>
                 </ul>
             </li>
         </ul>
-        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" class="btn btn-primary pull-right">+ New {{ entity }}</a>
+        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_new') }}" }}" class="btn btn-primary pull-right">+ New {{ entity }}</a>
         <hr />
     </div>
     <div class="row">

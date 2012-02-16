@@ -52,15 +52,10 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
         $dialog->writeSection($output, 'Welcome to the Avro controller generator!');
 
         $output->writeln('');
-        if ($dialog->askConfirmation($output, $dialog->getQuestion('Is this controller tied to an entity?', 'no', '?'), false)) {           
-            $output->writeln('(ex. AcmeTestBundle:Blog)');
-            $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Avro\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));         
+        if ($dialog->askConfirmation($output, $dialog->getQuestion('Is this controller based on an entity?', 'yes', '?'), true)) {           
 
-            list($bundle, $entity) = $this->parseShortcutNotation($entity);
-
-            $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
-            $metadata = $this->getEntityMetadata($entityClass);
-            $fields = $this->getFieldsFromMetadata($metadata[0]);
+            // initiate base command
+            list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
 
         } else {
             $output->writeln(array(
@@ -72,12 +67,11 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
             $entity = false;
         }
 
-        $bundle = $this->getApplication()->getKernel()->getBundle($bundle);
-
         //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle);
-        $avroControllerGenerator->generate($entity);
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroControllerGenerator->generate();
         
+        $output->writeln('Controller created succesfully!');
     }
 
 }

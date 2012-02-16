@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * {{ entity }} controller.
  *
- * @Route("/{{ bundle_corename }}/{{ entity_lc }}")
+ * @Route("/{{ bundle_corename }}/{{ entity_cc }}")
  */
 class {{ entity }}Controller extends ContainerAware
 {

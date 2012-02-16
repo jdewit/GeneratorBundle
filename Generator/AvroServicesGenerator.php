@@ -26,40 +26,20 @@ use Avro\GeneratorBundle\Manipulator\ConfigManipulator;
  */
 class AvroServicesGenerator extends Generator
 {
-    protected $entity;
-    protected $entityLC;
-    protected $fields;
-    
     /**
      * Generates the entity class if it does not exist.
      *
-     * @param string $entity The entity relative class name
-     * @param array $fields The entity fields
      */
-    public function generate($entity, array $fields)
+    public function generate()
     {
-        $this->entity = $entity;
-        $this->entityLC = strtolower($entity);
-        $this->fields = $fields;
-        
-        $parts = explode('\\', $entity);
-        
-        $parameters = array(
-            'entity' => $this->entity,
-            'entity_lc' => $this->entityLC,
-            'fields' => $this->fields,
-            'bundle_name' => $this->bundleName,
-            'bundle_path' => $this->bundlePath,
-            'bundle_namespace' => $this->bundleNamespace,  
-            'bundle_vendor' => $this->bundleVendor,
-            'bundle_basename' => $this->bundleBasename,
-            'bundle_alias' => $this->bundleAlias,  
-            'bundle_alias_cc' => $this->bundleAliasCC,
-            'db_driver' => $this->dbDriver        
-        );
+        if (file_exists($this->bundlePath.'/Resources/config/services/'.$this->entityCC.'.yml')) {
+            $fileExists = true;
+            if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion($this->entityCC.'.yml exists. Overwrite?', 'no', '?'), false)) {
+                $overwrite = true;
+            }
+        }
 
-        //add services to bundle config 
-        if (!file_exists($this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml')) {
+        if (!$fileExists) {
             $this->output->writeln(array(
                 '',
                 'Specify the service configuration of your bundle.',
@@ -81,17 +61,20 @@ class AvroServicesGenerator extends Generator
                 ));
             }  
         }
-        $this->output->write('Creating '.$this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml: ');
-        try {
-            $this->updateService($parameters);
-            $this->output->writeln('<info>Ok</info>');
-        } catch (\RuntimeException $e) {
-            $this->output->writeln(array(
-                '<error>Fail</error>',
-                $e->getMessage(),
-                ''
-            ));
-        }  
+        if (!$fileExists || $overwrite) {
+            $targetFile = $this->bundlePath.'/Resources/config/services/'.$this->entityCC.'.yml';
+            $this->output->write('Creating '.$targetFile. ':');
+            try {
+                $this->createService($targetFile);
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }  
+        }
     }
 
     protected function updateBundleServicesConfig($format)
@@ -99,51 +82,45 @@ class AvroServicesGenerator extends Generator
         switch ($format) {
             case 'config.yml':
                 $configManipulator = new ConfigManipulator($this->bundlePath.'/Resources/config/config.yml');
-                $configManipulator->addResourceToImports($this->bundleName.'/Resources/config/services/'.$this->entityLC.'.yml');
+                $configManipulator->addResourceToImports($this->bundleName.'/Resources/config/services/'.$this->entityCC.'.yml');
             break;
         }
     }
 
-    protected function createService($parameters, $targetFile)
+    protected function createService($targetFile)
     {
-        $this->renderFile('Resources/config/services/servicesPartial.yml', $targetFile, $parameters);
+        $this->renderFile('Resources/config/services/servicesPartial.yml', $targetFile);
     }
 
-    protected function updateService($parameters)
-    {
-        $targetFile = $this->bundlePath.'/Resources/config/services/'.$this->entityLC.'.yml';
-        
-        if (!file_exists($targetFile)) {
-            $this->createService($parameters, $targetFile);
-       
-            return true;
-        }
-
-        $parser = new Parser();
-
-        $currentFileArray = $parser->parse(file_get_contents($targetFile));
-        
-        if (!empty($currentFileArray['services'][$this->bundleAlias.'.'.$this->entityLC.'_manager'])) {         
-            return true;
-        }
-        
-        $partialFile = $this->bundlePath.'/Resources/config/servicesPartial.yml';
-        
-        // generate partial                
-        $this->renderFile('Resources/config/services/servicesPartial.yml', $partialFile, $parameters); 
-        
-        $currentCode = file_get_contents($currentFile);
-        $partialCode = file_get_contents($partialFile);
-        
-        $code = $currentCode;
-        $code .= $partialCode;
-        
-        unlink($partialFile);
-        
-        if (false === file_put_contents($currentFile, $code)) {
-            throw new \RuntimeException('Could not write to services.yml');
-        }                
-        return true;        
-    }   
+//    protected function updateService()
+//    {
+//        
+//
+//        $parser = new Parser();
+//
+//        $currentFileArray = $parser->parse(file_get_contents($targetFile));
+//        
+//        if (!empty($currentFileArray['services'][$this->bundleAlias.'.'.$this->entityCC.'_manager'])) {         
+//            return true;
+//        }
+//        
+//        $partialFile = $this->bundlePath.'/Resources/config/servicesPartial.yml';
+//        
+//        // generate partial                
+//        $this->renderFile('Resources/config/services/servicesPartial.yml', $partialFile); 
+//        
+//        $currentCode = file_get_contents($currentFile);
+//        $partialCode = file_get_contents($partialFile);
+//        
+//        $code = $currentCode;
+//        $code .= $partialCode;
+//        
+//        unlink($partialFile);
+//        
+//        if (false === file_put_contents($currentFile, $code)) {
+//            throw new \RuntimeException('Could not write to services.yml');
+//        }                
+//        return true;        
+//    }   
 
 }

@@ -48,41 +48,13 @@ class GenerateAvroFeatureCommand extends GenerateAvroCommand
         $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Avro feature generator!');
 
-        while (true) {
-            $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Sensio\Bundle\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
+        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
 
-            list($bundle, $entity) = $this->parseShortcutNotation($entity);
-            $output->writeln($bundle);
-            $output->writeln($entity);
-            try {
-                $b = $this->getContainer()->get('kernel')->getBundle($bundle);
-            } catch (\Exception $e) {
-                $output->writeln(sprintf('<bg=red>Bundle "%s" does not exist.</>', $bundle));
-            }
-            $output->writeln($b->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php');
-            if (!file_exists($b->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
-                $output->writeln($entity.' not found. Please create it.');
-                $output->writeln('<error>Command aborted</error>');
+        //Generate Feature files
+        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroFeatureGenerator->generate();
 
-                return 1;              
-            }
-
-            break;         
-        }
-
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
-        $metadata = $this->getEntityMetadata($entityClass);
-        $fields = $this->getFieldsFromMetadata($metadata[0]);
-        $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
-
-        //Generate Form files
-        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle);
-        $avroFeatureGenerator->generate($entity, $fields);
-        $output->writeln('Features created');
-   
-        
-        $output->writeln('Service configuration created succesfully!');
-
+        $output->writeln('Behat features created succesfully!');
     }
     
 }

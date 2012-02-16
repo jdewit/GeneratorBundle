@@ -7,7 +7,7 @@
 {% for field in fields %}
         <tr>
             <td>{{ field.fieldName|camelCaseToTitle }}:</td>
-            <td>{{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</td>
+            <td>{{ "{{ "~ entity_cc ~"."~ field.fieldName ~" }}" }}</td>
         </tr>
 {% endfor %}
     </table>            

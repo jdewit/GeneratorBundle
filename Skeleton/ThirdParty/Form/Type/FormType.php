@@ -13,20 +13,20 @@ class {{ entity }}FormType extends AbstractType
 {% if field.type == 'string' %}
             ->add('{{ field.fieldName }}', 'text', array(
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}'  
                 )
             ))          
 {% elseif field.type == 'text' %}
             ->add('{{ field.fieldName }}', 'textarea', array(
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}'  
                 )
             ))          
 {% elseif field.type == 'datetime' %}
             ->add('{{ field.fieldName }}', 'date', array(
                 'attr' => array(
                     'class' => 'date',
-                    'title' => 'Select a date for the {{ entity_lc }}'
+                    'title' => 'Select a date for the {{ entity_cc }}'
                 ),
                 'widget' => 'single_text',
                 'input' => 'string',
@@ -36,7 +36,7 @@ class {{ entity }}FormType extends AbstractType
             ->add('{{ field.fieldName }}', 'entity', array(
                 'class' =>'{{ field.targetEntity }}',
                 'attr' => array(
-                    'title' => 'Choose a {{ field.fieldName }} for the {{ entity_lc }}'  
+                    'title' => 'Choose a {{ field.fieldName }} for the {{ entity_cc }}'  
                 )
             ))  
 {% elseif field.type == 'oneToMany' %}
@@ -70,6 +70,6 @@ class {{ entity }}FormType extends AbstractType
     
     public function getName()
     {
-        return '{{ bundle_alias }}_{{ entity_lc }}';
+        return '{{ bundle_alias }}_{{ entity_us }}';
     }
 }

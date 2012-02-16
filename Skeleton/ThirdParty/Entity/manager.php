@@ -32,15 +32,15 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     {
         $class = $this->getClass();
         
-        ${{ entity_lc }} = new $class($name);
+        ${{ entity_cc }} = new $class($name);
 
-        return ${{ entity_lc }};
+        return ${{ entity_cc }};
     }
        
     /**
      * {@inheritDoc}
      */  
-    public function delete{{ entity }}({{ entity }}Interface ${{ entity_lc }})
+    public function delete{{ entity }}({{ entity }}Interface ${{ entity_cc }})
     {
         $this->em->remove(${{ entity }});
         $this->em->flush();
@@ -59,11 +59,11 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
      */
     public function find{{ entity }}($id)
     {
-        ${{ entity_lc }} = $this->repository->find($id);
-        if (!${{ entity_lc }}) {
+        ${{ entity_cc }} = $this->repository->find($id);
+        if (!${{ entity_cc }}) {
             throw new NotFoundHttpException("{{ entity }} not found");
         }
-        return ${{ entity_lc }};
+        return ${{ entity_cc }};
     }
 
     /**
@@ -71,11 +71,11 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
      */
     public function find{{ entity }}By(array $criteria)
     {
-        ${{ entity_lc }} = $this->repository->findOneBy($criteria);
-        if (!${{ entity_lc }}) {
+        ${{ entity_cc }} = $this->repository->findOneBy($criteria);
+        if (!${{ entity_cc }}) {
             throw new NotFoundHttpException("{{ entity }} not found");
         }
-        return ${{ entity_lc }};
+        return ${{ entity_cc }};
     }
 
     /**
@@ -97,9 +97,9 @@ class {{ entity }}Manager implements {{ entity }}ManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function update{{ entity }}({{ entity }}Interface ${{ entity_lc }}, $andFlush = true)
+    public function update{{ entity }}({{ entity }}Interface ${{ entity_cc }}, $andFlush = true)
     {
-        $this->em->persist(${{ entity_lc }});
+        $this->em->persist(${{ entity_cc }});
         if ($andFlush) {
             $this->em->flush();
         }

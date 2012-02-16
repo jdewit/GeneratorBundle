@@ -28,12 +28,12 @@ class BundleRoutingManipulator extends Manipulator
      *
      * @param string $file The YAML routing file path
      */
-    public function __construct($filename, $format, $bundleName, $entityLC)
+    public function __construct($filename, $format, $bundleName, $entityCC)
     {
         $this->filename = $filename;
         $this->format = $format;
         $this->bundleName = $bundleName;
-        $this->entityLC = $entityLC;
+        $this->entityCC = $entityCC;
     }
 
     /**
@@ -85,7 +85,7 @@ class BundleRoutingManipulator extends Manipulator
         $current = file_get_contents($this->filename);
         $code = $this->bundleName.':';
         $code .= "\n";
-        $code .= sprintf("    resource: \"@%s/Resources/config/routing/%s.xml\"", $this->bundleName, $this->entityLC);
+        $code .= sprintf("    resource: \"@%s/Resources/config/routing/%s.xml\"", $this->bundleName, $this->entityCC);
         $code .= "\n \n";
         $code .= $current;
 

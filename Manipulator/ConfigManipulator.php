@@ -87,7 +87,7 @@ class ConfigManipulator extends Manipulator
 
         // get the applications config.yml and convert to php array      
         $config = $parser->parse(file_get_contents($this->file));
-        
+
         $config['imports'][] = array('resource' => '@'.$resource);
         
         $updatedConfig = $dumper->dump($config, 2);

@@ -28,40 +28,17 @@ use Avro\GeneratorBundle\Yaml\Dumper;
  */
 class AvroConfigGenerator extends Generator
 {
-    protected $entity;
-    protected $entityLC;
-    protected $fields;
-    
     /**
      * Generates the entity class if it does not exist.
      *
      * @param string $entity The entity relative class name
      * @param array $fields The entity fields
      */
-    public function generate($entity, array $fields)
+    public function generate()
     {
-        $this->entity = $entity;
-        $this->entityLC = strtolower($entity);
-        $this->fields = $fields;
-        
-        $parameters = array(
-            'entity' => $this->entity,
-            'entity_lc' => $this->entityLC,
-            'entity_class' => $this->bundleNamespace.'\\Model\\'.$this->entity,
-            'fields' => $this->fields,
-            'bundle_name' => $this->bundleName,
-            'bundle_path' => $this->bundlePath,
-            'bundle_namespace' => $this->bundleNamespace,  
-            'bundle_vendor' => $this->bundleVendor,
-            'bundle_basename' => $this->bundleBasename,
-            'bundle_alias' => $this->bundleAlias,          
-            'db_driver' => $this->dbDriver,
-            'actions' => array('show', 'list', 'new', 'edit', 'delete')
-        );  
-        
-        $this->output->write('Generating '.$this->bundleName.'/Resources/config/services/'.$this->entityLC.'.xml: ');
+        $this->output->write('Generating '.$this->bundleName.'/Resources/config/services/'.$this->entityCC.'.xml: ');
         try {
-            $this->generateEntityServices($parameters);
+            $this->generateEntityServices();
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -71,9 +48,9 @@ class AvroConfigGenerator extends Generator
             ));
         }   
 
-        $this->output->write('Generating '.$this->bundleName.'/Resources/config/services/orm_'.$this->entityLC.'.xml: ');
+        $this->output->write('Generating '.$this->bundleName.'/Resources/config/services/orm_'.$this->entityCC.'.xml: ');
         try {
-            $this->generateEntityDBServices($parameters);
+            $this->generateEntityDBServices();
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -85,7 +62,7 @@ class AvroConfigGenerator extends Generator
         
         $this->output->write('Updating app/config.yml: ');
         try {
-            $this->updateEntityConfig($parameters);
+            $this->updateEntityConfig();
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -95,9 +72,9 @@ class AvroConfigGenerator extends Generator
             ));
         } 
         
-//        $this->output->write('Generating '.$this->bundleName.'/Resources/config/routing/'.$this->entityLC.'.xml: ');
+//        $this->output->write('Generating '.$this->bundleName.'/Resources/config/routing/'.$this->entityCC.'.xml: ');
 //        try {
-//            $this->generateEntityRouting($parameters);;
+//            $this->generateEntityRouting($this->parameters);;
 //            $this->output->writeln('<info>Ok</info>');
 //        } catch (\RuntimeException $e) {
 //            $this->output->writeln(array(
@@ -123,16 +100,14 @@ class AvroConfigGenerator extends Generator
     /*
      * Generate entities mapping file
      * 
-     * @param array $parameters needed to generate file
      */
-    private function generateModelMapping($parameters)
+    private function generateModelMapping()
     {
-        switch ($parameters['db_driver']):
+        switch ($this->dbDriver):
             case 'orm':  
+                $filename = $this->bundlePath.'/Resources/config/doctrine/'.$this->entityCC.'.orm.xml';
                 
-                $filename = $this->bundlePath.'/Resources/config/doctrine/'.$this->entityLC.'.orm.xml';
-                
-                $this->renderFile('Resources/config/orm.xml', $filename, $parameters);    
+                $this->renderFile('Resources/config/orm.xml', $filename);    
                 
                 break;
             case 'mongodb':
@@ -147,38 +122,33 @@ class AvroConfigGenerator extends Generator
     /*
      * Generate Entity Services 
      * 
-     * @param array $parameters needed to generate file
      */
-    private function generateEntityServices($parameters)
+    private function generateEntityServices()
     {
-        $filename = $this->bundlePath.'/Resources/config/services/'.$this->entityLC.'.xml';   
+        $filename = $this->bundlePath.'/Resources/config/services/'.$this->entityCC.'.xml';   
         
-        $this->renderFile('Resources/config/services/services.xml', $filename, $parameters);    
+        $this->renderFile('Resources/config/services/services.xml', $filename);    
     }
 
     /*
      * Generate Entity DB Services 
-     * 
-     * @param array $parameters needed to generate file
      */
-    private function generateEntityDBServices($parameters)
+    private function generateEntityDBServices()
     {
-        $filename = $this->bundlePath.'/Resources/config/services/'.$this->dbDriver.'_'.$this->entityLC.'.xml';   
+        $filename = $this->bundlePath.'/Resources/config/services/'.$this->dbDriver.'_'.$this->entityCC.'.xml';   
         
-        $this->renderFile('Resources/config/services/orm_entity.xml', $filename, $parameters);    
+        $this->renderFile('Resources/config/services/orm_entity.xml', $filename);    
     }    
     
     /*
      * Update Entity Configuration Reference
-     * 
-     * @param array $parameters needed to generate file
      */
-    private function updateEntityConfig($parameters)
+    private function updateEntityConfig()
     {
         $parser = new Parser();
         $dumper = new Dumper();
         
-        $code = array($this->bundleAlias => array($this->entityLC => null));
+        $code = array($this->bundleAlias => array($this->entityCC => null));
         
         // get bundles config.yml and convert to php
         $configPath = $this->container->getParameter('kernel.root_dir').'/config/config.yml';
@@ -186,7 +156,7 @@ class AvroConfigGenerator extends Generator
         $config = $parser->parse(file_get_contents($configPath));
         
         // don't add configuration twice
-        if (!empty($config[$this->bundleAlias][$this->entityLC])) {
+        if (!empty($config[$this->bundleAlias][$this->entityCC])) {
             return true;
         }        
         
@@ -207,11 +177,11 @@ class AvroConfigGenerator extends Generator
      * Generates the routing configuration.
      *
      */
-    private function generateEntityRouting($parameters)
+    private function generateEntityRouting()
     {
-        $filename = $this->bundlePath.'/Resources/config/routing/'.$this->entityLC.'.xml'; 
+        $filename = $this->bundlePath.'/Resources/config/routing/'.$this->entityCC.'.xml'; 
 
-        $this->renderFile('Resources/config/routing/routing.xml', $filename, $parameters);  
+        $this->renderFile('Resources/config/routing/routing.xml', $filename);  
     }      
     
     /*
@@ -222,7 +192,7 @@ class AvroConfigGenerator extends Generator
     {
         $file = $this->bundlePath.'/Resources/config/routing.yml';
         $appRoutingFormat = 'yml';
-        $routingManipulator = new BundleRoutingManipulator($file, $appRoutingFormat, $this->bundleName, $this->entityLC);
+        $routingManipulator = new BundleRoutingManipulator($file, $appRoutingFormat, $this->bundleName, $this->entityCC);
         $routingManipulator->update();
     }           
 }

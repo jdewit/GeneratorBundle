@@ -1,0 +1,65 @@
+function {{ entity_cc }}ListModel({{ entity_cc }}s, filter) {
+    var self = this;
+    self.filter = ko.observable(filter);
+    self.{{ entity_cc }}s = ko.observableArray({{ entity_cc }}s);
+    self.checkAll = ko.observable(false);
+    self.new{{ entity }} = function(data, event) { 
+        var {{ entity_cc }}Form = $('#{{ entity_us }}_form_container');
+        self.{{ entity_cc }}Model.set{{ entity }}(null); 
+        self.bindForm({{ entity_cc }}Form);
+        createDialog({{ entity_cc }}Form, 'New {{ entity | camelCaseToTitle}}', true, 500);
+    };
+    self.edit{{ entity }} = function(data, event) { 
+        var {{ entity_cc }}Form = $('#{{ entity_us }}_form_container');
+        self.{{ entity_cc }}Model.set{{ entity }}(data);
+        self.bindForm({{ entity_cc }}Form);
+        createDialog({{ entity_cc }}Form, 'Edit {{ entity | camelCaseToTitle}}', true, 500);
+    };
+    self.delete{{ entity }} = function(data, event) { 
+        href = event.currentTarget.href; 
+        if (confirm("Are you sure you want to delete this {{ entity | camelCaseToTitle}}?")) {
+            $.ajax({
+                dataType: 'json',
+                url: href,
+                success: function(response){
+                    createNotice(response['notice']);
+                    self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id'] })
+                }
+            });
+        }
+    };
+    self.restore{{ entity }} = function(data, event) { 
+        href = event.currentTarget.href; 
+        if (confirm("Are you sure you want to restore this {{ entity | camelCaseToTitle }}?")) {
+            $.ajax({
+                dataType: 'json',
+                url: href,
+                success: function(response){
+                    createNotice(response['notice']);
+                    self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id'] })
+                }
+            });
+        }
+    };
+
+    self.bindForm = function(formContainer) {
+        var form = formContainer.find('form');
+        form.ajaxForm({
+            dataType:  'json',
+            success:   function(response){
+                createNotice(response['notice']);
+                if (response['status'] == "OK") {
+                    form.parents('.ui-dialog-content').dialog('close');
+                    self.{{ entity_cc }}s.remove(function( {{ entity_cc }} ) { return {{ entity_cc }}.id == response['data']['id'] });
+                    self.{{ entity_cc }}s.push(response['data']);
+                } else {
+                    $.each( response['data'], function(field, message) {
+                        form.prepend('<div class="error">'+ message +'</div>');
+                        form.find('#{{ bundle_alias }}_{{ entity_us }}_'+ field).parents('.control-group').addClass('error');
+                    });
+                }
+            }
+        });
+    };
+}
+

@@ -1,16 +1,16 @@
         
-        if (!empty($config['{{ entity_lc }}'])) {
-            $loader->load('services/{{ entity_lc }}.xml');
-            $loader->load(sprintf('services/%s_{{ entity_lc }}.xml', $config['db_driver']));
+        if (!empty($config['{{ entity_cc }}'])) {
+            $loader->load('services/{{ entity_cc }}.xml');
+            $loader->load(sprintf('services/%s_{{ entity_cc }}.xml', $config['db_driver']));
 
-            $container->setAlias('{{ bundle_alias }}.{{ entity_lc }}_manager', $config['{{ entity_lc }}']['{{ entity_lc }}_manager']);
-            $container->setAlias('{{ bundle_alias }}.{{ entity_lc }}.form.handler', $config['{{ entity_lc }}']['form']['handler']);
-            unset($config['{{ entity_lc }}']['form']['handler']);
+            $container->setAlias('{{ bundle_alias }}.{{ entity_us }}_manager', $config['{{ entity_cc }}']['{{ entity_us }}_manager']);
+            $container->setAlias('{{ bundle_alias }}.{{ entity_us }}.form.handler', $config['{{ entity_cc }}']['form']['handler']);
+            unset($config['{{ entity_cc }}']['form']['handler']);
 
-            $this->remapParametersNamespaces($config['{{ entity_lc }}'], $container, array(
+            $this->remapParametersNamespaces($config['{{ entity_cc }}'], $container, array(
                 '' => array(
-                    '{{ entity_lc }}_class' => '{{ bundle_alias }}.model.{{ entity_lc }}.class',
+                    '{{ entity_cc }}_class' => '{{ bundle_alias }}.model.{{ entity_cc }}.class',
                 ),
-                'form' => '{{ bundle_alias }}.{{ entity_lc }}.form.%s',
+                'form' => '{{ bundle_alias }}.{{ entity_us }}.form.%s',
             ));
         }    

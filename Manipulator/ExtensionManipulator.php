@@ -43,7 +43,7 @@ class ExtensionManipulator extends Manipulator
         
         $newMethod = file_get_contents($partial);
         
-        $methodCall = 'if (!empty($config[\''.$this->parameters['entity_lc'].'\'])) {';
+        $methodCall = 'if (!empty($config[\''.$this->parameters['entity_cc'].'\'])) {';
         
         $extensionCode = array_slice($src, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1);
 

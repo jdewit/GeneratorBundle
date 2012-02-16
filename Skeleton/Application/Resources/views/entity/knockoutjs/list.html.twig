@@ -1,21 +1,29 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <div class="row">
-        <h1 class="pull-left">{{ entity }} List</h1>
-        <ul class="buttonDropdown pull-left">
-            <li class="dropdown">
-                <a href="#" class="btn" data-toggle="dropdown">{{ "{{ filter }}" }}<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="{{" {{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'All' }) }}" }}">All</a></li>
-                    <li><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'Deleted' }) }}" }}">Deleted</a></li>
-                </ul>
-            </li>
-        </ul>
-        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" class="btn btn-primary pull-right">+ New {{ entity }}</a>
+    <div data-bind="with: {{ entity_cc }}ListModel">
+        <h1>{{ entity | camelCaseToTitle }} List</h1>
+        <a href="#" class="btn btn-new throw-right" data-bind="click: new{{ entity }}">New {{ entity | camelCaseToTitle }}</a>
         <hr />
-    </div>
-    <div class="row">
         {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+        {{ "{% include '"~ bundle_name~":"~ entity ~":form.html.twig' %}" }}
     </div>
+{{ "{% endblock %}" }}
+{{ "{% block customJS %}" }}
+    function appViewModel() {
+        this.{{ entity_cc }}ListModel = new {{ entity_cc }}ListModel(
+            {{ "{{ "~ entity_cc ~"s | serialize | raw }}" }},
+            '{{ "{{ filter }}" }}'
+        );
+        this.{{ entity_cc }}Model = new {{ entity_cc }}Model(
+            null, 
+            '{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_new') }}" }}',
+            '{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_edit', {'id': ''}) }}" }}'
+        );
+        this.{{ entity_cc }}ListModel.{{ entity_cc }}Model = this.{{ entity_cc }}Model;
+        this.{{ entity_cc }}Model.{{ entity_cc }}ListModel = this.{{ entity_cc }}ListModel;
+    };
+
+    ko.applyBindings(new appViewModel());
+
 {{ "{% endblock %}" }}
 

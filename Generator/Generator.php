@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Symfony package.
  *
@@ -32,6 +31,7 @@ class Generator
     protected $registry;
     protected $filesystem;
     protected $output;
+    protected $parameters;
     protected $bundleAlias;
     protected $bundleAliasCC;
     protected $bundleCoreName;
@@ -40,12 +40,16 @@ class Generator
     protected $bundleNamespace; 
     protected $bundlePath;
     protected $bundleVendor;
-    protected $dbDriver = 'orm';
+    protected $entity;
+    protected $entityCC;
+    protected $entityUS;
+    protected $fields;
+    protected $dbDriver;
     protected $message;
-    protected $thirdParty = true; 
+    protected $thirdParty; 
     protected $style; 
 
-    public function __construct($container, $dialog, OutputInterface $output, BundleInterface $bundle = null, $style = null)
+    public function __construct($container, $dialog, $output, $bundle = null, $entity = null, $fields = null, $style = null)
     {
         $this->container = $container;
         $this->dialog = $dialog;
@@ -66,6 +70,26 @@ class Generator
             $this->bundleAliasCC = $this->bundleVendor.str_replace('Bundle', '', $this->bundleBasename); 
             $this->bundleCorename = str_replace(strtolower($this->bundleVendor).'_','',$this->bundleAlias);
             $this->dbDriver = $this->getDbDriver($this->bundlePath, $this->bundleAlias);
+            $this->entity = $entity;
+            $this->entityCC = $this->toCamelCase($entity);
+            $this->entityUS = $this->toUnderscore($entity);
+            $this->fields = $fields;
+
+            $this->parameters = array(
+                'entity' => $this->entity,
+                'entity_cc' => $this->entityCC,
+                'entity_us' => $this->entityUS,
+                'fields' => $this->fields,
+                'bundle_vendor' => $this->bundleVendor,
+                'bundle_basename' => $this->bundleBasename,
+                'bundle_name' => $this->bundleName,
+                'bundle_corename' => $this->bundleCorename,
+                'bundle_path' => $this->bundlePath,
+                'bundle_namespace' => $this->bundleNamespace,  
+                'bundle_alias' => $this->bundleAlias,          
+                'db_driver' => $this->dbDriver,
+                'style' => $this->style,
+            );
         }    
     }
 
@@ -74,11 +98,10 @@ class Generator
      * 
      * @param $template The file to use as a template
      * @param $filename The location of the new file
-     * @param $parameters The parameters required to generate the template
      * @param $append Appends new code to existing file
      * 
      */
-    protected function renderFile($template, $filename, $parameters, $append = false)
+    protected function renderFile($template, $filename, $append = false)
     {   
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
@@ -95,9 +118,9 @@ class Generator
         $twig->addExtension(new GeneratorExtension());
 
         if ($append == true) {
-            file_put_contents($filename, $twig->render($template, $parameters, FILE_APPEND));
+            file_put_contents($filename, $twig->render($template, $this->parameters, FILE_APPEND));
         } else {
-            file_put_contents($filename, $twig->render($template, $parameters));
+            file_put_contents($filename, $twig->render($template, $this->parameters));
         } 
     }
 
@@ -128,12 +151,46 @@ class Generator
     {
         $application = new Application($this->container->get('kernel'));
         $application->setAutoExit(false);        
-
-        //$options["-e"] = "test";
-        $options["-q"] = null;
+        if (empty($options["-e"])) {
+            $options["-e"] = "dev";
+        }
         $options = array_merge($options, array('command' => $command));
-
-        return $application->run(new ArrayInput($options));
+        $application->run(new ArrayInput($options));
     }
 
+    /**
+    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
+    * @param    string   $str    String in camel case format
+    * @return    string            $str Translated into underscore format
+    */
+    function toUnderscore($str) {
+        $str[0] = strtolower($str[0]);
+        $func = create_function('$c', 'return "_" . strtolower($c[1]);');
+
+        return preg_replace_callback('/([A-Z])/', $func, $str);
+    }
+
+    /**
+    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
+    * @param    string   $str    String in camel case format
+    * @return    string            $str Translated into underscore format
+    */
+    function toTitle($str) {
+        $str = ucfirst($str);
+        $func = create_function('$c', 'return " " . ucfirst($c[1]);');
+
+        return preg_replace_callback('/([A-Z])/', $func, $str);
+    }
+
+    /**
+    * Translates a string with underscores into camel case (e.g. first_name -&gt; firstName)
+    * @param    string   $str                     String in underscore format
+    * @return   string                              $str translated into camel caps
+    */
+    function toCamelCase($str) {
+        $str = lcfirst($str);
+        $func = create_function('$c', 'return strtoupper($c[1]);');
+
+        return preg_replace_callback('/_([a-z])/', $func, $str);
+    }
 }

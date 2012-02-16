@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @author Joris de <joris.w.dewit@gmail.com>
  * 
  * @ORM\Entity
- * @ORM\Table(name="{{ bundle_corename }}_{{ entity_lc }}s")
+ * @ORM\Table(name="{{ bundle_corename }}_{{ entity_cc }}s")
  * @ORM\HasLifecycleCallbacks
  */
 class {{ entity }} 
@@ -55,7 +55,7 @@ class {{ entity }}
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}", inversedBy="{{ field.inversedBy }}"{% if field.cascade is not empty %}, cascade={"{% for item in field.cascade %}{% if loop.last %}{{ item }}{% else %}{{ item }} {% endif %}{% endfor %}"}{% endif %})
-     * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_lc }}_{{ field.fieldName }}")
+     * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_cc }}_{{ field.fieldName }}")
      */
 {% else %}
     /** 
@@ -133,7 +133,7 @@ class {{ entity }}
     }
 
     /**
-     * Get {{ entity_lc }} id
+     * Get {{ entity_cc }} id
      *
      * @return integer
      */   

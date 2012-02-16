@@ -5,7 +5,7 @@
     </div>
     <div class="content">  
 {% for field in fields %}
-        <div>{{ field.fieldName|camelCaseToTitle }}: {{ "{{ "~ entity_lc ~"."~ field.fieldName ~" }}" }}</div>
+        <div>{{ field.fieldName|camelCaseToTitle }}: {{ "{{ "~ entity_cc ~"."~ field.fieldName ~" }}" }}</div>
 {% endfor %}
     </div>            
 {{ "{% endblock %}" }}

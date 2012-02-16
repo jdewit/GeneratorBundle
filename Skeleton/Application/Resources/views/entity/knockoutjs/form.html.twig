@@ -1,22 +1,22 @@
-<div id="{{ entity_lc }}_form_container" class="hide" data-bind="with: {{ entity_lc }}Model">
-    <form id="{{ entity_lc }}_form" class="form-horizontal" data-bind="attr: { 'action': formAction() }" method="post" {{ "{{ form_enctype("~ entity_lc ~"Form) }}" }}>
+<div id="{{ entity_us }}_form_container" class="hide" data-bind="with: {{ entity_cc }}Model">
+    <form id="{{ entity_us }}_form" class="form-horizontal" data-bind="validate: true, attr: { 'action': formAction() }" method="post" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>
 {% for field in fields %}
 {% if field.type == 'oneToMany' or field.type == 'manyToMany' %}
-        {{ "{{ form_row("~ entity_lc ~"Form."~ field.fieldName ~"s) }}" }}    
+        {{ "{{ form_row("~ entity_cc ~"Form."~ field.fieldName ~"s) }}" }}    
 {% else %}
-        {{ "{{ form_row("~ entity_lc ~"Form."~ field.fieldName ~") }}" }}    
+        {{ "{{ form_row("~ entity_cc ~"Form."~ field.fieldName ~") }}" }}    
 {% endif %}
 {% endfor %} 
-        {{ "{{ form_widget("~ entity_lc ~"Form._token) }}" }}
-        {{ "{{ form_rest("~ entity_lc ~"Form) }}" }}        
+        {{ "{{ form_widget("~ entity_cc ~"Form._token) }}" }}
+        {{ "{{ form_rest("~ entity_cc ~"Form) }}" }}        
         <div class="form-actions" data-bind="visible: formMode() == 'new'">
-            <input type="submit" class="btn-primary btn" value="Add {{ entity }}"/>
-            <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list') }}" }}" class="closeDialog btn">Cancel</a>
+            <button type="submit" class="btn-new">Add {{ entity }}</button>
+            <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_list') }}" }}" class="btn-cancel">Cancel</a>
         </div>
         <div class="form-actions" data-bind="visible: formMode() == 'edit'">
-            <input type="submit" class="btn-primary btn" value="Update {{ entity }}"/>
-            <a href="#" class="btn destroyDialog">Cancel</a>
-            <a id="delete_{{ entity_lc }}" data-bind="attr: { 'href': '{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_delete', {'id': ''}) }}" }}/'+ {{ entity_lc }}Id() }" class="btn btn-danger pull-right">Delete</a>
+            <button type="submit" class="btn-update">Update {{ entity }}</button>
+            <a href="#" class="btn-cancel">Cancel</a>
+            <a id="delete_{{ entity_cc }}" data-bind="click: {{ entity_cc }}ListModel.delete{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_delete') }}" }}/'+ {{ entity_cc }}Id() }" class="btn-delete">Delete</a>
         </div>
     </form>
 </div>

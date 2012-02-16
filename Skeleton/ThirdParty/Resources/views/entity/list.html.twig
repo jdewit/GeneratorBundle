@@ -5,13 +5,13 @@
         <div class="dropDown filter">
             <a href="#" class="dropDownButton">{{ "{{ filter }}" }}</a>
             <ul class="dropDownContent border">
-                <li><a href="{{" {{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'All' }) }}" }}">All</a></li>
-                <li><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list', {'filter': 'Deleted' }) }}" }}">Deleted</a></li>
+                <li><a href="{{" {{ path('"~ bundle_alias ~"_"~ entity_us ~"_list', {'filter': 'All' }) }}" }}">All</a></li>
+                <li><a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_list', {'filter': 'Deleted' }) }}" }}">Deleted</a></li>
                 <li><a href="#">Search</a></li>
             </ul>
         </div>
         <div id="rightButton">
-            <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" class="button ui-btn-right">New {{ entity }}</a>
+            <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_new') }}" }}" class="button ui-btn-right">New {{ entity }}</a>
         </div>
     </div>
     <div class="content">

@@ -30,7 +30,7 @@ class AvroBundleGenerator extends Generator
         $this->filesystem = $this->container->get('filesystem');
         $this->bundleName = $bundleName;
         
-        $parameters = array(
+        $this->parameters = array(
             'third_party' => $thirdParty,
             'bundle_vendor' => $vendor,
             'bundle_namespace' => $bundleNamespace,
@@ -43,7 +43,7 @@ class AvroBundleGenerator extends Generator
 
         $this->output->write('Creating bundle structure: ');
         try {
-            $this->createBundleStructure($dir, $parameters);
+            $this->createBundleStructure($dir, $this->parameters);
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -56,7 +56,7 @@ class AvroBundleGenerator extends Generator
         if ($updateConfig){
             $this->output->write('Adding bundle to AppKernel.php: ');
             try {
-                $this->updateAppKernel($parameters);
+                $this->updateAppKernel($this->parameters);
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -80,18 +80,18 @@ class AvroBundleGenerator extends Generator
         }
     }
     
-    protected function createBundleStructure($dir, $parameters)
+    protected function createBundleStructure($dir, $this->parameters)
     {
       
         //create bundle.php
-        $this->renderFile('Bundle.php', $dir.'/'.$parameters['bundle_name'].'.php', $parameters);      
-        $this->renderFile('Resources/views/layout.html.twig', $dir.'/Resources/views/layout.html.twig', $parameters);
-        $this->renderFile('Resources/config/routing.yml', $dir.'/Resources/config/routing.yml', $parameters);
-        $this->renderFile('Resources/config/config.yml', $dir.'/Resources/config/config.yml', $parameters);
-        $this->renderFile('README.md', $dir.'/README.md', $parameters);
-        $this->renderFile('Resources/meta/LICENSE', $dir.'/Resources/meta/LICENSE', $parameters);
+        $this->renderFile('Bundle.php', $dir.'/'.$this->parameters['bundle_name'].'.php', $this->parameters);      
+        $this->renderFile('Resources/views/layout.html.twig', $dir.'/Resources/views/layout.html.twig', $this->parameters);
+        $this->renderFile('Resources/config/routing.yml', $dir.'/Resources/config/routing.yml', $this->parameters);
+        $this->renderFile('Resources/config/config.yml', $dir.'/Resources/config/config.yml', $this->parameters);
+        $this->renderFile('README.md', $dir.'/README.md', $this->parameters);
+        $this->renderFile('Resources/meta/LICENSE', $dir.'/Resources/meta/LICENSE', $this->parameters);
         
-        //$this->renderFile('DependencyInjection/Extension.php', $dir.'/DependencyInjection/'.$parameters['bundle_alias_cc'].'extension.php', $parameters);
+        //$this->renderFile('DependencyInjection/Extension.php', $dir.'/DependencyInjection/'.$this->parameters['bundle_alias_cc'].'extension.php', $this->parameters);
         
         //generate file structure
         $this->filesystem->mkdir($dir.'/Controller');
@@ -105,7 +105,7 @@ class AvroBundleGenerator extends Generator
             $this->filesystem->mkdir($dir.'/Document');
             $this->filesystem->mkdir($dir.'/Entity');  
         } else {
-            switch ($parameters['db_driver']):
+            switch ($this->parameters['db_driver']):
                 case 'orm':
                     $this->filesystem->mkdir($dir.'/Entity');  
                 break;
@@ -123,10 +123,10 @@ class AvroBundleGenerator extends Generator
         
     }
     
-    protected function updateAppKernel($parameters)
+    protected function updateAppKernel($this->parameters)
     {
         $kernelManipulator = new KernelManipulator($this->container->get('kernel'));
-        $kernelManipulator->addBundle($parameters['bundle_namespace'], $parameters['bundle_name']);
+        $kernelManipulator->addBundle($this->parameters['bundle_namespace'], $this->parameters['bundle_name']);
     }    
     
     protected function updateAppRouting()

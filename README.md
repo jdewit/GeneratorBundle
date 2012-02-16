@@ -1,16 +1,13 @@
 AvroGeneratorBundle
 ====================
-Generate code similar in structure to the 
-FOSUserBundle. With this bundle you can generate or update 
-all classes related to an entity with just a few commands 
-in the console.
+Generate Symfony2 code from the command line!
+With this bundle you can generate or update 
+all classes related to an entity with just a few commands!
 
 This bundle generates code that is customised to my personal 
 preferences so it won't be for everyone. However, I am open 
 to collaborating with others in improving this bundle and 
 making it more suitable for more people. 
-
-FYI: Updating any classes overwrites the original file.
 
 Status
 ======
@@ -20,11 +17,38 @@ Currently it only provides support for Doctrine ORM.
 The code still needs to get cleaned up a 
 fair bit and tests still need to be made. Any help would be much appreciated!
 
+Styles
+======
+Currently, two "styles" of code are supported. 
+
+FOS
+---
+Generates <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a> inspired code.
+
+Knockout
+--------
+Implements <a href="http://knockoutjs.com">KnockoutJS</a> in the view layer along 
+with FOSUserBundle inspired code.
+Generates data-binds in the form classes as well as viewModels.
+
 Dependencies
 ============
-The view generator creates views with classes for <a href="http://twitter.github.com/bootstrap/index.html">twitter bootstrap 2.0</a>.
+FOS
+---
+    - None
 
-The knockoutjs view generator requires <a href="http://knockoutjs.com">KnockoutJS</a>.
+Knockout
+--------
+    - <a href="http://knockoutjs.com">KnockoutJS</a>
+    - <a href="http://jquery.com">JQuery</a>
+    - <a href="http://jquery.malsup.com/form/">JQuery Form Plugin</a>
+    - <a href="https://github.com/schmittjoh/JMSSerializerBundle">JMSSerializerBundle</a>
+    - some custom javascript functions, I will create a bundle of these soon
+
+Optional Dependencies
+=====================
+    - The view generator generates some <a href="http://jqueryui.com">JQueryUI</a> classes
+    - Form fields have classes that work with <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">JQuery Validation</a>
 
 Installation
 ============
@@ -100,12 +124,6 @@ Generate views with:
 $ php app/console generate:avro:view
 ```
 
-Generate KnockoutJS views and viewModel with:
-
-``` bash
-$ php app/console generate:avro:knockout
-```
-
 Generate a formType and formHandler with:
 
 ``` bash
@@ -127,6 +145,6 @@ $ php app/console generate:avro:feature
 SOMEDAY FEATURES
 ================
 
+- more 'official' third party style code
 - MongoDB support
 - CouchDB support
-- speech activation and/or a pet monkey

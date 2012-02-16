@@ -30,84 +30,81 @@ class {{ entity }}Manager
     }
 
     /**
-     * Create {{ entity_lc }}
+     * Create {{ entity_cc }}
      */
     public function create()
     {
         $class = $this->getClass();
         
-        ${{ entity_lc }} = new $class();
-        ${{ entity_lc }}->setOwner($this->owner);
+        ${{ entity_cc }} = new $class();
+        ${{ entity_cc }}->setOwner($this->owner);
 
-        return ${{ entity_lc }};
+        return ${{ entity_cc }};
     }
            
     /**
-     * Update {{ entity_lc }}
+     * Update {{ entity_cc }}
      */
-    public function update({{ entity }} ${{ entity_lc }}, $andFlush = true)
+    public function update({{ entity }} ${{ entity_cc }}, $andFlush = true)
     {
 {% for field in fields %}
 {% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
-        foreach (${{ entity_lc }}->get{{ field.fieldName }}() as ${{ field.fieldName|slice(0, -1) }}) {
+        foreach (${{ entity_cc }}->get{{ field.fieldName }}() as ${{ field.fieldName|slice(0, -1) }}) {
             ${{ field.fieldName|slice(0, -1) }}->setOwner($this->owner);
         }
 {% endif %}
 {% endfor %}
-        $this->em->persist(${{ entity_lc }});
+        $this->em->persist(${{ entity_cc }});
         if ($andFlush) {
             $this->em->flush();
         }
     }
 
     /**
-     * Soft delete one {{ entity_lc }}
+     * Soft delete one {{ entity_cc }}
      */  
-    public function softDelete({{ entity }} ${{ entity_lc }})
+    public function softDelete({{ entity }} ${{ entity_cc }})
     {
-        ${{ entity_lc }}->setIsDeleted(true);
-        ${{ entity_lc }}->setDeletedAt( new \Datetime('now') );
+        ${{ entity_cc }}->setIsDeleted(true);
+        ${{ entity_cc }}->setDeletedAt(new \Datetime('now'));
        
-        $this->em->persist(${{ entity_lc }});
+        $this->em->persist(${{ entity_cc }});
         $this->em->flush();
     }
 
     /**
-     * Permanently delete one {{ entity_lc }}
+     * Restore one {{ entity_cc }}
      */  
-    public function delete({{ entity }} ${{ entity_lc }})
+    public function restore({{ entity }} ${{ entity_cc }})
+    {
+        ${{ entity_cc }}->setIsDeleted(false);
+        ${{ entity_cc }}->setDeletedAt(null);
+       
+        $this->em->persist(${{ entity_cc }});
+        $this->em->flush();
+    }
+
+    /**
+     * Permanently delete one {{ entity_cc }}
+     */  
+    public function delete({{ entity }} ${{ entity_cc }})
     {
         $this->em->remove(${{ entity }});
         $this->em->flush();
     }
 
-    /** 
-     * Find {{ entity_lc }} as array with id as key
-     */
-    public function findAsKeyedArray($criteria = array()) 
-    {
-        ${{ entity_lc }}s = $this->findBy($criteria);
-
-        $array = array();
-        foreach( ${{ entity_lc }}s as ${{ entity_lc }} ) {
-            $array[ ${{ entity_lc }}->getId() ] = $this->toArray( ${{ entity_lc }} );
-        }
-        
-        return $array;
-    }
-
     /**
-     * Find one {{ entity_lc }} by id
+     * Find one {{ entity_cc }} by id
      */
     public function find($id)
     {
-        ${{ entity_lc }} = $this->repository->find($id);
+        ${{ entity_cc }} = $this->repository->find($id);
 
-        return ${{ entity_lc }};
+        return ${{ entity_cc }};
     }
 
     /**
-     * Find one {{ entity_lc }} by criteria
+     * Find one {{ entity_cc }} by criteria
      *
      * @parameter $criteria
      */
@@ -120,7 +117,7 @@ class {{ entity }}Manager
     }
 
     /**
-     * Find {{ entity_lc }}s by criteria
+     * Find {{ entity_cc }}s by criteria
      *
      * @parameter $criteria
      */
@@ -133,7 +130,7 @@ class {{ entity }}Manager
     }
     
     /**
-     * Find all {{ entity_lc }}s 
+     * Find all {{ entity_cc }}s 
      *
      */
     public function findAll($criteria = array())
@@ -153,20 +150,6 @@ class {{ entity }}Manager
         $criteria['isDeleted'] = true;
 
         return $this->repository->findBy($criteria);
-    }
-
-    /**
-     * Convert {{ entity_lc }} entity to array
-     */
-    public function toArray(${{ entity_lc }})
-    {
-        $array = array(
-{% for field in fields %}
-            '{{ field.fieldName }}' => ${{ entity_lc }}->get{{ field.fieldName|capitalizeFirst }}(),
-{% endfor %}
-        );
-
-        return $array;
     }
 
 }

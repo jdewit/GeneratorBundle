@@ -23,39 +23,14 @@ use Avro\GeneratorBundle\Generator\Generator;
  */
 class AvroReadmeGenerator extends Generator
 {
-    protected $entity;
-    protected $entityLC;
-    protected $fields;
-    
     /**
      * Generates the entity class if it does not exist.
-     *
-     * @param string $entity The entity relative class name
-     * @param array $fields The entity fields
      */
-    public function generate($entity, array $fields)
+    public function generate()
     {
-        $this->entity = $entity;
-        $this->entityLC = strtolower($entity);
-        $this->fields = $fields;
-        
-        $parameters = array(
-            'entity' => $this->entity,
-            'entity_lc' => $this->entityLC,
-            'fields' => $this->fields,
-            'bundle_name' => $this->bundleName,
-            'bundle_path' => $this->bundlePath,
-            'bundle_namespace' => $this->bundleNamespace,  
-            'bundle_vendor' => $this->bundleVendor,
-            'bundle_alias' => $this->bundleAlias,  
-            'bundle_alias_cc' => $this->bundleAliasCC,
-            'db_driver' => $this->dbDriver,
-            'actions' => array('show', 'list', 'new', 'edit', 'delete')
-        );
-
-        $this->output->writeln('Generating '.$parameters['bundle_name'].'/README.md: <info>OK</info>');
+        $this->output->writeln('Generating '.$this->parameters['bundle_name'].'/README.md: <info>OK</info>');
         try {
-            $this->generateReadme($parameters);        
+            $this->generateReadme();        
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -69,12 +44,11 @@ class AvroReadmeGenerator extends Generator
     /*
      * Generate the readme.md
      * 
-     * @param array $parameters needed to generate file
      */
-    private function generateReadme($parameters)
+    private function generateReadme()
     {   
         $filename = $this->bundlePath.'/README.md';
 
-        $this->renderFile('README.md', $filename, $parameters);                      
+        $this->renderFile('README.md', $filename);                      
     }    
 }

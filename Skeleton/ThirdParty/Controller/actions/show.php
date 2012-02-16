@@ -1,15 +1,15 @@
     
     /**
-     * Show one {{ entity_lc }}.
+     * Show one {{ entity_cc }}.
      *
-     * @Route("/show/{id}", name="{{ bundle_alias }}_{{ entity_lc }}_show")
+     * @Route("/show/{id}", name="{{ bundle_alias }}_{{ entity_us }}_show")
      * @Template()
      */
     public function showAction($id)
     {
-        ${{ entity_lc }} = $this->container->get('{{ bundle_alias }}.{{ entity_lc }}_manager')->find{{ entity }}($id);
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_us }}_manager')->find{{ entity }}($id);
 
         return array(
-            '{{ entity_lc }}' => ${{ entity_lc }},
+            '{{ entity_cc }}' => ${{ entity_cc }},
         );
     }

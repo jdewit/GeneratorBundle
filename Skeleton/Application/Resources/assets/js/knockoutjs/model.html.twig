@@ -1,6 +1,6 @@
-function {{ entity_lc }}Model({{ entity_lc }}, newUrl, editUrl) {
+function {{ entity_cc }}Model({{ entity_cc }}, newUrl, editUrl) {
     var self = this;
-    self.{{ entity_lc }}Id = ko.observable();
+    self.{{ entity_cc }}Id = ko.observable();
     self.formAction = ko.observable();
     self.formMode = ko.observable();
 {% for field in fields %}
@@ -8,26 +8,25 @@ function {{ entity_lc }}Model({{ entity_lc }}, newUrl, editUrl) {
     self.{{ field.fieldName }} = ko.observableArray();
 {% elseif field.type == 'manyToOne' %}
     self.selected{{ field.fieldName|capitalize }} = ko.observable();
-    self.available{{ field.fieldName|capitalize }}s = ko.observableArray(available{{ field.fieldName|capitalize }}s);
 {% else %}
     self.{{ field.fieldName }} = ko.observable();
 {% endif %}
 {% endfor %}
 
-    self.set{{ entity }} = function({{ entity_lc }}) {
-        self.{{ entity_lc }}Id({{ entity_lc }} ? {{ entity_lc }}.id : null);
-        self.formMode({{ entity_lc }} ? 'edit' : 'new');
-        self.formAction({{ entity_lc }} ? editUrl +'/'+ {{ entity_lc }}.id : newUrl);
+    self.set{{ entity }} = function({{ entity_cc }}) {
+        self.{{ entity_cc }}Id({{ entity_cc }} ? {{ entity_cc }}.id : null);
+        self.formMode({{ entity_cc }} ? 'edit' : 'new');
+        self.formAction({{ entity_cc }} ? editUrl +'/'+ {{ entity_cc }}.id : newUrl);
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}
-        self.selected{{ field.fieldName|capitalize }}({{ entity_lc }} ? {{ entity_lc }}.{{ field.fieldName }} : null);
+        self.selected{{ field.fieldName|capitalize }}({{ entity_cc }} ? {{ entity_cc }}.{{ field.fieldName }} : null);
 {% else %}
-        self.{{ field.fieldName }}({{ entity_lc }} ? {{ entity_lc }}.{{ field.fieldName }} : null);
+        self.{{ field.fieldName }}({{ entity_cc }} ? {{ entity_cc }}.{{ field.fieldName }} : null);
 {% endif %}
 {% endfor %}
     }
 
-    self.set{{ entity }}({{ entity_lc }});
+    self.set{{ entity }}({{ entity_cc }});
 }
 
 

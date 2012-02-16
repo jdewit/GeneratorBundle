@@ -28,35 +28,12 @@ use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
  */
 class AvroEntityGenerator extends Generator
 {
-    protected $entity;
-    protected $entityLC;
-    protected $fields;
-    
-    public function generate($entity, array $fields, $writeManager = true, $updateDB = true)
+    public function generate()
     {
-        $this->entity = $entity;
-        $this->entityLC = strtolower($entity);
-        $this->fields = $fields;
-        $parameters = array(
-            'third_party' => $this->thirdParty,
-            'entity' => $this->entity,
-            'entity_lc' => $this->entityLC,
-            'entity_class' => $this->bundleNamespace.'\\Entity\\'.$this->entity,
-            'fields' => $this->fields,
-            'bundle_basename' => $this->bundleBasename,
-            'bundle_name' => $this->bundleName,
-            'bundle_path' => $this->bundlePath,
-            'bundle_namespace' => $this->bundleNamespace,
-            'bundle_vendor' => $this->bundleVendor,
-            'bundle_alias' => $this->bundleAlias,     
-            'bundle_corename' => $this->bundleCorename,     
-            'db_driver' => $this->dbDriver
-        );
-
         if ($this->thirdParty == true) {
             $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'.php: ');        
             try {
-                $this->generateEntity($parameters);
+                $this->generateEntity();
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -68,7 +45,7 @@ class AvroEntityGenerator extends Generator
             
             $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Interface.php: ');                
             try {
-                $this->generateEntityInterface($parameters);
+                $this->generateEntityInterface();
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -77,11 +54,11 @@ class AvroEntityGenerator extends Generator
                     ''
                 ));
             }  
-            
-            if ($writeManager) {
+
+            if ($dialog->askConfirmation($output, $dialog->getQuestion('Overwrite '.$entity.'Manager', 'no', '?'), false)) {
                 $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
                 try {
-                    $this->generateEntityManager($parameters);
+                    $this->generateEntityManager();
                     $this->output->writeln('<info>Ok</info>');
                 } catch (\RuntimeException $e) {
                     $this->output->writeln(array(
@@ -93,7 +70,7 @@ class AvroEntityGenerator extends Generator
 
                 $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'ManagerInterface.php: ');       
                 try {
-                    $this->generateEntityManagerInterface($parameters);
+                    $this->generateEntityManagerInterface();
                     $this->output->writeln('<info>Ok</info>');
                 } catch (\RuntimeException $e) {
                     $this->output->writeln(array(
@@ -106,7 +83,7 @@ class AvroEntityGenerator extends Generator
         } else {
             $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'.php: ');        
             try {
-                $this->generateEntity($parameters);
+                $this->generateEntity();
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -116,10 +93,10 @@ class AvroEntityGenerator extends Generator
                 ));
             }        
             
-            if ($writeManager) {
+            if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Overwrite '.$this->entity.'Manager', 'no', '?'), false)) {
                 $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
                 try {
-                    $this->generateEntityManager($parameters);
+                    $this->generateEntityManager();
                     $this->output->writeln('<info>Ok</info>');
                 } catch (\RuntimeException $e) {
                     $this->output->writeln(array(
@@ -129,6 +106,8 @@ class AvroEntityGenerator extends Generator
                     ));
                 }  
 
+            } else {
+                $this->output->writeln('<info>Ok</info>');
             }
         }
 
@@ -151,50 +130,47 @@ class AvroEntityGenerator extends Generator
     /*
      * Generates the Entity code
      * 
-     * @param array $parameters The parameters needed to generate the file
+     * @param array $this->parameters The this->parameters needed to generate the file
      */
-    private function generateEntity($parameters)
+    private function generateEntity()
     {
         $filename = $this->bundlePath.'/Entity/'.$this->entity.'.php';
 
-        $this->renderFile('Entity/entity.php', $filename, $parameters); 
+        $this->renderFile('Entity/entity.php', $filename); 
     }
     
     /*
      * Generate the EntityInterface
      * 
-     * @param array $parameters The parameters needed to generate file
      */
-    private function generateEntityInterface($parameters)
+    private function generateEntityInterface()
     {
         $filename = $this->bundlePath.'/Entity/'.$this->entity.'Interface.php';
 
-        $this->renderFile('Entity/entityInterface.php', $filename, $parameters);        
+        $this->renderFile('Entity/entityInterface.php', $filename);        
     }
     
     /*
      * Generate the EntityManager
      * 
-     * @param array $parameters The parameters needed to generate file
      */
-    private function generateEntityManager($parameters)
+    private function generateEntityManager()
     {   
         $filename = $this->bundlePath.'/Entity/'.$this->entity.'Manager.php';      
         
-        $this->renderFile('Entity/manager.php', $filename, $parameters);        
+        $this->renderFile('Entity/manager.php', $filename);        
                
     }
     
     /*
      * Generate the EntityManagerInterface
      * 
-     * @param array $parameters The parameters needed to generate filee
      */
-    private function generateEntityManagerInterface($parameters)
+    private function generateEntityManagerInterface()
     {
         $filename = $this->bundlePath.'/Entity/'.$this->entity.'ManagerInterface.php';
 
-        $this->renderFile('Entity/managerInterface.php', $filename, $parameters);
+        $this->renderFile('Entity/managerInterface.php', $filename);
     }
     
 

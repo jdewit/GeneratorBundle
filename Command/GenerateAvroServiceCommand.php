@@ -50,19 +50,12 @@ class GenerateAvroServiceCommand extends GenerateAvroCommand
         $dialog = $this->getDialogHelper();
         
         $dialog->writeSection($output, 'Welcome to the Avro service configuration generator!');
-        $output->writeln('(ex. AcmeTestBundle:Blog)');
-        $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Avro\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));         
 
-        list($bundle, $entity) = $this->parseShortcutNotation($entity);
-
-        $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundle).'\\'.$entity;
-        $metadata = $this->getEntityMetadata($entityClass);
-        $fields = $this->getFieldsFromMetadata($metadata[0]);
-        $bundle   = $this->getApplication()->getKernel()->getBundle($bundle);
+        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
 
         //Update services.yml
-        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle);
-        $avroServicesGenerator->generate($entity, $fields);        
+        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroServicesGenerator->generate(true);        
         
         $output->writeln('Service configuration created succesfully!');
     }

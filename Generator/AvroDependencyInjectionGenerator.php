@@ -21,45 +21,18 @@ use Avro\GeneratorBundle\Manipulator\ExtensionManipulator;
 /**
  * Generates the dependencyInjection files on a Doctrine entity.
  *
- * @author Fabien Potencier <fabien@symfony.com>
- * @author Hugo Hamon <hugo.hamon@sensio.com>
  * @author Joris de Wit <joris.w.Avro@gmail.com>
  */
 class AvroDependencyInjectionGenerator extends Generator
 {
-    protected $entity;
-    protected $entityLC;
-    protected $fields;
-    
     /**
-     * Generates the entity class if it does not exist.
-     *
-     * @param string $entity The entity relative class name
-     * @param array $fields The entity fields
+     * Generates the dependency injection classes.
      */
-    public function generate($entity, array $fields)
+    public function generate()
     {
-        $this->entity = $entity;
-        $this->entityLC = strtolower($entity);
-        $this->fields = $fields;
-        
-        $parameters = array(
-            'entity' => $this->entity,
-            'entity_lc' => $this->entityLC,
-            'entity_class' => $this->bundleNamespace.'\\Model\\'.$this->entity,
-            'fields' => $this->fields,
-            'bundle_name' => $this->bundleName,
-            'bundle_basename' => $this->bundleBasename,
-            'bundle_path' => $this->bundlePath,
-            'bundle_namespace' => $this->bundleNamespace,  
-            'bundle_alias' => $this->bundleAlias,   
-            'bundle_alias_cc' => $this->bundleAliasCC,
-            'db_driver' => $this->dbDriver
-        );
-
         $this->output->write('Updating '.$this->bundleBasename.'/DependancyInjection/Configuration.php: ');
         try {
-            $this->updateConfiguration($parameters);
+            $this->updateConfiguration();
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -71,7 +44,7 @@ class AvroDependencyInjectionGenerator extends Generator
         
         $this->output->write('Updating '.$this->bundleBasename.'/DependencyInjection/'.$this->bundleAliasCC.'Extension.php: ');
         try {
-            $this->updateExtension($parameters);
+            $this->updateExtension();
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -87,19 +60,18 @@ class AvroDependencyInjectionGenerator extends Generator
     /*
      * Update Configuration.php
      * 
-     * @param array $parameters
      */
-    protected function updateConfiguration($parameters)
+    protected function updateConfiguration()
     {
         $partial = $this->bundlePath.'/DependencyInjection/ConfigurationPartial.php';
      
         // generate partial                
-        $this->renderFile('DependencyInjection/ConfigurationPartial.php', $partial, $parameters); 
+        $this->renderFile('DependencyInjection/ConfigurationPartial.php', $partial); 
         
         // manipulate Configuration.php file
-        $manip = new ConfigurationManipulator($this->bundlePath.'/DependencyInjection/Configuration.php', $parameters);
+        $manip = new ConfigurationManipulator($this->bundlePath.'/DependencyInjection/Configuration.php');
         try {
-            $manip->addPartial($partial, $parameters['entity']);
+            $manip->addPartial($partial, $this->entity);
             unlink($partial);
         } catch (\RuntimeException $e) {
             unlink($partial);
@@ -110,18 +82,16 @@ class AvroDependencyInjectionGenerator extends Generator
     
     /*
      * Update Extension.php
-     * 
-     * @param array $parameters
      */
-    private function updateExtension($parameters)
+    private function updateExtension()
     {
         $partial = $this->bundlePath.'/DependencyInjection/ExtensionPartial.php';
      
         // generate partial                
-        $this->renderFile('DependencyInjection/ExtensionPartial.php', $partial, $parameters); 
+        $this->renderFile('DependencyInjection/ExtensionPartial.php', $partial); 
         
         // manipulate Extension.php file
-        $manip = new ExtensionManipulator($this->bundlePath.'/DependencyInjection/'.$this->bundleAliasCC.'Extension.php', $parameters);
+        $manip = new ExtensionManipulator($this->bundlePath.'/DependencyInjection/'.$this->bundleAliasCC.'Extension.php');
         $manip->addPartial($partial, $this->entity);
         
         //delete partial

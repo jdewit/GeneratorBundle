@@ -2,11 +2,11 @@
 {{ "{% block content %}" }}
     <h1>New {{ entity }}</h1>
     <hr/>
-    <form id="{{ bundle_alias }}_{{ entity_lc }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_new') }}" }}" {{ "{{ form_enctype("~ entity_lc ~"Form) }}" }}>  
+    <form id="{{ bundle_alias }}_{{ entity_us }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_new') }}" }}" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>  
         {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
         <div class="form-actions">
-            <input type="submit" class="btn-large btn-primary" title="Create this {{ entity_lc }}." value="Create {{ entity }}"/>
-            <a class="btn closeDialog" title="Close this form." href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_lc ~"_list') }}" }}">Cancel</a>
+            <input type="submit" class="btn-large btn-primary" title="Create this {{ entity_cc }}." value="Create {{ entity }}"/>
+            <a class="btn closeDialog" title="Close this form." href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_us ~"_list') }}" }}">Cancel</a>
         </div>
     </form>
 {{ "{% endblock %}" }}

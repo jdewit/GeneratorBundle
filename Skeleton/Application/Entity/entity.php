@@ -11,6 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 {%- endif -%}
 {% endfor %}
 use JMS\SerializerBundle\Annotation\Exclude;
+{% if style == 'default' %}
+use Symfony\Component\Validator\Constraints as Assert;
+{% endif %}
 
 /**
  * {{ bundle_namespace }}\Entity\{{ entity }}
@@ -18,7 +21,7 @@ use JMS\SerializerBundle\Annotation\Exclude;
  * @author Joris de <joris.w.dewit@gmail.com>
  * 
  * @ORM\Entity
- * @ORM\Table(name="{{ bundle_corename }}_{{ entity_lc }}")
+ * @ORM\Table(name="{{ bundle_corename }}_{{ entity_us }}")
  * @ORM\HasLifecycleCallbacks
  */
 class {{ entity }} 
@@ -54,7 +57,7 @@ class {{ entity }}
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}"{% if field.mappedBy %}, mappedBy="{{ field.mappedBy }}"{% endif %}{% if field.inversedBy %}, inversedBy="{{ field.inversedBy }}"{% endif %}{% if field.cascade is not empty %}, cascade={ {% for item in field.cascade %}{% if loop.last %}"{{ item }}"{% else %}"{{ item }}",{% endif %}{% endfor %} }{% endif %}{% if field.orphanRemoval is defined %}{% if field.orphanRemoval %}, orphanRemoval=true {% endif %}{% endif %})
-     * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_lc }}_{{ field.fieldName }}")
+     * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_cc }}_{{ field.fieldName }}")
      */
     protected ${{ field.fieldName }};
 
@@ -63,6 +66,38 @@ class {{ entity }}
      * @var string
      *
      * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     */
+    protected ${{ field.fieldName }};
+
+{% elseif field.type == "text" %}
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     */
+    protected ${{ field.fieldName }};
+
+{% elseif field.type == "integer" %}
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="integer"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     */
+    protected ${{ field.fieldName }};
+
+{% elseif field.type == "decimal" %}
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="decimal"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     */
+    protected ${{ field.fieldName }};
+
+{% elseif field.type == "float" %}
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="float"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -84,9 +119,9 @@ class {{ entity }}
 
 {% endif %}{% endfor %}    
     /**
-     * @var \Application\UserBundle\Entity\User
+     * @var \Application\UserBundle\Entity\Owner
      *
-     * @ORM\ManyToOne(targetEntity="Application\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Application\UserBundle\Entity\Owner")
      * @exclude
      */
     protected $owner;
@@ -146,7 +181,7 @@ class {{ entity }}
     }
 
     /**
-     * Get {{ entity_lc }} id
+     * Get {{ entity_cc }} id
      *
      * @return integer
      */   
@@ -162,7 +197,7 @@ class {{ entity }}
      * 
      * @return {{ field.targetEntity }} 
      */
-    public function get{{ field.fieldName|capitalizeFirst }}()
+    public function get{{ field.fieldName | capitalizeFirst }}()
     {
         return $this->{{ field.fieldName }};
     }
@@ -172,7 +207,7 @@ class {{ entity }}
      *
      * @param {{ field.type }} ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName|capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
+    public function set{{ field.fieldName | capitalizeFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
@@ -348,9 +383,9 @@ class {{ entity }}
      */
     public function __toString()
     {
-{% for field in fields %}
+{% for field in fields %}{% if loop.first %}
         return $this->{{ field.fieldName }};
-{% endfor %}
+{% endif %}{% endfor %}
     } 
 }
 

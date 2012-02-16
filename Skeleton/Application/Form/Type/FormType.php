@@ -20,11 +20,13 @@ class {{ entity }}FormType extends AbstractType
         $builder
 {% for field in fields %}
 {% if field.type == 'string' %}
-            ->add('{{ field.fieldName }}', 'text', array(
+{% if field.fieldName == 'email' %}
+            ->add('{{ field.fieldName }}', 'email', array(
                 'label' => '{{ field.fieldName|title }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'email',
 {% if style == 'knockout' %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
@@ -32,12 +34,72 @@ class {{ entity }}FormType extends AbstractType
 {% endif %}
                 )
             ))          
+{% elseif field.fieldName == 'country' %}
+            ->add('{{ field.fieldName }}', 'country', array(
+                'label' => '{{ field.fieldName|title }}',
+                'required' => false,
+                'attr' => array(
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'required',
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+                )
+            ))   
+{% elseif field.fieldName == 'zipCode' %}
+            ->add('{{ field.fieldName }}', 'text', array(
+                'label' => '{{ field.fieldName|title }}',
+                'required' => false,
+                'attr' => array(
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'required zipCode',
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+                )
+            ))   
+{% else %}
+            ->add('{{ field.fieldName }}', 'text', array(
+                'label' => '{{ field.fieldName|title }}',
+                'required' => false,
+                'attr' => array(
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'required capitalize',
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+                )
+            ))   
+{% endif %}
+{% elseif field.type == 'decimal' %}
+            ->add('{{ field.fieldName }}', 'number', array(
+                'label' => '{{ field.fieldName|title }}',
+                'required' => false,
+                'precision' => {{ field.precision }},
+                'attr' => array(
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'number required',
+{% if style == 'knockout' %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+
+                )
+            ))      
 {% elseif field.type == 'text' %}
             ->add('{{ field.fieldName }}', 'textarea', array(
                 'label' => '{{ field.fieldName|title }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_lc }}'  
+                    'title' => 'Enter the {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'digits required',
 {% if style == 'knockout' %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
@@ -54,8 +116,8 @@ class {{ entity }}FormType extends AbstractType
                 'input' => 'string',
                 'format' => 'dd/MM/yy', //\IntlDateFormatter::FULL
                 'attr' => array(
-                    'class' => 'date',
-                    'title' => 'Select a date for the {{ entity_lc }}'
+                    'class' => 'date required',
+                    'title' => 'Select a date for the {{ entity_cc }}',
 {% if style == 'knockout' %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
@@ -70,10 +132,11 @@ class {{ entity }}FormType extends AbstractType
                 'class' =>'{{ field.targetEntity }}',
                 'query_builder' => function ($repository) use ($owner) { return $repository->createQueryBuilder('e')->where('e.owner = ?1')->setParameter('1', $owner); },
                 'attr' => array(
-                    'title' => 'Choose a {{ field.fieldName }} for the {{ entity_lc }}'  
+                    'title' => 'Choose a {{ field.fieldName }} for the {{ entity_cc }}',  
+                    'class' => 'required',
 {% if style == 'knockout' %}
                     'data-bind' => "
-                        value: selected{{ field.fieldName }}()
+                        value: selected{{ field.fieldName|capitalize }}()
                     "
 {% endif %}
 
@@ -102,7 +165,7 @@ class {{ entity }}FormType extends AbstractType
                 'label' => '{{ field.fieldName|title }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => '{{ field.fieldName|title }}?'  
+                    'title' => '{{ field.fieldName|title }}?',  
 {% if style == 'knockout' %}
                     'data-bind' => "
                         checked: {{ field.fieldName }}
@@ -115,7 +178,8 @@ class {{ entity }}FormType extends AbstractType
                 'label' => '{{ field.fieldName|title }}',
                 'required' => false,
                  'attr' => array(
-                    'title' => '{{ field.fieldName|title }}'  
+                    'title' => '{{ field.fieldName|title }}',  
+                    'class' => 'required',
 {% if style == 'knockout' %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
@@ -136,6 +200,6 @@ class {{ entity }}FormType extends AbstractType
     
     public function getName()
     {
-        return '{{ bundle_alias }}_{{ entity_lc }}';
+        return '{{ bundle_alias }}_{{ entity_us }}';
     }
 }
