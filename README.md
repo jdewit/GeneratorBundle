@@ -1,4 +1,5 @@
-#AvroGeneratorBundle
+AvroGeneratorBundle
+-------------------
 Generate Symfony2 code from the command line!
 With this bundle you can generate or update 
 all classes related to an entity with just a few commands!
@@ -8,14 +9,16 @@ preferences so it won't be for everyone. However, I am open
 to collaborating with others in improving this bundle and 
 making it more suitable for more people. 
 
-#Status
+Status
+------
 The bundle is a work in progress but is working...most of the time :) 
 Currently it only provides support for Doctrine ORM.
 
 The code still needs to get cleaned up a 
 fair bit and tests still need to be made. Any help would be much appreciated!
 
-#Styles
+Styles
+------
 Currently, two "styles" of code are supported. 
 
 ###FOS 
@@ -26,7 +29,8 @@ Implements <a href="http://knockoutjs.com">KnockoutJS</a> in the view layer alon
 with FOSUserBundle inspired code.
 Generates data-binds in the form classes as well as viewModels.
 
-#Dependencies
+Dependencies
+------------
 ###FOS
     - None
 
@@ -37,11 +41,13 @@ Generates data-binds in the form classes as well as viewModels.
     - <a href="https://github.com/schmittjoh/JMSSerializerBundle">JMSSerializerBundle</a>
     - some custom javascript functions, I will create a bundle of these soon
 
-#Optional Dependencies
+Optional Dependencies
+---------------------
     - The view generator generates some <a href="http://jqueryui.com">JQueryUI</a> classes
     - Form fields have classes that work with <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">JQuery Validation</a>
 
-#Installation
+Installation
+------------
 Add the `Avro` namespace to your autoloader:
 
 ``` php
@@ -80,7 +86,8 @@ Now, run the vendors script to download the bundle:
 $ bin/vendors update
 ```
 
-#USAGE
+USAGE
+-----
 Enter the following in the console and follow the directions!
 
 Generate a bundle skeleton with:
@@ -131,8 +138,8 @@ Generate behat features with:
 $ php app/console generate:avro:feature
 ```
 
-#SOMEDAY FEATURES
-
+SOMEDAY FEATURES
+----------------
 - more 'official' third party style code
 - MongoDB support
 - CouchDB support
