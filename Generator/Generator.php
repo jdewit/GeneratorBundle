@@ -107,7 +107,7 @@ class Generator
             mkdir(dirname($filename), 0777, true);
         }
 
-        $skeletonDir = __DIR__.'/../Skeleton/Application';
+        $skeletonDir = __DIR__.'/../Resources/Application';
 
         $twig = new \Twig_Environment(new \Twig_Loader_Filesystem($skeletonDir), array(
             'debug'            => true,

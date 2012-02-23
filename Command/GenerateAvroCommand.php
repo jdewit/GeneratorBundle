@@ -116,7 +116,7 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
             $fields = $this->getFieldsFromMetadata($metadata[0]);
         }    
 
-        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (default, knockout)', 'default', '?'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle'), 'default'); 
+        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1. default, 2. knockout)', '1. default', '?'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle'), '2'); 
 
         return array($bundle, $entity, $fields, $style);
 
@@ -233,10 +233,10 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
                 $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 255), $lengthValidator, false, 255);
             }
 
-            if ($type != 'oneToOne' && $type == 'manyToOne' && $type == 'manyToMany') {
-                $data['nullable'] = $dialog->askConfirmation($output, $dialog->getQuestion('nullable?: ', 'yes', '?'), true); 
-            } else {
+            if ($type == 'oneToOne' || $type == 'manyToOne' || $type == 'manyToMany') {
                 $data['nullable'] = false;
+            } else {
+                $data['nullable'] = $dialog->askConfirmation($output, $dialog->getQuestion('nullable?: ', 'yes', '?'), true); 
             }
 
             $fields[$data['fieldName']] = $data;

@@ -1,0 +1,55 @@
+<table id="{{ entity_cc }}-table" data-bind="tablesorter: {{ entity_cc }}s">
+    <thead class="ui-state-default">
+        <tr>
+            <th class="{sorter: false} check-all" title="Select All"><input name="check-all" type="checkbox" data-bind="checked: checkAll"/></th>
+{% for field in fields %}
+            <th>{{ field.fieldName | camelCaseToTitle }}</th>
+{% endfor %}
+            <th class="{sorter: false}" width="75px">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: {{ entity_cc }}s">
+            <tr>
+                <td><input class="selector" type="checkbox" name="selected[]" data-bind="value: id, checked: $parent.checkAll()"/></td>
+{% for field in fields %}
+{% if field.type == 'manyToOne' %}
+                <td data-bind="text: ({{ field.fieldName | camelCaseToUnderscore }} ? {{ field.fieldName | camelCaseToUnderscore }}.name : null)"></td>
+{% elseif field.type == 'datetime' %}
+                <td data-bind="text: ({{ field.fieldName | camelCaseToUnderscore }} ? {{ field.fieldName | camelCaseToUnderscore }}.substring(0, 10) : null)"></td>
+{% else %}
+                <td data-bind="text: ({{ field.fieldName | camelCaseToUnderscore }})"></td>
+{% endif %}
+{% endfor %}
+                <td><a class="btn-edit" title="Edit this {{ entity | camelCaseToTitle | lower }}" href="#" data-bind="click: function(data, event) { $parent.edit{{ entity }}(data, event) }">edit</a></td>
+            </tr>
+    </tbody>
+    <tbody data-bind="if: {{ entity_cc }}s().length == 0">
+        <tr>
+            <td colspan="0" class="left-align">0 {{ entity | camelCaseToTitle | lower }}s found.</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><i class="sprite-arrow_left_up"></i></td> 
+            <td colspan="0">
+                <span class="pull-left">
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_getForm') }}" }}" class="btn-edit" title="Batch edit" data-bind="click: function(data, event) { batchEdit(data, event) }">edit</a>
+                    |
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'">Delete</a>
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'">Restore</a>
+                </span>
+                <span>
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_search') }}" }}" title="Search expenses" data-bind="click: search"><i class="sprite-magnifier"></i>Search</a>
+                </span>
+                <span class="pull-right">
+                    Filter: 
+                    <a title="View recent {{ entity_cc | camelCaseToTitle | lower }}s" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get', { 'filter': 'Recent' } ) }}" }}" data-bind="click: function(data, event) { updateFilter(data, event, 'Recent') }, attr: {'class': filter() == 'Recent' ? 'underline' : ''}">Recent</a> 
+                    |
+                    <a title="View all {{ entity_cc | camelCaseToTitle | lower }}s" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get', { 'filter': 'All' } ) }}" }}" data-bind="click: function(data, event) { updateFilter(data, event, 'All') }, attr: {'class': filter() == 'All' ? 'underline' : ''}">All</a> 
+                    |
+                    <a title="View all {{ entity_cc | camelCaseToTitle | lower }}s" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get', { 'filter': 'Deleted' } ) }}" }}" data-bind="click: function(data, event) { updateFilter(data, event, 'Deleted') }, attr: {'class': filter() == 'Deleted' ? 'underline' : ''}">Deleted</a> 
+                </span>
+            </td>
+        </tr>
+    </tfoot>
+</table>

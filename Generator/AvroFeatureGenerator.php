@@ -49,7 +49,11 @@ class AvroFeatureGenerator extends Generator
     {   
         $filename = $this->bundlePath.'/Features/'.$this->entityCC.'.feature';      
         
-        $this->renderFile('Features/entity.feature', $filename);
+        if ($this->style == 'knockout') {
+            $this->renderFile('Features/knockout.feature', $filename);
+        } else {
+            $this->renderFile('Features/entity.feature', $filename);
+        }
     }    
     
 }

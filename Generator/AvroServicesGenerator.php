@@ -32,12 +32,15 @@ class AvroServicesGenerator extends Generator
      */
     public function generate()
     {
+        $fileExists = false;
+        $overwrite = true;
+
         if (file_exists($this->bundlePath.'/Resources/config/services/'.$this->entityCC.'.yml')) {
             $fileExists = true;
             if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion($this->entityCC.'.yml exists. Overwrite?', 'no', '?'), false)) {
                 $overwrite = true;
-            }
-        }
+            } 
+        } 
 
         if (!$fileExists) {
             $this->output->writeln(array(

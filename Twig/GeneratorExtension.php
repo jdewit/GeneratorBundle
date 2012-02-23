@@ -6,8 +6,8 @@ class GeneratorExtension extends \Twig_Extension {
     public function getFilters()
     {
         return array(
-            'capitalizeFirst'    => new \Twig_Filter_Function(
-                '\Avro\GeneratorBundle\Twig\GeneratorExtension::capitalizeFirstFilter'
+            'ucFirst'    => new \Twig_Filter_Function(
+                '\Avro\GeneratorBundle\Twig\GeneratorExtension::ucFirstFilter'
             ),
             'camelCaseToTitle'   => new \Twig_Filter_Function(
                 '\Avro\GeneratorBundle\Twig\GeneratorExtension::camelCaseToTitle'
@@ -23,13 +23,20 @@ class GeneratorExtension extends \Twig_Extension {
         return 'GeneratorExtension';
     }
 
-    public static function capitalizeFirstFilter($input)
+    public static function ucFirstFilter($input)
     {
+        if (is_array($input)) {
+            print_r($input); exit;
+        }
         return ucfirst($input);
     }
 
     public static function camelCaseToTitle($input)
     {
+        if (is_array($input)) {
+            print_r($input); exit;
+        }
+
         return trim(implode(" ", preg_split('/(?=[A-Z])/', ucfirst($input))));
     }
 

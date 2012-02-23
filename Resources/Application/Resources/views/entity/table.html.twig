@@ -1,0 +1,42 @@
+<form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batch') }}" }}">  
+    <table id="tableSorter" class="table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th class="{sorter: false}" title="Select All"><input id="checkAll" type="checkbox"/></th>
+{% for field in fields %}
+                <th>{{ field.fieldName|capitalize }}</th>
+{% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {{ "{% for "~ entity_cc ~" in "~ entity_cc ~"s %}" }}
+                <tr>
+                    <td class="center_align"><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_cc ~".id }}" }}"/></td>
+                    <td class="showSpriteOnHover"><a title="Edit this {{ entity_cc }}" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit', {'id': "~ entity_cc ~".id }) }}" }}"><i class="sprite-pencil"></i>{{ "{{ "~ entity_cc ~".id }}" }}</a></td>
+{% for field in fields %}
+{% endfor %}
+                </tr>
+            {{ "{% else %}" }}
+                <tr>
+                    <td colspan="0">0 {{ entity_cc }}s Found</td>
+                </tr>
+            {{" {% endfor %}" }}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="0">
+                    {{ "{% if "~ entity_cc ~"s %}" }}
+                        <i class="sprite-arrow_left_up"></i>
+                       {{ "{% if filter != 'Deleted' %}" }}
+                            <button type="submit" name="form_action" value="Delete" class="btn btn-danger confirm" title="Are you sure you want to delete these {{ entity_cc }}s?">Delete</button>
+                        {{ "{% else %}" }}
+                            <button type="submit" name="form_action" value="Restore" class="btn btn-info confirm" title="Are you sure you want to restore these {{ entity_cc }}s?">Restore</button>
+                        {{ "{% endif %}" }}
+                    {{ "{% else %}" }}
+                        &nbsp;
+                    {{ "{% endif %}" }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</form>

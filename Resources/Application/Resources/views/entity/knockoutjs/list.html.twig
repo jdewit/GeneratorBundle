@@ -1,0 +1,27 @@
+{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% block content %}" }}
+    <div id="{{ entity_cc }}-list-container">
+        <h1>{{ entity | camelCaseToTitle }} List</h1>
+        <a href="#" class="btn btn-new throw-right" data-bind="click: new{{ entity }}">New {{ entity | camelCaseToTitle }}</a>
+        <hr />
+        {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+    </div>
+    {{ "{% include '"~ bundle_name~":"~ entity ~":form.html.twig' %}" }}
+{{ "{% endblock %}" }}
+{{ "{% block customJS %}" }}
+    this.{{ entity_cc }}ListModel = new {{ entity_cc }}ListModel(
+        {{ "{{ "~ entity_cc ~"s | serialize | raw }}" }},
+        '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get') }}" }}'
+    );
+    this.{{ entity_cc }}Model = new {{ entity_cc }}Model(
+        null, 
+        '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}',
+        '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit', {'id': ''}) }}" }}'
+    );
+    this.{{ entity_cc }}ListModel.{{ entity_cc }}Model = this.{{ entity_cc }}Model;
+    this.{{ entity_cc }}Model.{{ entity_cc }}ListModel = this.{{ entity_cc }}ListModel;
+
+    ko.applyBindings(this.{{ entity_cc }}ListModel, $("#{{ entity_cc }}-list-container")[0]);
+    ko.applyBindings(this.{{ entity_cc }}Model, $(".{{ entity_cc }}-form-container")[0]);
+{{ "{% endblock %}" }}
+

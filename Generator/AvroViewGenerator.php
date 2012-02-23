@@ -33,7 +33,7 @@ class AvroViewGenerator extends Generator
         switch ($this->style) {
             //knockout
             case 'knockout':
-                $views = array('list', 'table', 'form');
+                $views = array('list', 'table', 'form', 'getForm', 'search');
                  foreach ($views as $view) {
                     $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig: ');
                     try {

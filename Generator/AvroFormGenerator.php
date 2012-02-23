@@ -42,8 +42,25 @@ class AvroFormGenerator extends Generator
                 ''
             ));
         }       
+
+        // searchForm
+        if ($this->style == 'knockout') {
+            if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate a search form for '.$this->entity, 'yes', '?'), true)) {
+                $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'SearchFormType.php: ');
+                try {
+                    $this->generateSearchFormType();
+                    $this->output->writeln('<info>Ok</info>');
+                } catch (\RuntimeException $e) {
+                    $this->output->writeln(array(
+                        '<error>Fail</error>',
+                        $e->getMessage(),
+                        ''
+                    ));
+                }           
+            }
+        }
         
-        $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'.FormHandler.php: ');
+        $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'FormHandler.php: ');
         try {
             $this->generateFormHandler();
             $this->output->writeln('<info>Ok</info>');
@@ -66,15 +83,26 @@ class AvroFormGenerator extends Generator
         
         $this->renderFile('Form/Type/FormType.php', $filename);
     }    
-    
+
+    /**
+     * Generates the SearchFormType in the final bundle.
+     *
+     */
+    private function generateSearchFormType()
+    {   
+        $filename = $this->bundlePath.'/Form/Type/'.$this->entity.'SearchFormType.php';      
+        
+        $this->renderFile('Form/Type/SearchFormType.php', $filename);
+    }    
+   
     /**
      * Generates the FormHandler in the final bundle.
      *
      */
     private function generateFormHandler()
     {
-        $filename = $this->bundlePath.'/Form/Handler/'.$this->entity.'FormHandler.php';             
-        
+        $filename = $this->bundlePath.'/Form/Handler/'.$this->entity.'FormHandler.php';      
+
         $this->renderFile('Form/Handler/FormHandler.php', $filename);       
     }       
     

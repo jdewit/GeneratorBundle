@@ -86,8 +86,19 @@ class Validators
     {
         $style = strtolower($style);
 
-        if (!in_array($style, array('default', 'knockout'))) {
-            throw new \RuntimeException(sprintf('Style "%s" is not supported.', $style));
+        if (!in_array($style, array('1', '2'))) {
+            throw new \RuntimeException(sprintf('Option "%s" is not supported.', $style));
+        }
+        switch ($style) {
+            case '1':
+                $style = 'default';
+            break;
+            case '2':
+                $style = 'knockout';
+            break;
+            default: 
+                $style = 'default';
+            break;
         }
 
         return $style;

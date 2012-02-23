@@ -1,0 +1,14 @@
+{{ "{% extends '::layout.html.twig' %}" }}
+{{ "{% block content %}" }}
+    {{ "{% include '"~ bundle_name~":"~ entity ~":form.html.twig' %}" }}
+{{ "{% endblock %}" }}
+{{ "{% block customJS %}" }}
+    this.{{ entity_cc }}Model = new {{ entity_cc }}Model(
+        {{ "{{ "~ entity_cc ~" | serialize | raw }}" }}, 
+        '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}', 
+        '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit') }}" }}'
+    );
+
+    ko.applyBindings(this.{{ entity_cc }}Model, $('.{{ entity_cc }}-form-container:last')[0]);
+{{ "{% endblock %}" }}
+

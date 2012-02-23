@@ -93,7 +93,13 @@ class AvroEntityGenerator extends Generator
                 ));
             }        
             
-            if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Overwrite '.$this->entity.'Manager', 'no', '?'), false)) {
+            if (file_exists($this->bundlePath.'/Entity/'.$this->entityCC.'Manager.php')) {
+                $write = $this->dialog->askConfirmation($this->output, $this->dialog->getQuestion($this->entityCC.'.yml exists. Overwrite?', 'no', '?'), false);
+            } else {
+                $write = true;
+            }
+
+            if ($write) {
                 $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
                 try {
                     $this->generateEntityManager();
@@ -110,7 +116,6 @@ class AvroEntityGenerator extends Generator
                 $this->output->writeln('<info>Ok</info>');
             }
         }
-
         // update the database
         if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Update the database', 'yes', '?'), true)) {
             $this->output->write('Updating database: ');        
