@@ -115,7 +115,7 @@ Feature: {{ entity }} Feature
 {% elseif field.type == 'integer' %} 
         And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "789"
 {% elseif field.type == 'string' %}
-        And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "wrong string"
+        And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "2012-01-01"
 {% elseif field.type == 'text' %}
         And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "wrong text"
 {% endif %}{% endfor %}

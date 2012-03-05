@@ -94,7 +94,7 @@ class AvroEntityGenerator extends Generator
             }        
             
             if (file_exists($this->bundlePath.'/Entity/'.$this->entityCC.'Manager.php')) {
-                $write = $this->dialog->askConfirmation($this->output, $this->dialog->getQuestion($this->entityCC.'.yml exists. Overwrite?', 'no', '?'), false);
+                $write = $this->dialog->askConfirmation($this->output, $this->dialog->getQuestion($this->entityCC.'Manager exists. Overwrite?', 'no', '?'), false);
             } else {
                 $write = true;
             }

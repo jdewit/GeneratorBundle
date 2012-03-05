@@ -43,7 +43,7 @@ class AvroBundleGenerator extends Generator
 
         $this->output->write('Creating bundle structure: ');
         try {
-            $this->createBundleStructure($dir, $this->parameters);
+            $this->createBundleStructure($dir);
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -56,7 +56,7 @@ class AvroBundleGenerator extends Generator
         if ($updateConfig){
             $this->output->write('Adding bundle to AppKernel.php: ');
             try {
-                $this->updateAppKernel($this->parameters);
+                $this->updateAppKernel();
                 $this->output->writeln('<info>Ok</info>');
             } catch (\RuntimeException $e) {
                 $this->output->writeln(array(
@@ -80,7 +80,7 @@ class AvroBundleGenerator extends Generator
         }
     }
     
-    protected function createBundleStructure($dir, $this->parameters)
+    protected function createBundleStructure($dir)
     {
       
         //create bundle.php
@@ -123,7 +123,7 @@ class AvroBundleGenerator extends Generator
         
     }
     
-    protected function updateAppKernel($this->parameters)
+    protected function updateAppKernel()
     {
         $kernelManipulator = new KernelManipulator($this->container->get('kernel'));
         $kernelManipulator->addBundle($this->parameters['bundle_namespace'], $this->parameters['bundle_name']);

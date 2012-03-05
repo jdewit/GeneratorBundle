@@ -195,8 +195,8 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
             $data['type'] = $type;
 
             if ($type == "decimal") {
-                $data['length'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field length', 10), $lengthValidator, false, 10);
-                $data['precision'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field precision', 2), $lengthValidator, false, 2);
+                $data['precision'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field precision', 10), $lengthValidator, false, 10);
+                $data['scale'] = $dialog->askAndValidate($output, $dialog->getQuestion('Field scale', 2), $lengthValidator, false, 2);
             }
             if ($type == "oneToOne") {
                 $data['targetEntity'] = $entity;

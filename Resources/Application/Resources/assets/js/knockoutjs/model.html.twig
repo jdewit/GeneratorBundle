@@ -1,8 +1,8 @@
-function {{ entity_cc }}Model({{ entity_cc }}, newUrl, editUrl) {
-    var self = this;
+function {{ entity_cc }}Model(options) {
+    var self = this,
+        {{ entity_cc }} = options.{{ entity_cc }}; 
+
     self.{{ entity_cc }}Id = ko.observable();
-    self.formAction = ko.observable();
-    self.formMode = ko.observable();
 {% for field in fields %}
 {% if field.type == 'oneToMany' %}
     self.{{ field.fieldName }} = ko.observableArray();
@@ -15,24 +15,29 @@ function {{ entity_cc }}Model({{ entity_cc }}, newUrl, editUrl) {
     self.isDeleted = ko.observable();
 
     self.set{{ entity }} = function({{ entity_cc }}) {
-        self.{{ entity_cc }}Id({{ entity_cc }} ? {{ entity_cc }}.id : null);
-        self.formMode({{ entity_cc }} ? 'edit' : 'new');
-        self.formAction({{ entity_cc }} ? editUrl +'/'+ {{ entity_cc }}.id : newUrl);
+        if ({{ entity_cc }}) {
+            self.{{ entity_cc }}Id({{ entity_cc }}.id);
 {% for field in fields %}
 {% if field.fieldName == 'date' %}
-        self.{{ field.fieldName }}({{ entity_cc }} ? {{ entity_cc }}.{{ field.fieldName }} : getTodaysDate());
+            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
 {% elseif field.type == 'manyToOne' %}
-        self.selected{{ field.fieldName|ucFirst }}({{ entity_cc }} ? ({{ entity_cc }}.{{ field.fieldName }} ? {{ entity_cc }}.{{ field.fieldName }}.name : null ) : null);
+            self.selected{{ field.fieldName|ucFirst }}({{ entity_cc }}.{{ field.fieldName }} ? {{ entity_cc }}.{{ field.fieldName | camelCaseToUnderscore }}.id : null);
 {% elseif field.type == 'datetime' %}
-        self.{{ field.fieldName }}({{ entity_cc }} ? {{ entity_cc }}.{{ field.fieldName }} : getTodaysDate());
+            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName | camelCaseToUnderscore }});
 {% else %}
-        self.{{ field.fieldName }}({{ entity_cc }} ? {{ entity_cc }}.{{ field.fieldName }} : null);
+            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName | camelCaseToUnderscore }});
 {% endif %}
 {% endfor %}
-        self.isDeleted({{ entity_cc }} ? {{ entity_cc }}.is_deleted : null);
+            self.isDeleted({{ entity_cc }}.is_deleted);
+        } 
     }
 
     self.set{{ entity }}({{ entity_cc }});
+
+    // provide blank form binding to allow for newSelect binding to work
+    self.bindForm = function() {
+        return true;
+    }
 }
 
 

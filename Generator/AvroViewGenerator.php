@@ -47,29 +47,6 @@ class AvroViewGenerator extends Generator
                         ));
                     }  
                 }
-                $this->output->write('Generating '.$this->bundleBasename.'/Resources/assets/js/knockoutjs/'.$this->entity.'/Model.js: ');
-                try {
-                    $this->generateKnockoutViewModel();
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                }  
-                $this->output->write('Generating '.$this->bundleBasename.'/Resources/assets/js/knockoutjs/'.$this->entity.'/ListModel.js: ');
-                try {
-                    $this->generateKnockoutListModel();
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                }  
-
             break;
             default:
                 foreach ($this->parameters['actions'] as $view) {
@@ -87,7 +64,6 @@ class AvroViewGenerator extends Generator
                 }
             break;
         }
-        
     }
     
     /**
@@ -113,28 +89,4 @@ class AvroViewGenerator extends Generator
 
         $this->renderFile('Resources/views/entity/knockoutjs/'.$view.'.html.twig', $filename);
     }
-
-    /**
-     * Generates knockoutjs viewModel.
-     * 
-     */
-    private function generateKnockoutViewModel()
-    {
-        $filename = $this->bundlePath.'/Resources/assets/js/knockoutjs/'.$this->entityCC.'Model.js';
-
-        $this->renderFile('Resources/assets/js/knockoutjs/model.html.twig', $filename);
-    }
-
-    /**
-     * Generates knockoutjs listModel.
-     * 
-     * @param array $this->parameters The this->parameters needed to generate the file
-     */
-    private function generateKnockoutListModel()
-    {
-        $filename = $this->bundlePath.'/Resources/assets/js/knockoutjs/'.$this->entityCC.'ListModel.js';
-
-        $this->renderFile('Resources/assets/js/knockoutjs/listModel.html.twig', $filename);
-    }
-
 }

@@ -87,9 +87,9 @@ class {{ entity }}
 
 {% elseif field.type == "decimal" %}
     /**
-     * @var string
+     * @var decimal
      *
-     * @ORM\Column(type="decimal"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     * @ORM\Column(type="decimal"{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.scale is defined %}, scale={{ field.precision }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -119,9 +119,9 @@ class {{ entity }}
 
 {% endif %}{% endfor %}    
     /**
-     * @var \Application\UserBundle\Entity\Owner
+     * @var \Avro\UserBundle\Entity\Owner
      *
-     * @ORM\ManyToOne(targetEntity="Application\UserBundle\Entity\Owner")
+     * @ORM\ManyToOne(targetEntity="Avro\UserBundle\Entity\Owner")
      * @exclude
      */
     protected $owner;
@@ -207,7 +207,7 @@ class {{ entity }}
      *
      * @param {{ field.type }} ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName | ucFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
+    public function set{{ field.fieldName | ucFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }} = null)
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
@@ -228,7 +228,7 @@ class {{ entity }}
      *
      * @param ArrayCollection ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName|ucFirst }}(\{{ field.targetEntity }} ${{ field.fieldName }})
+    public function set{{ field.fieldName|ucFirst }}(${{ field.fieldName }})
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     } 
@@ -264,7 +264,7 @@ class {{ entity }}
      * 
      * @return {{ field.type }} 
      */
-    public function get{{ field.fieldName }}()
+    public function get{{ field.fieldName|ucFirst }}()
     {
         return $this->{{ field.fieldName }};
     }
@@ -274,7 +274,7 @@ class {{ entity }}
      *
      * @param {{ field.type }} ${{ field.fieldName }}
      */
-    public function set{{ field.fieldName }}(${{ field.fieldName }})
+    public function set{{ field.fieldName|ucFirst }}(${{ field.fieldName }})
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }    
@@ -283,7 +283,7 @@ class {{ entity }}
     /**
      * Get owner
      * 
-     * @return Application\UserBundle\Entity\Owner 
+     * @return Avro\UserBundle\Entity\Owner 
      */
     public function getOwner()
     {
@@ -295,7 +295,7 @@ class {{ entity }}
      *
      * @param manyToOne $owner
      */
-    public function setOwner(\Application\UserBundle\Entity\Owner $owner)
+    public function setOwner(\Avro\UserBundle\Entity\Owner $owner)
     {
         $this->owner = $owner;
     }  

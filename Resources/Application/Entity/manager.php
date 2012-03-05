@@ -49,7 +49,7 @@ class {{ entity }}Manager
     {
 {% for field in fields %}
 {% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
-        foreach (${{ entity_cc }}->get{{ field.fieldName }}() as ${{ field.fieldName|slice(0, -1) }}) {
+        foreach (${{ entity_cc }}->get{{ field.fieldName | ucFirst }}() as ${{ field.fieldName|slice(0, -1) }}) {
             ${{ field.fieldName|slice(0, -1) }}->setOwner($this->owner);
         }
 {% endif %}
@@ -98,7 +98,10 @@ class {{ entity }}Manager
      */
     public function find($id)
     {
-        ${{ entity_cc }} = $this->repository->find($id);
+        $criteria['id'] = $id;
+        $criteria['owner'] = $this->owner->getId();
+
+        ${{ entity_cc }} = $this->repository->findOneBy($criteria);
 
         return ${{ entity_cc }};
     }
@@ -120,7 +123,7 @@ class {{ entity }}Manager
      *
      * @parameter $criteria
      */
-    public function findBy(array $criteria, array $sortBy, $limit)
+    public function findBy(array $criteria = null, array $sortBy = null, $limit = null)
     {
         $criteria['owner'] = $this->owner->getId();
 

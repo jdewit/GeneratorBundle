@@ -26,6 +26,7 @@ use Avro\GeneratorBundle\Generator\AvroEntityGenerator;
 use Avro\GeneratorBundle\Generator\AvroConfigGenerator;
 use Avro\GeneratorBundle\Generator\AvroControllerGenerator;
 use Avro\GeneratorBundle\Generator\AvroViewGenerator;
+use Avro\GeneratorBundle\Generator\AvroKnockoutGenerator;
 use Avro\GeneratorBundle\Generator\AvroFormGenerator;
 use Avro\GeneratorBundle\Generator\AvroReadmeGenerator;
 use Avro\GeneratorBundle\Generator\AvroFeatureGenerator;
@@ -85,7 +86,13 @@ EOT
         //Generate View files
         $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
         $avroViewGenerator->generate();    
-
+        
+        if ($style == 'knockout') {
+            //Generate Knockout model files
+            $avroKnockoutGenerator = new AvroKnockoutGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+            $avroKnockoutGenerator->generate();  
+        }
+        
         //Generate Form files
         $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
         $avroFormGenerator->generate();

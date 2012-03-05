@@ -34,6 +34,9 @@ class {{ entity }}Controller extends ContainerAware
             case 'Deleted':
                 ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findAllDeleted();
             break;            
+            default: 
+                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findRecent();
+            break;
         }
 
         ${{ entity_cc }}s = $this->container->get('serializer')->serialize(${{ entity_cc }}s, 'json');
@@ -48,27 +51,20 @@ class {{ entity }}Controller extends ContainerAware
      * Search {{ entity_cc }}s.
      *
      * @Route("/search", name="{{ bundle_alias }}_{{ entity_cc }}_search")
-     * @Template
+     * @method("post")
      */
     public function searchAction()
     {
         $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}Search.form');
         $form->bindRequest($this->container->get('request'));
 
-        if ('POST' == $this->container->get('request')->getMethod()) {
-            if ($form->isValid()) {
-                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search($form->getData());
-                $count = count(${{ entity_cc }}s);
-                $response = new Response('{"status": "OK", "notice": "'. $count .' {{ entity_cc }}s found", "data": '.$this->container->get('serializer')->serialize(${{ entity_cc }}s, 'json').'}');
-            } else {
-                $response = new Response('{"status": "FAIL", "notice": "Search failed. Please try again.", "data": '.json_encode($form->getErrors()).' }');
-            }
-            $response->headers->set('Content-Type', 'application/json');
+        if ($form->isValid()) {
+            ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search($form->getData());
+            $response = new Response('{"status": "OK", "notice": "'.count(${{ entity_cc }}s).' {{ entity_cc }}s found", "data": '.$this->container->get('serializer')->serialize(${{ entity_cc }}s, 'json').'}');
         } else {
-            $response = array(
-                'searchForm' => $form->createView()
-            );
+            $response = new Response('{"status": "FAIL", "notice": "Search failed. Please try again.", "data": '.json_encode($form->getErrors()).' }');
         }
+        $response->headers->set('Content-Type', 'application/json');
 
         return $response; 
     }
@@ -81,12 +77,10 @@ class {{ entity }}Controller extends ContainerAware
      */
     public function listAction()
     {
-        ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findAllActive();
-        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form');
-
         return array(
-            '{{ entity_cc }}s' => ${{ entity_cc }}s,
-            '{{ entity_cc }}Form' => $form->createView()
+            '{{ entity_cc }}s' => $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findAllActive(),
+            '{{ entity_cc }}Form' => $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form')->createView(),
+            'searchForm' => $this->container->get('{{ bundle_alias }}.{{ entity_cc}}Search.form')->createView(),
         );
     }          
 
@@ -155,14 +149,14 @@ class {{ entity }}Controller extends ContainerAware
                 ${{ entity_cc }} = $form->getData('{{ entity_cc }}');
                 ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
                 $response = new Response('{"status": "OK", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} updated.", "data": '.${{ entity_cc }}.'}');
-            } else {
-                $response = new Response('{"status": "FAIL", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} not created.", "data": '.json_encode($process).' }');
             }
-
-            $response->headers->set('Content-Type', 'application/json');
-
-            return $response; 
+        } else {
+            $response = new Response('{"status": "FAIL", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} not created.", "data": '.json_encode($process).' }');
         }
+
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response; 
     }
 
     /**
@@ -225,7 +219,7 @@ class {{ entity }}Controller extends ContainerAware
             }
         } 
 
-        $response = new Response('{"notice": "{{ entity_cc | camelCaseToTitle }}s deleted."}');
+        $response = new Response('{"notice": "'.count($selected).' {{ entity_cc | camelCaseToTitle | lower }}s deleted."}');
         $response->headers->set('Content-Type', 'application/json');
 
         return $response; 
@@ -249,7 +243,7 @@ class {{ entity }}Controller extends ContainerAware
             }
         } 
 
-        $response = new Response('{"notice": "{{ entity_cc | camelCaseToTitle }}s restored."}');
+        $response = new Response('{"notice": "'.count($selected).' {{ entity_cc | camelCaseToTitle | lower }}s restored."}');
         $response->headers->set('Content-Type', 'application/json');
 
         return $response; 

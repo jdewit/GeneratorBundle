@@ -124,7 +124,7 @@
             ))
 {% elseif field.type == 'manyToOne' %}
 {% if field.fieldName == 'image' %}
-            ->add('image', new \Application\AssetBundle\Form\Type\ImageFormType(), array(
+            ->add('image', new \Avro\AssetBundle\Form\Type\ImageFormType(), array(
                 'required' => false,
                 'label' => 'false'
             ))
@@ -141,8 +141,8 @@
 {% if style == 'knockout' %}
                     'data-href' => $this->router->generate('{{ bundle_alias }}_{{ field.fieldName }}_getForm'),
                     'data-bind' => "
-                        value: selected{{ field.fieldName | ucFirst }}(),
-                        newSelect: true
+                        value: selected{{ field.fieldName | ucFirst }},
+                        newSelect: selected{{ field.fieldName | ucFirst }}
                     "
 {% endif %}
                 )
@@ -150,17 +150,18 @@
 {% endif %}
 {% elseif field.type == 'oneToMany' %}
             ->add('{{ field.fieldName }}', 'collection', array(
-                'label' => 'false'
+                'label' => 'false',
                 'required' => false,
                 'type' => new \{{ bundle_namespace }}\Form\Type\{{ field.fieldName | ucFirst }}FormType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-                'options' => array('data_class' => '{{ bundle_namespace }}\Entity\{{ field.fieldName | ucFirst }}'), 
+                'by_reference' => false,
+                'options' => array('data_class' => '{{ bundle_namespace }}\Entity\{{ field.fieldName | ucFirst |slice(0, -1) }}'), 
             ))
 {% elseif field.type == 'manyToMany' %}
             ->add('{{ field.fieldName }}s', 'collection', array(
-                'label' => 'false'
+                'label' => 'false',
                 'required' => false,
                 'type' => new \{{ bundle_namespace }}\Form\Type\{{ field.fieldName | ucFirst }}FormType(),
                 'allow_add' => true,
@@ -172,7 +173,7 @@
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => '{{ field.fieldName | camelCaseToTitle | lower }}?',  
+                    'title' => '{{ field.fieldName | camelCaseToTitle }}?',  
 {% if style == 'knockout' %}
                     'data-bind' => "
                         checked: {{ field.fieldName }}

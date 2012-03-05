@@ -106,6 +106,11 @@ class Generator
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
         }
+        if (file_exists($filename)) {
+            $array = explode("/", $filename);
+            $name = array_pop($array).'_new';
+            $filename = implode("/", $array).'/'.$name;
+        }
 
         $skeletonDir = __DIR__.'/../Resources/Application';
 

@@ -149,8 +149,7 @@ EOT
         
         $output->writeln('');
         $output->write('Generating bundle code: ');
-        
-        $bundleGenerator = new AvroBundleGenerator($container, $dialog, $input, $output);
+        $bundleGenerator = new AvroBundleGenerator($container, $dialog, $output);
         $bundleGenerator->generate($thirdParty, $vendor, $basename, $bundleNamespace, $bundleName, $dir, $dbDriver, $updateConfig);
         
         $output->writeln(array(
@@ -165,7 +164,9 @@ EOT
             'add this line to the "imports" node in your config.yml file',
             "- { resource: '@".$bundleName."/Resources/config/config.yml' }",
             '',
-            
+             'add this line to the bundles array in your AppKernel.php file',
+            "new {{ vendor }}\\".$bundleName."\\".$bundleName."()",
+           
         ));
         
         $output->writeln(array(

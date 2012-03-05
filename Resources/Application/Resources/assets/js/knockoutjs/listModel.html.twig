@@ -1,112 +1,109 @@
-function {{ entity_cc }}ListModel({{ entity_cc }}s) {
-    var self = this;
+function {{ entity_cc }}ListModel(options) {
+    var self = this,
+        {{ entity_cc }}s = options.{{ entity_cc }}s;
+
     self.{{ entity_cc }}s = ko.observableArray({{ entity_cc }}s);
+    self.{{ entity_cc }}sBatch = ko.observableArray();
     self.checkAll = ko.observable(false);
     self.filter = ko.observable('Recent');
     self.updateFilter = function(data, event, filter) {
         self.filter(filter);
         href = event.currentTarget.href; 
-        showSpinner();
+        avro.showSpinner();
         $.ajax({
             type: 'post',
             dataType: 'json',
             url: href,
             success: function(response){
-                hideSpinner();
+                avro.hideSpinner();
                 self.{{ entity_cc }}s(response['data']);
-            }
+            },
+            error: function() {
+                avro.createNotice('Error updating filter. Please try again.');
+            },
         });
     };
-    self.search = function(data, event) {
-        href = event.currentTarget.href; 
-        var target = $('#{{ entity_cc }}-search-form-container');
-        if (!target.length) {
-            showSpinner();
-            $.ajax({
-                dataType: 'html',
-                url: href,
-                async: false,
-                success: function(response){
-                    hideSpinner();
-                    $('body').append(response);
-                }
-            });
-            var target = $('#{{ entity_cc }}-search-form-container');
-            createDialog(target, 'Search {{ entity_cc | camelCaseToTitle }}', true, 500);
-        } else {
-            target.dialog('open');
-        }
-        var form = target.find('form');
-        form.ajaxForm({
+    self.searchDialogOptions = ko.observable({});
+    self.showSearchForm = function() {
+        self.searchDialogOptions({title: 'Search {{ entity_cc | camelCaseToTitle | lower }}'});
+    };
+    self.bindSearchForm = function(form) {
+        $form = $(form);
+        $form.ajaxSubmit({
             dataType:  'json',
             beforeSubmit: function() {
-                showSpinner();
+                avro.showSpinner();
             },
             success:   function(response){
-                hideSpinner();
+                avro.hideSpinner();
                 if (response['status'] == "OK") {
-                    createNotice(response['notice']);
-                    form.parents('.ui-dialog-content').dialog('close');
+                    avro.createNotice(response['notice']);
+                    $form.dialog('close');
                     self.{{ entity_cc }}s(response['data']);
-                    self.filter('All');
+                    self.filter('Search');
                 } else {
                     $.each(response['data'], function(field, message) {
-                        form.prepend('<div class="error">'+ message +'</div>');
-                        form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).parents('.control-group').addClass('error');
+                        $form.prepend('<div class="error">'+ message +'</div>');
+                        $form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).parents('.control-group').addClass('error');
                     });
                 }
             }
         });
-    }
+    };
 
     self.new{{ entity }} = function(data, event) { 
-        var target = $('.{{ entity_cc }}-form-container:last');
-        self.{{ entity_cc }}Model.set{{ entity }}(null); 
-        self.bindForm(target);
-        createDialog(target, 'New {{ entity | camelCaseToTitle}}', true, 500);
+        self.{{ entity_cc }}sBatch.removeAll(); 
+        self.{{ entity_cc }}sBatch.push(new {{ entity_cc }}Model({
+            {{ entity_cc }}: null
+        })); 
     };
     self.edit{{ entity }} = function(data, event) { 
-        var target = $('.{{ entity_cc }}-form-container:last');
-        self.{{ entity_cc }}Model.set{{ entity }}(data);
-        self.bindForm(target);
-        createDialog(target, 'Edit {{ entity | camelCaseToTitle}}', true, 500);
+        self.{{ entity_cc }}sBatch.removeAll(); 
+        self.{{ entity_cc }}sBatch.push(new {{ entity_cc }}Model({
+            {{ entity_cc }}: data
+        })); 
     };
+
     self.batchEdit = function(data, event) {
         href = event.currentTarget.href; 
         var checked = $('#{{ entity_cc }}-table input.selector:checked');
         if (checked.length) {
+            avro.showSpinner();
+            self.{{ entity_cc }}sBatch.removeAll();
             checked.each(function() {
-                showSpinner();
                 var id = $(this).val();
-                $.ajax({
-                    type: 'post',
-                    dataType: 'html',
-                    url: href +'/'+ id,
-                    success: function(response){
-                        hideSpinner();
-                        //attach response to body and run javascript
-                        $('body').append('<div id="{{ entity_cc }}-'+ id +'">'+ response +'</div>');
-                        eval($('#{{ entity_cc }}-'+ id + ' script[type="text/html"]').text());
-                        var target = $('#{{ entity_cc }}-'+ id +' .{{ entity_cc }}-form-container');
-                        self.bindForm(target);
-                        createDialog(target, 'Edit {{ entity | camelCaseToTitle }}', true, '500', true);
+                {{ entity_cc }} = ko.utils.arrayFirst(self.{{ entity_cc }}s(), function({{ entity_cc }}) {
+                    if ({{ entity_cc }}.id == id) {
+                        return true;
                     }
                 });
+                self.{{ entity_cc }}sBatch.push(new {{ entity_cc }}Model({
+                    {{ entity_cc }}: {{ entity_cc }}
+                }));
             });
+            avro.hideSpinner();
         } else {
             alert('No {{ entity_cc | camelCaseToTitle | lower }}s were selected');
         }
-    }
+    };
     self.delete{{ entity }} = function(data, event) { 
-        href = event.currentTarget.href; 
+        var target = event.currentTarget; 
+        var href = target.href; 
+
         if (confirm("Are you sure you want to delete this {{ entity | camelCaseToTitle}}?")) {
+            avro.showSpinner();
             $.ajax({
                 type: 'post',
                 dataType: 'json',
                 url: href,
                 success: function(response){
-                    createNotice(response['notice']);
+                    avro.hideSpinner();
+                    avro.createNotice(response['notice']);
                     self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; })
+                    $(target).closest('.ui-dialog-content').dialog('close');
+                },
+                error: function() {
+                    avro.createNotice('Error deleting {{ entity_cc | camelCaseToTitle | lower }}. Please try again.');
                 }
             });
         }
@@ -116,86 +113,100 @@ function {{ entity_cc }}ListModel({{ entity_cc }}s) {
         if (checked.length) {
             if (confirm("Are you sure you want to delete these {{ entity_cc | camelCaseToTitle | lower }}s?")) {
                 href = event.currentTarget.href; 
-                showSpinner();
+                avro.showSpinner();
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
                     url: href,
                     data: checked,
                     success: function(response){
-                        hideSpinner();
-                        createNotice(response['notice']);
+                        avro.hideSpinner();
+                        avro.createNotice(response['notice']);
                         checked.each(function() {
                             var id = $(this).val();
                             self.{{ entity_cc }}s.remove(function({{ entity_cc }} ) { return {{ entity_cc }}.id == id; });
                         });
+                    },
+                    error: function() {
+                        avro.createNotice('Error batch deleting {{ entity_cc | camelCaseToTitle | lower }}s. Please try again.');
                     }
                 });
             }
         } else {
-            alert('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
+            avro.createNotice('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
         }
-    }
+    };
     self.restore{{ entity }} = function(data, event) { 
-        href = event.currentTarget.href; 
-            $.ajax({
-                type: 'post',
-                dataType: 'json',
-                url: href,
-                success: function(response){
-                    createNotice(response['notice']);
-                    self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; })
-                }
-            });
+        var target = event.currentTarget; 
+        href = target.href; 
+
+        avro.showSpinner();
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: href,
+            success: function(response){
+                avro.hideSpinner();
+                avro.createNotice(response['notice']);
+                self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; })
+                $(target).closest('.ui-dialog-content').dialog('close');
+            },
+            error: function() {
+                avro.createNotice('Error restoring {{ entity_cc | camelCaseToTitle | lower }}. Please try again.');
+            }
+        });
     };
     self.batchRestore = function(data, event) {
         var checked = $('#{{ entity_cc }}-table input.selector:checked');
         if (checked.length) {
             if (confirm("Are you sure you want to restore these {{ entity_cc | camelCaseToTitle | lower }}s?")) {
                 href = event.currentTarget.href; 
-                showSpinner();
+                avro.showSpinner();
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
                     url: href,
                     data: checked,
                     success: function(response){
-                        hideSpinner();
-                        createNotice(response['notice']);
+                        avro.hideSpinner();
+                        avro.createNotice(response['notice']);
                         checked.each(function() {
                             var id = $(this).val();
                             self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == id; });
                         });
+                    },
+                    error: function() {
+                        avro.createNotice('Error batch restoring {{ entity_cc | camelCaseToTitle | lower }}s. Please try again.');
                     }
                 });
             }
         } else {
-            alert('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
+            avro.createNotice('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
         }
-    }
-
-    self.bindForm = function(target) {
-        var form = target.find('form');
-        form.ajaxForm({
+    };
+    self.bindForm = function(form) {
+        var $form = $(form);
+        $form.ajaxSubmit({
             dataType:  'json',
             beforeSubmit: function() {
-                showSpinner();
+                avro.showSpinner();
             },
-            success:   function(response){
-                hideSpinner();
+            success: function(response){
+                avro.hideSpinner();
                 if (response['status'] == "OK") {
-                    createNotice(response['notice']);
-                    form.parents('.ui-dialog-content').dialog('close');
-                    self.{{ entity_cc }}s.remove(function( {{ entity_cc }} ) { return {{ entity_cc }}.id == response['data']['id']; });
-                    self.{{ entity_cc }}s.push(response['data']);
+                    avro.createNotice(response['notice']);
+                    $form.dialog('close');
+                    self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; });
+                    self.{{ entity_cc }}s.unshift(response['data']);
                 } else {
                     $.each( response['data'], function(field, message) {
-                        form.prepend('<div class="error">'+ message +'</div>');
-                        form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).parents('.control-group').addClass('error');
+                        $form.prepend('<div class="error">'+ message +'</div>');
+                        $form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).parents('.control-group').addClass('error');
                     });
                 }
             }
         });
     };
+
 }
 
