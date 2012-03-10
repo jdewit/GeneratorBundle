@@ -31,28 +31,13 @@
     <tfoot>
         <tr>
             <td><a title="Select all" data-bind="click: function(data, event) { checkAll() ? checkAll(false) : checkAll(true) }"><i class="sprite-arrow_left_up"></i></a></td> 
-            <td colspan="0">
-                <span class="pull-left">
-                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_getForm') }}" }}" class="btn-edit" title="Batch edit" data-bind="click: function(data, event) { batchEdit(data, event) }"><i class="sprite-pencil"></i>edit</a>
-                    {{ "{% if is_granted('ROLE_ADMIN') %}" }}
-                        |
-                        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'"><i class="sprite-delete"></i>Delete</a>
-                        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow_refresh"></i>Restore</a>
-                    {{ "{% endif %}" }}
-                </span>
-                <span>
-                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_search') }}" }}" title="Search expenses" data-bind="click: showSearchForm, attr: {'class': filter() == 'Search' ? 'underline' : ''}"><i class="sprite-magnifier"></i>Search</a>
-                </span>
-                <span class="pull-right">
-                    Filter: 
-                    <a title="View recent {{ entity_cc | camelCaseToTitle | lower }}s" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get', { 'filter': 'Recent' } ) }}" }}" data-bind="click: function(data, event) { updateFilter(data, event, 'Recent') }, attr: {'class': filter() == 'Recent' ? 'underline' : ''}">Recent</a> 
+            <td colspan="0" class="left-align">
+                <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_getForm') }}" }}" class="btn-edit" title="Batch edit" data-bind="click: function(data, event) { batchEdit(data, event) }"><i class="sprite-pencil"></i>edit</a>
+                {{ "{% if is_granted('ROLE_ADMIN') %}" }}
                     |
-                    <a title="View all {{ entity_cc | camelCaseToTitle | lower }}s" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get', { 'filter': 'All' } ) }}" }}" data-bind="click: function(data, event) { updateFilter(data, event, 'All') }, attr: {'class': filter() == 'All' ? 'underline' : ''}">All</a> 
-                    {{ "{% if is_granted('ROLE_ADMIN') %}" }}
-                        |
-                        <a title="View all {{ entity_cc | camelCaseToTitle | lower }}s" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get', { 'filter': 'Deleted' } ) }}" }}" data-bind="click: function(data, event) { updateFilter(data, event, 'Deleted') }, attr: {'class': filter() == 'Deleted' ? 'underline' : ''}">Deleted</a> 
-                    {{ "{% endif %}" }}
-                </span>
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'"><i class="sprite-delete"></i>Delete</a>
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow_refresh"></i>Restore</a>
+                {{ "{% endif %}" }}
             </td>
         </tr>
     </tfoot>

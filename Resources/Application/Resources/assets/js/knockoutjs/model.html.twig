@@ -1,6 +1,7 @@
 function {{ entity_cc }}Model(options) {
     var self = this,
-        {{ entity_cc }} = options.{{ entity_cc }}; 
+        {{ entity_cc }} = options ? options.{{ entity_cc }} : null,
+        list = options ? options.list : null; 
 
     self.{{ entity_cc }}Id = ko.observable();
 {% for field in fields %}
@@ -34,10 +35,32 @@ function {{ entity_cc }}Model(options) {
 
     self.set{{ entity }}({{ entity_cc }});
 
-    // provide blank form binding to allow for newSelect binding to work
-    self.bindForm = function() {
-        return true;
-    }
+    self.bindForm = function(form) {
+        var $form = $(form);
+        $form.ajaxSubmit({
+            dataType:  'json',
+            beforeSubmit: function() {
+                avro.showSpinner();
+            },
+            success: function(response){
+                avro.hideSpinner();
+                if (response['status'] == "OK") {
+                    avro.createNotice(response['notice']);
+                    self.set{{ entity_cc | capitalizeFirst }}(response['data']);
+                    if (list) {
+                        list.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; });
+                        list.{{ entity_cc }}s.unshift(response['data']);
+                    }
+                    $form.dialog('close');
+                } else {
+                    $.each( response['data'], function(field, message) {
+                        $form.find('#error-container').append('<i class="sprite-error"></i> '+ message +'.').show();
+                        $form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).closest('.control-group').addClass('error');
+                    });
+                }
+            }
+        });
+    };
 }
 
 

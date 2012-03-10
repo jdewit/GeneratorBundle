@@ -108,8 +108,8 @@ class Generator
         }
         if (file_exists($filename)) {
             $array = explode("/", $filename);
-            $name = array_pop($array).'_new';
-            $filename = implode("/", $array).'/'.$name;
+            //$name = array_pop($array).'_new';
+            //$filename = implode("/", $array).'/'.$name;
         }
 
         $skeletonDir = __DIR__.'/../Resources/Application';

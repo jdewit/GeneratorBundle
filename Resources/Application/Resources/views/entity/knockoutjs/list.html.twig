@@ -1,7 +1,15 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
     <div id="{{ entity_cc }}-list-container">
-        <h1>{{ entity | camelCaseToTitle }} List</h1>
+        <h1>
+            {{ entity | camelCaseToTitle }} List
+            <select data-bind="value: filter, filter: {{ entity_cc }}s" data-href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get') }}" }}">
+                <option class="current" value="Recent">Recent</option>
+                <option value="All">All</option>
+                <option value="Deleted">Deleted</option>
+                <option value="Search">Search</option>
+            </select>
+        </h1>
         <a href="#" class="btn btn-new throw-right" data-bind="click: new{{ entity }}"><i class="sprite-add"></i>New {{ entity | camelCaseToTitle }}</a>
         <hr />
         {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}

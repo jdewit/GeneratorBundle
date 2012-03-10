@@ -148,7 +148,7 @@ class {{ entity }}Manager
         $criteria['owner'] = $this->owner->getId();
         $criteria['isDeleted'] = false;
 
-        return $this->repository->findBy($criteria, array('{{ sortColumn }}' => 'DESC'), 25);
+        return $this->repository->findBy($criteria, array('updatedAt' => 'DESC'), 25);
     }
 
     /**

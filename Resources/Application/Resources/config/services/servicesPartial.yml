@@ -19,7 +19,7 @@ services:
     {{ bundle_alias }}.{{ entity_cc }}.form.handler:
         class: {{ bundle_namespace }}\Form\Handler\{{ entity }}FormHandler
         scope: request
-        arguments: ["@{{ bundle_alias }}.{{ entity_cc }}.form", "@request"{% if style == 'knockout' %}, "@validator"{% endif %}, "@{{ bundle_alias }}.{{ entity_cc }}_manager"]
+        arguments: ["@{{ bundle_alias }}.{{ entity_cc }}.form", "@request", "@{{ bundle_alias }}.{{ entity_cc }}_manager"]
 
 {% if style == 'knockout' %}
     {{ bundle_alias }}.{{ entity_cc }}Search.form.type:

@@ -1,5 +1,6 @@
-<form class="form-horizontal hide" data-bind="submit: $root.bindForm, attr: {'action': {{ entity_cc }}Id() ? '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit') }}" }}/'+ {{ entity_cc }}Id() : '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}' }, validate: true, dialog: {title: {{ entity_cc }}Id() ? 'Edit {{ entity_cc | camelCaseToTitle }}' : 'New {{ entity_cc | camelCaseToTitle }}'}" method="post" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>
+<form class="form-horizontal hide" data-bind="submit: bindForm, attr: {'action': {{ entity_cc }}Id() ? '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit') }}" }}/'+ {{ entity_cc }}Id() : '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}' }, validate: true, dialog: {title: {{ entity_cc }}Id() ? 'Edit {{ entity_cc | camelCaseToTitle }}' : 'New {{ entity_cc | camelCaseToTitle }}'}" method="post" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>
     <div class="form-content">
+        <div id="error-container"></div>
 {% for field in fields %}{% if field.type == 'oneToMany' or field.type == 'manyToMany' %}
         {{ "{{ form_row("~ entity_cc ~"Form."~ field.fieldName ~"s) }}" }}    
 {% else %}

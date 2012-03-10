@@ -1,31 +1,16 @@
 function {{ entity_cc }}ListModel(options) {
     var self = this,
-        {{ entity_cc }}s = options.{{ entity_cc }}s;
+        {{ entity_cc }}s = options ? options.{{ entity_cc }}s : null;
 
     self.{{ entity_cc }}s = ko.observableArray({{ entity_cc }}s);
     self.{{ entity_cc }}sBatch = ko.observableArray();
     self.checkAll = ko.observable(false);
-    self.filter = ko.observable('Recent');
-    self.updateFilter = function(data, event, filter) {
-        self.filter(filter);
-        href = event.currentTarget.href; 
-        avro.showSpinner();
-        $.ajax({
-            type: 'post',
-            dataType: 'json',
-            url: href,
-            success: function(response){
-                avro.hideSpinner();
-                self.{{ entity_cc }}s(response['data']);
-            },
-            error: function() {
-                avro.createNotice('Error updating filter. Please try again.');
-            },
-        });
-    };
+    self.filter = ko.observable();
     self.searchDialogOptions = ko.observable({});
-    self.showSearchForm = function() {
-        self.searchDialogOptions({title: 'Search {{ entity_cc | camelCaseToTitle | lower }}'});
+    self.filter.subscribe(function(value) {
+        if (value == 'Search') {
+            self.searchDialogOptions({title: 'Search {{ entity_cc | camelCaseToTitle | lower }}'});
+        }
     };
     self.bindSearchForm = function(form) {
         $form = $(form);
@@ -54,13 +39,15 @@ function {{ entity_cc }}ListModel(options) {
     self.new{{ entity }} = function(data, event) { 
         self.{{ entity_cc }}sBatch.removeAll(); 
         self.{{ entity_cc }}sBatch.push(new {{ entity_cc }}Model({
-            {{ entity_cc }}: null
+            {{ entity_cc }}: null,
+            list: self
         })); 
     };
     self.edit{{ entity }} = function(data, event) { 
         self.{{ entity_cc }}sBatch.removeAll(); 
         self.{{ entity_cc }}sBatch.push(new {{ entity_cc }}Model({
-            {{ entity_cc }}: data
+            {{ entity_cc }}: data,
+            list: self
         })); 
     };
 
@@ -78,12 +65,13 @@ function {{ entity_cc }}ListModel(options) {
                     }
                 });
                 self.{{ entity_cc }}sBatch.push(new {{ entity_cc }}Model({
-                    {{ entity_cc }}: {{ entity_cc }}
+                    {{ entity_cc }}: {{ entity_cc }},
+                    list: self
                 }));
             });
             avro.hideSpinner();
         } else {
-            alert('No {{ entity_cc | camelCaseToTitle | lower }}s were selected');
+            avro.createNotice('No {{ entity_cc | camelCaseToTitle | lower }}s were selected');
         }
     };
     self.delete{{ entity }} = function(data, event) { 
@@ -183,29 +171,6 @@ function {{ entity_cc }}ListModel(options) {
         } else {
             avro.createNotice('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
         }
-    };
-    self.bindForm = function(form) {
-        var $form = $(form);
-        $form.ajaxSubmit({
-            dataType:  'json',
-            beforeSubmit: function() {
-                avro.showSpinner();
-            },
-            success: function(response){
-                avro.hideSpinner();
-                if (response['status'] == "OK") {
-                    avro.createNotice(response['notice']);
-                    $form.dialog('close');
-                    self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; });
-                    self.{{ entity_cc }}s.unshift(response['data']);
-                } else {
-                    $.each( response['data'], function(field, message) {
-                        $form.prepend('<div class="error">'+ message +'</div>');
-                        $form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).parents('.control-group').addClass('error');
-                    });
-                }
-            }
-        });
     };
 
 }
