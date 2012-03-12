@@ -48,10 +48,10 @@ class GenerateAvroFeatureCommand extends GenerateAvroCommand
         $dialog = $this->getDialogHelper();
         $dialog->writeSection($output, 'Welcome to the Avro feature generator!');
 
-        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         //Generate Feature files
-        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
         $avroFeatureGenerator->generate();
 
         $output->writeln('Behat features created succesfully!');

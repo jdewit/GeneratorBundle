@@ -12,10 +12,12 @@ making it more suitable for more people.
 Status
 ------
 The bundle is a work in progress but is working...most of the time :) 
-Currently it only provides support for Doctrine ORM.
+Currently it only provides support for Doctrine ORM. 
 
-The code still needs to get cleaned up a 
-fair bit and tests still need to be made. Any help would be much appreciated!
+The code still needs to get cleaned up a fair bit but the code that 
+it does generate is pretty solid. 
+
+Any help would be much appreciated!
 
 Styles
 ------
@@ -45,50 +47,11 @@ Optional Dependencies
 ---------------------
 - The view generator generates some <a href="http://jqueryui.com">JQueryUI</a> classes
 - Form fields have classes that work with <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">JQuery Validation</a>
-
-Installation
-------------
-Add the `Avro` namespace to your autoloader:
-
-``` php
-<?php
-// app/autoload.php
-
-$loader->registerNamespaces(array(
-    // ...
-    'Avro' => __DIR__.'/../vendor/bundles',
-));
-```
-
-Enable the bundle in the kernel:
-
-``` php
-<?php
-// app/AppKernel.php
-
-    if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-        ...
-        $bundles[] = new Avro\GeneratorBundle\AvroGeneratorBundle();
-    }
-```
-
-Add to deps file
-    
-```
-[AvroGeneratorBundle]
-    git=git://github.com/jdewit/AvroGeneratorBundle.git
-    target=bundles/Avro/GeneratorBundle
-```
-
-Now, run the vendors script to download the bundle:
-
-``` bash
-$ bin/vendors update
-```
+- The CSV importer requires <a href="https://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a>
 
 USAGE
 -----
-Enter the following in the console and follow the directions!
+Enter the following commands in the console and follow the prompts!
 
 Generate a bundle skeleton with:
 
@@ -131,7 +94,7 @@ Generate a formType and formHandler with:
 $ php app/console generate:avro:form
 ```
 
-Generate a services.yml file for formType, formHandler, and entityManager:
+Generate a Dependency Injection configuration file for supported services:
 
 ``` bash
 $ php app/console generate:avro:service
@@ -143,8 +106,55 @@ Generate behat features with:
 $ php app/console generate:avro:feature
 ```
 
+Generate csv importer with:
+*requires AvroCsvBundle
+
+``` bash
+$ php app/console generate:avro:importer
+```
+
+Installation
+------------
+Add the `Avro` namespace to your autoloader:
+
+``` php
+<?php
+// app/autoload.php
+
+$loader->registerNamespaces(array(
+    // ...
+    'Avro' => __DIR__.'/../vendor/bundles',
+));
+```
+
+Enable the bundle in the kernel:
+
+``` php
+<?php
+// app/AppKernel.php
+
+    if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+        ...
+        $bundles[] = new Avro\GeneratorBundle\AvroGeneratorBundle();
+    }
+```
+
+Add to deps file
+    
+```
+[AvroGeneratorBundle]
+    git=git://github.com/jdewit/AvroGeneratorBundle.git
+    target=bundles/Avro/GeneratorBundle
+```
+
+Now, run the vendors script to download the bundle:
+
+``` bash
+$ bin/vendors update
+```
+
 SOMEDAY FEATURES
 ----------------
-- more 'official' third party style code
+- Improve compatibility 
 - MongoDB support
 - CouchDB support

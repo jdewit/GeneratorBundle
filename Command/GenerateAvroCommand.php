@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Symfony package.
  *
@@ -24,6 +23,11 @@ use Doctrine\DBAL\Types\Type;
 use Avro\GeneratorBundle\Command\GenerateDoctrineCommand;
 use Avro\GeneratorBundle\Command\Validators;
 
+/*
+ * Base Generator Command class 
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
+ */
 abstract class GenerateAvroCommand extends ContainerAwareCommand
 {
     protected function parseShortcutNotation($shortcut)
@@ -93,7 +97,6 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
 
     protected function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog, $entity)
     {
-
         return $fields;
     }
 
@@ -110,15 +113,21 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
         }
 
         $fields = false;
+        $overwrite = true;
         if (file_exists($bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
             $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundleName).'\\'.$entity;
             $metadata = $this->getEntityMetadata($entityClass);
             $fields = $this->getFieldsFromMetadata($metadata[0]);
+
+            $dialog->writeSection($output, array('This entity exists. Would you like to overwrite existing code?',
+                'If not, enter false and generated code will be written in a temp folder in your bundle.'
+            ));
+            $overwrite = $dialog->askConfirmation($output, $dialog->getQuestion('Overwrite existing code', 'no', '?'), false);
         }    
 
         $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1. default, 2. knockout)', '1. default', '?'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle'), '2'); 
 
-        return array($bundle, $entity, $fields, $style);
+        return array($bundle, $entity, $fields, $style, $overwrite);
 
     }
 

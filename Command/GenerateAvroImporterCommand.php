@@ -18,17 +18,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
-use Avro\GeneratorBundle\Generator\AvroViewGenerator;
+use Avro\GeneratorBundle\Generator\AvroImporterGenerator;
 
 
 /**
- * Generates views for a given Doctrine entity.
+ * Generates an importer class for a given Doctrine entity.
  *
- * @author Fabien Potencier <fabien@symfony.com>
- * @author Hugo Hamon <hugo.hamon@sensio.com>
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
-class GenerateAvroViewCommand extends GenerateAvroCommand
+class GenerateAvroImporterCommand extends GenerateAvroCommand
 {
     /**
      * @see Command
@@ -36,10 +34,11 @@ class GenerateAvroViewCommand extends GenerateAvroCommand
     protected function configure()
     {
         $this
-            ->setName('generate:avro:view')
-            ->setAliases(array('generate:avro:view'))
-            ->setDescription('Generates views in a bundle.')
-            ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)');
+            ->setName('generate:avro:importer')
+            ->setAliases(array('generate:avro:importer'))
+            ->setDescription('Generates importer code in a bundle.')
+            ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
+            ->addOption('style', null, InputOption::VALUE_REQUIRED, 'The style of code you would like to generate.');
     }
 
     /**
@@ -50,15 +49,17 @@ class GenerateAvroViewCommand extends GenerateAvroCommand
         $container = $this->getContainer();
         $dialog = $this->getDialogHelper();
         
-        $dialog->writeSection($output, 'Welcome to the Avro view generator!');
-
+        $dialog->writeSection($output, 'Welcome to the Avro importer generator!');
+        
+        // initiate base command
         list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
-        //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroViewGenerator->generate();        
-        
-        $output->writeln('Views created succesfully!');
-    }
+        // confirm
+        $dialog->writeSection($output, 'Generating importer code for '. $bundle->getName() );
 
+        //Generate Importer files
+        $avroImporterGenerator = new AvroImporterGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+        $avroImporterGenerator->generate();
+    }
+    
 }

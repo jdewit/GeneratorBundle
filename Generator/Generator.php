@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
  * Generator is the base class for all generators.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- * @author Joris de Wit <joris.w.avro@gmail.com>
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class Generator
 {
@@ -48,8 +48,9 @@ class Generator
     protected $message;
     protected $thirdParty; 
     protected $style; 
+    protected $overwrite;
 
-    public function __construct($container, $dialog, $output, $bundle = null, $entity = null, $fields = null, $style = null)
+    public function __construct($container, $dialog, $output, $bundle = null, $entity = null, $fields = null, $style = null, $overwrite = false)
     {
         $this->container = $container;
         $this->dialog = $dialog;
@@ -57,6 +58,7 @@ class Generator
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
         $this->style = $style;
+        $this->overwrite = $overwrite;
         if ($bundle !== null) {
             $this->bundlePath = $bundle->getPath();
             if (strstr($this->bundlePath, 'vendor/bundles') == false) {
@@ -103,13 +105,13 @@ class Generator
      */
     protected function renderFile($template, $filename, $append = false)
     {   
+        if ($this->overwrite === false) {
+            $newPath = $this->bundlePath.'/Temp/'.$this->entity;
+            $filename = str_replace($this->bundlePath, $newPath, $filename);
+        }
+
         if (!is_dir(dirname($filename))) {
             mkdir(dirname($filename), 0777, true);
-        }
-        if (file_exists($filename)) {
-            $array = explode("/", $filename);
-            //$name = array_pop($array).'_new';
-            //$filename = implode("/", $array).'/'.$name;
         }
 
         $skeletonDir = __DIR__.'/../Resources/Application';
@@ -152,6 +154,12 @@ class Generator
         return $this->dbDriver;
     }
 
+    /*
+     * Run a console command
+     *
+     * @param string $command Command
+     * @param array $options Command options
+     */
     protected function runConsole($command, Array $options = array())
     {
         $application = new Application($this->container->get('kernel'));
@@ -165,8 +173,10 @@ class Generator
 
     /**
     * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
-    * @param    string   $str    String in camel case format
-    * @return    string            $str Translated into underscore format
+    *
+    * @param  string $str String in camel case format
+    *
+    * @return string $str Translated into underscore format
     */
     function toUnderscore($str) {
         $str[0] = strtolower($str[0]);
@@ -177,8 +187,9 @@ class Generator
 
     /**
     * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
-    * @param    string   $str    String in camel case format
-    * @return    string            $str Translated into underscore format
+    *
+    * @param string $str String in camel case format
+    * @return string $str Translated into underscore format
     */
     function toTitle($str) {
         $str = ucfirst($str);
@@ -189,8 +200,9 @@ class Generator
 
     /**
     * Translates a string with underscores into camel case (e.g. first_name -&gt; firstName)
-    * @param    string   $str                     String in underscore format
-    * @return   string                              $str translated into camel caps
+    *
+    * @param string $str String in underscore format
+    * @return string $str translated into camel caps
     */
     function toCamelCase($str) {
         $str = lcfirst($str);

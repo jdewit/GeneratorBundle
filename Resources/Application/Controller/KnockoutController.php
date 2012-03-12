@@ -4,10 +4,10 @@ namespace {{ bundle_namespace }}\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * {{ entity }} controller.
@@ -247,6 +247,30 @@ class {{ entity }}Controller extends ContainerAware
         $response->headers->set('Content-Type', 'application/json');
 
         return $response; 
+    }
+
+    /**
+     *  Import {{ entity_cc | camelCaseToTitle | lower }} via csv.
+     *
+     * @Route("/import", name="{{ bundle_alias }}_{{ entity_cc }}_import")
+     * @Template
+     */
+    public function importAction()
+    {
+        $form = $this->container->get('avro_csv.csv.form');
+        $formHandler = $this->container->get('avro_csv.csv.form.handler');
+        $results = $formHandler->process();
+        $import = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_importer')->import($results);
+
+        if ($import === true) {
+            $this->container->get('session')->setFlash('success', count($results).' {{ entity_cc | camelCaseToTitle | lower }} created.');
+
+            return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}.{{ entity_cc }}_list'));
+        }
+
+        return array(
+            'form' => $form->createView()
+        );
     }
 
 }

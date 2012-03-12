@@ -11,16 +11,12 @@ function {{ entity_cc }}ListModel(options) {
         if (value == 'Search') {
             self.searchDialogOptions({title: 'Search {{ entity_cc | camelCaseToTitle | lower }}'});
         }
-    };
+    });
     self.bindSearchForm = function(form) {
         $form = $(form);
-        $form.ajaxSubmit({
+        $form.avroAjaxSubmit({
             dataType:  'json',
-            beforeSubmit: function() {
-                avro.showSpinner();
-            },
             success:   function(response){
-                avro.hideSpinner();
                 if (response['status'] == "OK") {
                     avro.createNotice(response['notice']);
                     $form.dialog('close');

@@ -20,11 +20,9 @@ use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Doctrine\ORM\Tools\Export\ClassMetadataExporter;
 
 /**
- * Generates model, modelInterface, modelManager, modelManagerInterface based on a Doctrine entity.
+ * Generates entity classes based on a Doctrine entity.
  *
- * @author Fabien Potencier <fabien@symfony.com>
- * @author Jonathan H. Wage <jonwage@gmail.com> 
- * @author Joris de Wit <joris.w.Avro@gmail.com>
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class AvroEntityGenerator extends Generator
 {
@@ -177,6 +175,4 @@ class AvroEntityGenerator extends Generator
 
         $this->renderFile('Entity/managerInterface.php', $filename);
     }
-    
-
 }

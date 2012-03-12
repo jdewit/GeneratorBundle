@@ -5,6 +5,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/*
+ * Search Form for a {{ entity }}
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
+ */
 class {{ entity }}SearchFormType extends AbstractType
 { 
     protected $owner;
@@ -53,6 +58,18 @@ class {{ entity }}SearchFormType extends AbstractType
                     'title' => 'Search deleted expenses?',
                 )
             ))
+            ->add('orderBy', 'choice', array(
+                'label' => 'Sort By',
+                'choices' => array(
+{% for field in fields %}
+                    '{{ field.fieldName }}' => '{{ field.fieldName | camelCaseToTitle }}',
+{% endfor %}
+                ),
+                'attr' => array(
+                    'title' => 'Sort by column'
+                )
+            ))
+
         ;
     }
     

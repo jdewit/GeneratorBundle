@@ -185,6 +185,10 @@ class {{ entity }}Manager
     public function search(array $query)
     {
         $qb = $this->em->createQueryBuilder()->select('e')->from($this->class, 'e');
+        $orderBy = array_pop($query);
+        if ($orderBy) {
+            $qb->orderBy('e.'.$orderBy, 'ASC');
+        }
         $qb->where('e.owner = ?1')->setParameter('1', $this->owner);
         $index = 2;
         foreach ($query as $key => $value) {

@@ -46,7 +46,7 @@ function {{ entity_cc }}Model(options) {
                 avro.hideSpinner();
                 if (response['status'] == "OK") {
                     avro.createNotice(response['notice']);
-                    self.set{{ entity_cc | capitalizeFirst }}(response['data']);
+                    self.set{{ entity_cc | ucFirst }}(response['data']);
                     if (list) {
                         list.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; });
                         list.{{ entity_cc }}s.unshift(response['data']);

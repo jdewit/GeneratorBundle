@@ -55,14 +55,14 @@ EOT
         $dialog->writeSection($output, 'Welcome to the Avro entity generator!');
         
         // initiate base command
-        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
         list($fields) = $this->fieldGenerator($input, $output, $dialog, $entity, $fields);      
 
         // confirm
         $dialog->writeSection($output, 'Generating code for '. $bundle->getName() );
                        
         //Generate Bundle/Entity files
-        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);    
+        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);    
         $avroEntityGenerator->generate();  
 
         $output->writeln('Entity created succesfully!');

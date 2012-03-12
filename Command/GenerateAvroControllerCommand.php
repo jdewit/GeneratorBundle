@@ -55,7 +55,7 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
         if ($dialog->askConfirmation($output, $dialog->getQuestion('Is this controller based on an entity?', 'yes', '?'), true)) {           
 
             // initiate base command
-            list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
+            list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         } else {
             $output->writeln(array(
@@ -68,7 +68,7 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
         }
 
         //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
         $avroControllerGenerator->generate();
         
         $output->writeln('Controller created succesfully!');

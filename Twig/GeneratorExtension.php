@@ -26,7 +26,7 @@ class GeneratorExtension extends \Twig_Extension {
     public static function ucFirstFilter($input)
     {
         if (is_array($input)) {
-            print_r($input); exit;
+            throw new \Exception('ucFirst twig filter input must be a string');
         }
         return ucfirst($input);
     }
@@ -34,7 +34,7 @@ class GeneratorExtension extends \Twig_Extension {
     public static function camelCaseToTitle($input)
     {
         if (is_array($input)) {
-            print_r($input); exit;
+            throw new \Exception('ucFirst twig filter input must be a string');
         }
 
         return trim(implode(" ", preg_split('/(?=[A-Z])/', ucfirst($input))));

@@ -12,6 +12,7 @@
 {% endif %}
 {% endif %}
 {% endfor %} 
+        {{ "{{ form_row(searchForm.orderBy) }}" }}
         {{ "{{ form_row(searchForm.isDeleted) }}" }}
         {{ "{{ form_widget(searchForm._token) }}" }}
     </div>

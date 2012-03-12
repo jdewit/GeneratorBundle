@@ -34,3 +34,7 @@ services:
         class: Symfony\Component\Form\Form
         arguments: ["@{{ bundle_alias }}.{{ entity_cc }}Search.form.type", {{ bundle_alias }}_{{ entity_cc }}_search]
 {% endif %}
+
+    {{ bundle_alias }}.{{ entity_cc }}_importer:
+        class: {{ bundle_namespace }}\Util\Importers\ClientImporter
+        arguments: ["@security.context", "@{{ bundle_alias }}.{{ entity_cc }}_manager", {% for field in fields %}{% if field.type == 'manyToOne' %}, "@{{ bundle_alias }}.{{ field.fieldName }}_manager{% endif %}{% endfor %}"]

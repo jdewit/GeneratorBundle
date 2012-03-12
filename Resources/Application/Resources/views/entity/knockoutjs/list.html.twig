@@ -2,7 +2,7 @@
 {{ "{% block content %}" }}
     <div id="{{ entity_cc }}-list-container">
         <h1>
-            {{ entity | camelCaseToTitle }} List
+            {{ entity | camelCaseToTitle }}s
             <select data-bind="value: filter, filter: {{ entity_cc }}s" data-href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_get') }}" }}">
                 <option class="current" value="Recent">Recent</option>
                 <option value="All">All</option>

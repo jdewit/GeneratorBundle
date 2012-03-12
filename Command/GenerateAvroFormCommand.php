@@ -26,6 +26,7 @@ use Avro\GeneratorBundle\Generator\AvroFormGenerator;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Hugo Hamon <hugo.hamon@sensio.com>
+ * @authoer Joris de Wit <joris.w.dewit@gmail.com>
  */
 class GenerateAvroFormCommand extends GenerateAvroCommand
 {
@@ -53,13 +54,13 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
         $dialog->writeSection($output, 'Welcome to the Avro form generator!');
         
         // initiate base command
-        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         // confirm
         $dialog->writeSection($output, 'Generating code for '. $bundle->getName() );
 
         //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
         $avroFormGenerator->generate();
     }
     

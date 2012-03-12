@@ -50,10 +50,10 @@ class GenerateAvroKnockoutCommand extends GenerateAvroCommand
         
         $dialog->writeSection($output, 'Welcome to the Avro knockout generator!');
 
-        list($bundle, $entity, $fields, $style) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         //Generate Knockout model files
-        $avroKnockoutGenerator = new AvroKnockoutGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style);
+        $avroKnockoutGenerator = new AvroKnockoutGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
         $avroKnockoutGenerator->generate();        
         
         $output->writeln('Knockout models created succesfully!');
