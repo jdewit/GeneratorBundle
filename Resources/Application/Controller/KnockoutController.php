@@ -258,19 +258,23 @@ class {{ entity }}Controller extends ContainerAware
     public function importAction()
     {
         $form = $this->container->get('avro_csv.csv.form');
-        $formHandler = $this->container->get('avro_csv.csv.form.handler');
-        $results = $formHandler->process();
-        $import = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_importer')->import($results);
 
-        if ($import === true) {
-            $this->container->get('session')->setFlash('success', count($results).' {{ entity_cc | camelCaseToTitle | lower }} created.');
+        if ('POST' === $this->container->get('request')->getMethod()) {
+            $formHandler = $this->container->get('avro_csv.csv.form.handler');
+            $importer = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_importer');
+            $process = $importer->import($formHandler->process());
 
-            return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}.{{ entity_cc }}_list'));
+            if ($process === true) {
+                $this->container->get('session')->setFlash('success', count($importer->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported. '.count($importer->getSkipped()). ' {{ entity_cc | camelCaseToTitle | lower }}s skipped.' );
+
+                return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}.{{ entity_cc }}_list'));
+            } else {
+                $this->container->get('session')->setFlash('error', 'Error importing CSV. Please try again.' );
+            }
         }
 
         return array(
             'form' => $form->createView()
         );
     }
-
 }

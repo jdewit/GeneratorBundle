@@ -37,6 +37,9 @@
                     |
                     <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'"><i class="sprite-delete"></i>Delete</a>
                     <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow_refresh"></i>Restore</a>
+                    <span class="pull-right">
+                        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_import') }}" }}"><i class="sprite-table_add"></i>import</a>
+                    </span>
                 {{ "{% endif %}" }}
             </td>
         </tr>

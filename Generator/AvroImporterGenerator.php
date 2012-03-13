@@ -49,7 +49,7 @@ class AvroImporterGenerator extends Generator
      */
     private function generateImporter()
     {   
-        $filename = $this->bundlePath.'/Util/Importer/'.$this->entity.'Importer.php';      
+        $filename = $this->bundlePath.'/Util/Importers/'.$this->entity.'Importer.php';      
         
         $this->renderFile('Util/Importers/Importer.php', $filename);
     }    
