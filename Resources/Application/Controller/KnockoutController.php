@@ -267,7 +267,7 @@ class {{ entity }}Controller extends ContainerAware
             if ($process === true) {
                 $this->container->get('session')->setFlash('success', count($importer->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported. '.count($importer->getSkipped()). ' {{ entity_cc | camelCaseToTitle | lower }}s skipped.' );
 
-                return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}.{{ entity_cc }}_list'));
+                return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
             } else {
                 $this->container->get('session')->setFlash('error', 'Error importing CSV. Please try again.' );
             }

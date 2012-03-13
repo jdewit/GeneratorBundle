@@ -35,6 +35,13 @@ class {{ entity }}
      */    
     protected $id;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="integer")
+     */    
+    protected $legacyId;
+
 {% for field in fields %}
 {% if field.type == "manyToOne" %}
     /**
@@ -189,6 +196,26 @@ class {{ entity }}
     {
         return $this->id;
     }
+
+    /**
+     * Get legacyId
+     * 
+     * @return string 
+     */
+    public function getLegacyId()
+    {
+        return $this->legacyId;
+    }
+    
+    /**
+     * Set legacyId
+     *
+     * @param string $legacyId
+     */
+    public function setLegacyId($legacyId)
+    {
+        $this->legacyId = $legacyId;
+    }  
 
 {% for field in fields %}
 {% if field.type == "manyToOne" %}

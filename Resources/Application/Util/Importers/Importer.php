@@ -44,7 +44,7 @@ class {{ entity }}Importer
             foreach($results as $result) {
                 ${{ entity_cc }} = $this->{{ entity_cc }}Manager->create();
                 ${{ entity_cc }}Id = $result[array_search('id', $columns)];
-                ${{ entity_cc }}->setId(${{ entity_cc }}Id); 
+                ${{ entity_cc }}->setLegacyId(${{ entity_cc }}Id); 
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}
                 ${{ field.fieldName }}Id = $result[array_search('{{ field.fieldName }}_id', $columns)];
@@ -55,7 +55,7 @@ class {{ entity }}Importer
                     }
                 }
 {% else %}
-                ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}($result[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $columns)]);
+                ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $columns) ? $result[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $columns)] : null);
 {% endif %}
 {% endfor %}
                 $this->{{ entity_cc }}Manager->update(${{ entity_cc }});
