@@ -10,8 +10,8 @@
 
 namespace Avro\GeneratorBundle\Command;
 
-use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
-use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
+use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
+use Symfony\Bundle\DoctrineBundle\Command\DoctrineCommand;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
