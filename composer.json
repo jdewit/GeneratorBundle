@@ -1,8 +1,21 @@
 {
-    "name": "jdewit/GeneratorBundle",
-    "version": "0.1",
-    "dist": {
-        "url": "http://www.github.com/jdewit/GeneratorBundle",
-        "type": "vcs"
-    }
+    "name": "jdewit/generator-bundle",
+    "type": "generator-bundle",
+    "description": "Symfony2 Generator Bundle",
+    "keywords": [],
+    "homepage": "http://github/jdewit/GeneratorBundle.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joris de Wit",
+            "email": "joris.w.dewit@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2",
+    },
+    "autoload": {
+        "psr-0": { "Avro\\GeneratorBundle": "" }
+    },
+    "target-dir": "Avro/GeneratorBundle"
 }
