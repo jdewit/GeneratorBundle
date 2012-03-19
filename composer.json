@@ -1,0 +1,8 @@
+{
+    "name": "jdewit/GeneratorBundle",
+    "version": "0.1",
+    "dist": {
+        "url": "http://www.github.com/jdewit/GeneratorBundle",
+        "type": "vcs"
+    }
+}
