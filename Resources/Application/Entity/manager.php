@@ -5,11 +5,17 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/*
+ * Managing class for {{ entity }} entity
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
+ */
 class {{ entity }}Manager 
 {
     protected $em;
     protected $class;
     protected $repository;
+    protected $context;
     protected $owner;
 
     public function __construct(EntityManager $em, $class, SecurityContextInterface $context)
@@ -18,11 +24,12 @@ class {{ entity }}Manager
         $metadata = $em->getClassMetadata($class);
         $this->class = $metadata->name;
         $this->repository = $em->getRepository($class);
+        $this->context = $context;
         $this->owner = $context->getToken()->getUser()->getOwner();
     }
 
     /**
-     * returns the {{ entity }}'s fully qualified class name
+     * @return fully qualified class name
      */
     public function getClass()
     {
@@ -30,7 +37,9 @@ class {{ entity }}Manager
     }
 
     /**
-     * Create {{ entity_cc }}
+     * Creates a {{ entity }}
+     *
+     * @return {{ entity }}
      */
     public function create()
     {
@@ -43,9 +52,13 @@ class {{ entity }}Manager
     }
            
     /**
-     * Update {{ entity_cc }}
+     * Updates a {{ entity }}
+     *
+     * @param {{ entity }} ${{ entity_cc }}
+     * @param boolean $andFlush Flush em if true
+     * @param boolean $andClear Clear em if true
      */
-    public function update({{ entity }} ${{ entity_cc }}, $andFlush = true)
+    public function update({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
     {
 {% for field in fields %}
 {% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
@@ -58,46 +71,98 @@ class {{ entity }}Manager
         if ($andFlush) {
             $this->em->flush();
         }
+        if ($andClear) {
+            $this->em->clear();
+            $this->owner = $this->context->getToken()->getUser()->getOwner();
+        }
     }
 
     /**
-     * Soft delete one {{ entity_cc }}
+     * Soft delete one {{ entity }}
+     *
+     * @param {{ entity }} ${{ entity_cc }}
+     * @param boolean $andFlush Flush em if true
+     * @param boolean $andClear Clear em if true
      */  
-    public function softDelete({{ entity }} ${{ entity_cc }})
+    public function softDelete({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
     {
         ${{ entity_cc }}->setIsDeleted(true);
         ${{ entity_cc }}->setDeletedAt(new \Datetime('now'));
        
         $this->em->persist(${{ entity_cc }});
-        $this->em->flush();
+
+        if ($andFlush) {
+            $this->em->flush();
+        }
+
+        if ($andClear) {
+            $this->em->clear();
+            $this->owner = $this->context->getToken()->getUser()->getOwner();
+        }
+
+        return true;
     }
 
     /**
-     * Restore one {{ entity_cc }}
+     * Restore one {{ entity }}
+     *
+     * @param {{ entity }} ${{ entity_cc }}
+     * @param boolean $andFlush Flush em if true
+     * @param boolean $andClear Clear em if true
      */  
-    public function restore({{ entity }} ${{ entity_cc }})
+    public function restore({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
     {
         ${{ entity_cc }}->setIsDeleted(false);
         ${{ entity_cc }}->setDeletedAt(null);
        
         $this->em->persist(${{ entity_cc }});
-        $this->em->flush();
+
+        if ($andFlush) {
+            $this->em->flush();
+        }
+
+        if ($andClear) {
+            $this->em->clear();
+            $this->owner = $this->context->getToken()->getUser()->getOwner();
+        }
+
+        return true;
     }
 
     /**
-     * Permanently delete one {{ entity_cc }}
+     * Permanently delete one {{ entity }}
+     *
+     * @param {{ entity }} ${{ entity_cc }}
+     * @param boolean $andFlush Flush em if true
+     * @param boolean $andClear Clear em if true
      */  
-    public function delete({{ entity }} ${{ entity_cc }})
+    public function delete({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
     {
         $this->em->remove(${{ entity }});
-        $this->em->flush();
+
+        if ($andFlush) {
+            $this->em->flush();
+        }
+
+        if ($andClear) {
+            $this->em->clear();
+            $this->owner = $this->context->getToken()->getUser()->getOwner();
+        }
+
+        return true;
     }
 
     /**
      * Find one {{ entity_cc }} by id
+     *
+     * @param string $id 
+     * @return {{ entity }}
      */
     public function find($id)
     {
+        if (!is_numeric($id)) {
+            throw new \InvalidArgumentException('Id must be specified.');
+        }
         $criteria['id'] = $id;
         $criteria['owner'] = $this->owner->getId();
 
@@ -109,7 +174,8 @@ class {{ entity }}Manager
     /**
      * Find one {{ entity_cc }} by criteria
      *
-     * @parameter $criteria
+     * @parameter array $criteria
+     * @return {{ entity }}
      */
     public function findOneBy($criteria = array())
     {
@@ -121,7 +187,10 @@ class {{ entity }}Manager
     /**
      * Find {{ entity_cc }}s by criteria
      *
-     * @parameter $criteria
+     * @param array $criteria
+     * @param array $sortBy
+     * @param string $limit
+     * @return array {{ entity }}s
      */
     public function findBy(array $criteria = null, array $sortBy = null, $limit = null)
     {
@@ -129,68 +198,38 @@ class {{ entity }}Manager
 
         return $this->repository->findBy($criteria, $sortBy, $limit);
     }
-{% for field in fields %}
-{% if field.fieldName == 'date' %}
-    {% set sortColumn = 'date' %}
-{% elseif field.fieldName == 'name' %}
-    {% set sortColumn = 'name' %} 
-{% endif %}
-{% endfor %}
-{% if sortColumn is not defined %}
-    {% set sortColumn = 'createdAt' %} 
-{% endif %}
-    /**
-     * Find recent {{ entity_cc }}s 
-     *
-     */
-    public function findRecent()
-    {
-        $criteria['owner'] = $this->owner->getId();
-        $criteria['isDeleted'] = false;
 
-        return $this->repository->findBy($criteria, array('updatedAt' => 'DESC'), 25);
-    }
-
-    /**
-     * Find all active {{ entity_cc }}s 
-     *
-     */
-    public function findAllActive()
-    {
-        $criteria['owner'] = $this->owner->getId();
-        $criteria['isDeleted'] = false;
-
-        return $this->repository->findBy($criteria, array('{{ sortColumn }}' => 'DESC'));
-    }
-
-    /**
-     * Find all deleted {{ entity_cc }}s 
-     *
-     */
-    public function findAllDeleted()
-    {
-        $criteria['owner'] = $this->owner->getId();
-        $criteria['isDeleted'] = true;
-
-        return $this->repository->findBy($criteria, array('{{ sortColumn }}' => 'DESC'));
-    }
-  
     /**
      * Search {{ entity_cc }}s
      * 
-     * @param array $query
-     *
-     * @return {{ entity_cc }}s
+     * @param array $query Search criteria
+     * @param string $offset 
+     * @return array {{ entity }}s
      */
-    public function search(array $query)
+    public function search(array $query = array('orderBy' => 'updatedAt', 'limit' => 20, 'direction' => 'ASC', 'offset' => 0, 'filter' => 'Active'))
     {
         $qb = $this->em->createQueryBuilder()->select('e')->from($this->class, 'e');
-        $orderBy = array_pop($query);
-        if ($orderBy) {
-            $qb->orderBy('e.'.$orderBy, 'ASC');
-        }
+        $qb->setFirstResult($query['offset']);
+        $qb->orderBy('e.'.$query['orderBy'], $query['direction']);
+        $qb->setMaxResults($query['limit']);
         $qb->where('e.owner = ?1')->setParameter('1', $this->owner);
-        $index = 2;
+
+        switch($query['filter']) {
+            case 'Deleted':
+                $qb->andWhere('e.isDeleted = ?2')->setParameter(2, true);
+            break;
+        }
+
+        $index = 3;
+
+        // remove non entity related fields
+        unset($query['_token']);
+        unset($query['offset']);
+        unset($query['direction']);
+        unset($query['orderBy']);
+        unset($query['limit']);
+        unset($query['filter']);
+
         foreach ($query as $key => $value) {
             if ((!empty($value)) && ($key != '_token')) {
                 if (is_object($value)) { 
@@ -205,9 +244,9 @@ class {{ entity }}Manager
                 $index = $index +1;
             }
         }
-        $results = $qb->getQuery()->getResult();
+        $results = $qb->getQuery()->getArrayResult();
 
         return $results; 
     }
-
 }
+

@@ -107,6 +107,7 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
         $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Avro\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
 
         list($bundleName, $entity) = $this->parseShortcutNotation($entity);
+
         try {
             $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
         } catch (\Exception $e) {

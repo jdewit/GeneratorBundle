@@ -1,8 +1,8 @@
 {{ bundle_name }}
-====================
+-----------------
 
 Installation
-============
+------------
 
 Add the `{{ bundle_vendor }}` namespace to your autoloader:
 
@@ -25,7 +25,7 @@ Enable the bundle in the kernel:
 
 ```
 [{{ bundle_name }}]
-    git=git://github.com/yourGitHubAccount.git
+    git=git://github.com/{{ bundle_vendor }}/{{ bundle_basename }}.git
     target=bundles/{{ bundle_vendor }}/{{ bundle_basename }}
 ```
 

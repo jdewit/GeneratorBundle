@@ -104,10 +104,15 @@ class RoutingManipulator extends Manipulator
     {
         switch ($this->format) {
             case 'yml':
-                $current = file_get_contents($this->filename);
+                if (file_exists($this->filename)) {
+                    $current = file_get_contents($this->filename);
         
-                $parser = new Parser();
-                $array = $parser->parse($current);
+                    $parser = new Parser();
+                    $array = $parser->parse($current);
+                } else {
+                    $array = array();
+                    $current = '';
+                }
                 
                 if (empty($array[$bundleAlias.'_'.$entityUS])) {
                     $code = $bundleAlias.'_'.$entityUS.':';

@@ -49,6 +49,9 @@ class Generator
     protected $thirdParty; 
     protected $style; 
     protected $overwrite;
+    protected $updateDb;
+    protected $routingFormat;
+    protected $serviceConfigFormat;
 
     public function __construct($container, $dialog, $output, $bundle = null, $entity = null, $fields = null, $style = null, $overwrite = false)
     {
@@ -103,16 +106,32 @@ class Generator
      * @param $append Appends new code to existing file
      * 
      */
-    protected function renderFile($template, $filename, $append = false)
+    protected function renderFile($template, $filename)
     {   
-        if ($this->overwrite === false) {
-            $newPath = $this->bundlePath.'/Temp/'.$this->entity;
+        if ($this->overwrite) {
+            $newPath= $this->bundlePath;
             $filename = str_replace($this->bundlePath, $newPath, $filename);
+
+            if (!is_dir(dirname($filename))) {
+                mkdir(dirname($filename), 0777, true);
+            }
+        } else {
+            $newPath1= $this->bundlePath.'/Temp/split/'.$this->entity;
+            $filename1 = str_replace($this->bundlePath, $newPath1, $filename);
+
+            $newPath2= $this->bundlePath.'/Temp/src';
+            $filename2= str_replace($this->bundlePath, $newPath2, $filename);
+
+            if (!is_dir(dirname($filename1))) {
+                mkdir(dirname($filename1), 0777, true);
+            }
+
+            if (!is_dir(dirname($filename2))) {
+                mkdir(dirname($filename2), 0777, true);
+            }
         }
 
-        if (!is_dir(dirname($filename))) {
-            mkdir(dirname($filename), 0777, true);
-        }
+
 
         $skeletonDir = __DIR__.'/../Resources/Application';
 
@@ -124,11 +143,12 @@ class Generator
         ));
         $twig->addExtension(new GeneratorExtension());
 
-        if ($append == true) {
-            file_put_contents($filename, $twig->render($template, $this->parameters, FILE_APPEND));
-        } else {
+        if ($this->overwrite) {
             file_put_contents($filename, $twig->render($template, $this->parameters));
-        } 
+        } else {
+            file_put_contents($filename1, $twig->render($template, $this->parameters));
+            file_put_contents($filename2, $twig->render($template, $this->parameters));
+        }
     }
 
     /*
@@ -210,4 +230,26 @@ class Generator
 
         return preg_replace_callback('/_([a-z])/', $func, $str);
     }
+
+    /*
+     * Set bundles routing format
+     */
+    function setRoutingFormat($format) {
+        $this->routingFormat = $format;
+    }
+
+    /*
+     * Set update database trigger
+     */
+    function setUpdateDb($updateDb) {
+        $this->updateDb = $updateDb;
+    }
+
+    /*
+     * Set service configuration format
+     */
+    function setServiceConfigFormat($format) {
+        $this->serviceConfigFormat = $format;
+    }
+
 }

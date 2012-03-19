@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * {{ bundle_namespace }}\Entity\{{ entity }}
  * 
- * @author Joris de <joris.w.dewit@gmail.com>
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
  * 
  * @ORM\Entity
  * @ORM\Table(name="{{ bundle_corename }}_{{ entity_cc }}")
@@ -38,7 +38,7 @@ class {{ entity }}
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */    
     protected $legacyId;
 

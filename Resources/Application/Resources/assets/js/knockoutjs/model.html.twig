@@ -1,8 +1,9 @@
 function {{ entity_cc }}Model(options) {
-    var self = this,
-        {{ entity_cc }} = options ? options.{{ entity_cc }} : null,
-        list = options ? options.list : null; 
+    var self = this;
+    self.{{ entity_cc }} = options.{{ entity_cc }} || null,
+    self.list = options.list || null; 
 
+    self.dialogOptions = ko.observable({});
     self.{{ entity_cc }}Id = ko.observable();
 {% for field in fields %}
 {% if field.type == 'oneToMany' %}
@@ -22,36 +23,45 @@ function {{ entity_cc }}Model(options) {
 {% if field.fieldName == 'date' %}
             self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
 {% elseif field.type == 'manyToOne' %}
-            self.selected{{ field.fieldName|ucFirst }}({{ entity_cc }}.{{ field.fieldName }} ? {{ entity_cc }}.{{ field.fieldName | camelCaseToUnderscore }}.id : null);
+            self.selected{{ field.fieldName|ucFirst }}({{ entity_cc }}.{{ field.fieldName }} ? {{ entity_cc }}.{{ field.fieldName }}.id : null);
 {% elseif field.type == 'datetime' %}
-            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName | camelCaseToUnderscore }});
+            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
 {% else %}
-            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName | camelCaseToUnderscore }});
+            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
 {% endif %}
 {% endfor %}
-            self.isDeleted({{ entity_cc }}.is_deleted);
-        } 
-    }
+            self.isDeleted({{ entity_cc }}.isDeleted);
 
-    self.set{{ entity }}({{ entity_cc }});
+            self.dialogOptions({title: 'Edit {{ entity_cc | camelCaseToTitle }}', width: '50%'});
+        } else {
+            self.{{ entity_cc }}Id(null);
+{% for field in fields %}
+{% if field.fieldName == 'date' %}
+            self.{{ field.fieldName }}(avro.getTodaysDate());
+{% elseif field.type == 'manyToOne' %}
+            self.selected{{ field.fieldName|ucFirst }}(null);
+{% elseif field.type == 'datetime' %}
+            self.{{ field.fieldName }}(avro.getTodaysDate());
+{% else %}
+            self.{{ field.fieldName }}(null);
+{% endif %}
+{% endfor %}
+            self.isDeleted(false);
+            self.dialogOptions({title: 'New {{ entity_cc | camelCaseToTitle }}', width: '50%'});
+        }
+    }
 
     self.bindForm = function(form) {
         var $form = $(form);
-        $form.ajaxSubmit({
-            dataType:  'json',
-            beforeSubmit: function() {
-                avro.showSpinner();
-            },
+        $form.avroAjaxSubmit({
             success: function(response){
-                avro.hideSpinner();
                 if (response['status'] == "OK") {
                     avro.createNotice(response['notice']);
-                    self.set{{ entity_cc | ucFirst }}(response['data']);
-                    if (list) {
-                        list.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; });
-                        list.{{ entity_cc }}s.unshift(response['data']);
+                    if (self.list.dialogQueue.queue('dialogs').length === 0) {
+                        avro.ajaxManager.clearCache();
+                        self.list.offset.valueHasMutated();
                     }
-                    $form.dialog('close');
+                    $form.closest('.ui-dialog-content').dialog('close');
                 } else {
                     $.each( response['data'], function(field, message) {
                         $form.find('#error-container').append('<i class="sprite-error"></i> '+ message +'.').show();

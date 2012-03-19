@@ -33,11 +33,11 @@ class AvroViewGenerator extends Generator
         switch ($this->style) {
             //knockout
             case 'knockout':
-                $views = array('list', 'table', 'form', 'getForm', 'search');
+                $views = array('list', 'table', 'form', 'getForm', 'search', 'import');
                  foreach ($views as $view) {
                     $this->output->write('Generating '.$this->bundleBasename.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig: ');
                     try {
-                        $this->generateKnockoutView($view);
+                        $this->generateView($view);
                         $this->output->writeln('<info>Ok</info>');
                     } catch (\RuntimeException $e) {
                         $this->output->writeln(array(
@@ -75,18 +75,6 @@ class AvroViewGenerator extends Generator
     {
         $filename = $this->bundlePath.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig';
 
-        $this->renderFile('Resources/views/entity/'.$view.'.html.twig', $filename);
-    }
-    
-    /**
-     * Generates knockoutjs views.
-     * 
-     * @param $view The view to generate
-     */
-    private function generateKnockoutView($view)
-    {
-        $filename = $this->bundlePath.'/Resources/views/'.$this->entity.'/'.$view.'.html.twig';
-
-        $this->renderFile('Resources/views/entity/knockoutjs/'.$view.'.html.twig', $filename);
+        $this->renderFile('Resources/views/entity/'.$this->style.'/'.$view.'.html.twig', $filename);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the Symfony package.
  *
@@ -17,7 +16,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Avro\GeneratorBundle\Generator\Generator;
 
 /**
- * Generates a formType and FormHandler based on a Doctrine entity.
+ * Generates a form and form handler based on a Doctrine entity.
  *
  * @author Joris de Wit <joris.w.avro@gmail.com>
  */
@@ -26,8 +25,6 @@ class AvroFormGenerator extends Generator
     /**
      * Generates the entity class if it does not exist.
      *
-     * @param string $entity The entity relative class name
-     * @param array $fields The entity fields
      */
     public function generate()
     {
@@ -43,21 +40,18 @@ class AvroFormGenerator extends Generator
             ));
         }       
 
-        // searchForm
         if ($this->style == 'knockout') {
-            if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Generate a search form for '.$this->entity, 'yes', '?'), true)) {
-                $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'SearchFormType.php: ');
-                try {
-                    $this->generateSearchFormType();
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                }           
-            }
+            $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'SearchFormType.php: ');
+            try {
+                $this->generateSearchFormType();
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }           
         }
         
         $this->output->write('Generating '.$this->bundleName.'/Form/'.$this->entity.'FormHandler.php: ');

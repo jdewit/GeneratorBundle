@@ -13,76 +13,50 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  * {{ entity }} controller.
  *
  * @Route("/{{ entity_cc }}")
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class {{ entity }}Controller extends ContainerAware
 {
      /**
-     * Get {{ entity | camelCaseToTitle | lower }}s.
-     *
-     * @Route("/get/{filter}", name="{{ bundle_alias }}_{{ entity_cc }}_get", defaults={"filter" = "Recent"})
-     * @method("post")     
-     */
-    public function getAction($filter)
-    {
-        switch ($filter) {
-            case 'Recent':
-                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findRecent();
-            break;
-            case 'All':
-                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findAllActive();
-            break;
-            case 'Deleted':
-                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findAllDeleted();
-            break;            
-            default: 
-                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findRecent();
-            break;
-        }
-
-        ${{ entity_cc }}s = $this->container->get('serializer')->serialize(${{ entity_cc }}s, 'json');
-
-        $response = new Response('{"filter": "'.$filter.'", "data": '.${{ entity_cc }}s.' }');
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response; 
-    }
-
-    /**
-     * Search {{ entity_cc }}s.
-     *
-     * @Route("/search", name="{{ bundle_alias }}_{{ entity_cc }}_search")
-     * @method("post")
-     */
-    public function searchAction()
-    {
-        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}Search.form');
-        $form->bindRequest($this->container->get('request'));
-
-        if ($form->isValid()) {
-            ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search($form->getData());
-            $response = new Response('{"status": "OK", "notice": "'.count(${{ entity_cc }}s).' {{ entity_cc }}s found", "data": '.$this->container->get('serializer')->serialize(${{ entity_cc }}s, 'json').'}');
-        } else {
-            $response = new Response('{"status": "FAIL", "notice": "Search failed. Please try again.", "data": '.json_encode($form->getErrors()).' }');
-        }
-        $response->headers->set('Content-Type', 'application/json');
-
-        return $response; 
-    }
-
-     /**
-     * Show all {{ entity | camelCaseToTitle | lower }}s.
+     * List {{ entity | camelCaseToTitle | lower }}s.
      *
      * @Route("/list", name="{{ bundle_alias }}_{{ entity_cc }}_list")
      * @Template()     
      */
     public function listAction()
     {
-        return array(
-            '{{ entity_cc }}s' => $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->findAllActive(),
-            '{{ entity_cc }}Form' => $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form')->createView(),
-            'searchForm' => $this->container->get('{{ bundle_alias }}.{{ entity_cc}}Search.form')->createView(),
-        );
-    }          
+        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}Search.form');
+        $form->bindRequest($this->container->get('request'));
+
+        if ('POST' == $this->container->get('request')->getMethod()) {
+            if ($form->isValid()) {
+                ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search($form->getData());
+                $response = new Response(json_encode(array(
+                    'status' => 'OK',
+                    'data' => ${{ entity_cc }}s
+                )));
+            } else {
+                $response = new Response(json_encode(array(
+                    'status' => 'FAIL',
+                    'notice' => 'Search failed.', 
+                    'data' => $form->getErrors()
+                )));
+            }
+            $response->headers->set('Content-Type', 'application/json');
+
+        } else {
+            ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search();
+
+            $response = array(
+                '{{ entity_cc }}s' => ${{ entity_cc }}s,
+                '{{ entity_cc }}Form' => $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form')->createView(),
+                'searchForm' => $form->createView()
+            );
+        }
+
+        return $response; 
+    }
 
     /**
      *  Get {{ entity_cc | camelCaseToTitle | lower }} form.
@@ -118,12 +92,21 @@ class {{ entity }}Controller extends ContainerAware
         $formHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form.handler');
 
         $process = $formHandler->process();
-        if (true === $process) {
+        if ($process) {
             ${{ entity_cc }} = $form->getData('{{ entity_cc }}');
-            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
-            $response = new Response('{"status": "OK", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} created.", "data": '.${{ entity_cc }}.' }');
+            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'array');
+
+            $response = new Response(json_encode(array(
+                'status' => 'OK',
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} created.',
+                'data' => ${{ entity_cc }}
+            )));
         } else {
-            $response = new Response('{"status": "FAIL", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} not created.", "data": '.json_encode($process).' }');
+            $response = new Response(json_encode(array(
+                'status' => 'FAIL',
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} not created.',
+                'data' => $process
+            )));
         }
 
         $response->headers->set('Content-Type', 'application/json');
@@ -132,26 +115,33 @@ class {{ entity }}Controller extends ContainerAware
     }
 
     /**
-     * Edit one {{ entity_cc | camelCaseToTitle }}.
+     * Edit one {{ entity_cc | camelCaseToTitle | lower }}.
      *
      * @Route("/edit/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_edit", defaults={"id" = false})
      * @method("post")
      */
     public function editAction($id)
     {
-        if ($id) {
-            ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
-            $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form');
-            $formHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form.handler');
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
+        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form');
+        $formHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form.handler');
 
-            $process = $formHandler->process(${{ entity_cc }});
-            if (true === $process) {
-                ${{ entity_cc }} = $form->getData('{{ entity_cc }}');
-                ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
-                $response = new Response('{"status": "OK", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} updated.", "data": '.${{ entity_cc }}.'}');
-            }
+        $process = $formHandler->process(${{ entity_cc }});
+        if ($process) {
+            ${{ entity_cc }} = $form->getData('{{ entity_cc }}');
+            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'array');
+
+            $response = new Response(json_encode(array(
+                'status' => 'OK',
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} updated.',
+                'data' => ${{ entity_cc }}
+            )));
         } else {
-            $response = new Response('{"status": "FAIL", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} not created.", "data": '.json_encode($process).' }');
+            $response = new Response(json_encode(array(
+                'status' => 'FAIL',
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} not updated.',
+                'data' => $process
+            )));
         }
 
         $response->headers->set('Content-Type', 'application/json');
@@ -160,41 +150,60 @@ class {{ entity }}Controller extends ContainerAware
     }
 
     /**
-     * Delete one {{ entity | camelCaseToTitle }}.
+     * Delete one {{ entity | camelCaseToTitle | lower }}.
      *
      * @Route("/delete/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_delete", defaults={"id" = false})
      * @method("post")
      */
     public function deleteAction($id)
     {
-        if ($id) {
-            ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
-            $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->softDelete(${{ entity_cc }});
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
+        $process = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->softDelete(${{ entity_cc }});
+
+        if ($process) {
             ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
-            $response = new Response('{"status": "OK", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} deleted.", "data": '.${{ entity_cc }}.'}');
+
+            $response = new Response(json_encode(array(
+                'status' => 'OK',
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} deleted.',
+                'data' => ${{ entity_cc }}
+            )));
         } else {
-            $response = new Response('{"status": "FAIL", "notice": "Unable to delete {{ entity_cc | camelCaseToTitle | lower }}.", "data": "null" }');
-        } 
+            $response = new Response(json_encode(array(
+                'status' => 'FAIL',
+                'notice' => 'Unable to delete {{ entity | camelCaseToTitle | lower | ucFirst }}.',
+                'data' => $process
+            )));
+        }
         $response->headers->set('Content-Type', 'application/json');
         
         return $response; 
     }
 
     /**
-     * Restore one {{ entity | camelCaseToTitle }}.
+     * Restore one {{ entity | camelCaseToTitle | lower }}.
      *
      * @Route("/restore/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_restore", defaults={"id" = false})
      * @method("post")
      */
     public function restoreAction($id)
     {
-        if ($id) {
-            ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
-            $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->restore(${{ entity_cc }});
-            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
-            $response = new Response('{"status": "OK", "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} restored.", "data": '.${{ entity_cc }}.'}');
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
+        $process = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->restore(${{ entity_cc }});
+        if ($process) {
+            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'array');
+
+            $response = new Response(json_encode(array(
+                'status' => 'OK',
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} restored.',
+                'data' => ${{ entity_cc }}
+            )));
         } else {
-            $response = new Response('{"status": "FAIL", "notice": "Unable to restore {{ entity_cc | camelCaseToTitle | lower }}.", "data": "null" }');
+            $response = new Response(json_encode(array(
+                'status' => 'FAIL',
+                'notice' => 'Unable to restore {{ entity | camelCaseToTitle | lower | ucFirst }}.',
+                'data' => $process
+            )));
         } 
         $response->headers->set('Content-Type', 'application/json');
         
@@ -210,16 +219,25 @@ class {{ entity }}Controller extends ContainerAware
     public function batchDeleteAction()
     {
         $selected = $this->container->get('request')->get('selected');
-        if ($selected) {
-            ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
 
-            foreach ($selected as $id) {
-                ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
-                ${{ entity_cc }}Manager->softDelete(${{ entity_cc }});
+        $i = 0;
+        foreach ($selected as $id) {
+            ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
+
+            if (!next($selected) || ($i % 10 == 0)) {
+                ${{ entity_cc }}Manager->softDelete(${{ entity_cc }}, true, true);
+            } else {
+                ${{ entity_cc }}Manager->softDelete(${{ entity_cc }}, false);
             }
-        } 
+            ++$i;
+        }
 
-        $response = new Response('{"notice": "'.count($selected).' {{ entity_cc | camelCaseToTitle | lower }}s deleted."}');
+        $response = new Response(json_encode(array(
+            'status' => 'OK',
+            'notice' => $i.' {{ entity_cc | camelCaseToTitle | lower }}s deleted.'
+        )));
+
         $response->headers->set('Content-Type', 'application/json');
 
         return $response; 
@@ -234,23 +252,32 @@ class {{ entity }}Controller extends ContainerAware
     public function batchRestoreAction()
     {
         $selected = $this->container->get('request')->get('selected');
-        if ($selected) {
-            ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
 
-            foreach ($selected as $id) {
-                ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
-                ${{ entity_cc }}Manager->restore(${{ entity_cc }});
+        $i = 0;
+        foreach ($selected as $id) {
+            ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
+
+            if (!next($selected) || ($i % 10 == 0)) {
+                ${{ entity_cc }}Manager->restore(${{ entity_cc }}, true, true);
+            } else {
+                ${{ entity_cc }}Manager->restore(${{ entity_cc }}, false);
             }
-        } 
+            ++$i;
+        }
 
-        $response = new Response('{"notice": "'.count($selected).' {{ entity_cc | camelCaseToTitle | lower }}s restored."}');
+        $response = new Response(json_encode(array(
+            'status' => 'OK',
+            'notice' => $i.' {{ entity_cc | camelCaseToTitle | lower }}s restored.'
+        )));
+
         $response->headers->set('Content-Type', 'application/json');
 
         return $response; 
     }
 
     /**
-     *  Import {{ entity_cc | camelCaseToTitle | lower }} via csv.
+     *  Import {{ entity_cc | camelCaseToTitle | lower }}s via csv.
      *
      * @Route("/import", name="{{ bundle_alias }}_{{ entity_cc }}_import")
      * @Template
@@ -258,20 +285,14 @@ class {{ entity }}Controller extends ContainerAware
     public function importAction()
     {
         $form = $this->container->get('avro_csv.csv.form');
+        $importHandler = $this->container->get('avro_crm.client_import.handler');
 
-        if ('POST' === $this->container->get('request')->getMethod()) {
-            $formHandler = $this->container->get('avro_csv.csv.form.handler');
-            $importer = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_importer');
-            $process = $importer->import($formHandler->process());
+        $process = $importHandler->process();
+        if ($process) {
+            $this->container->get('session')->setFlash('success', count($importer->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported.<br />'.count($importer->getSkipped()). ' {{ entity_cc | camelCaseToTitle | lower }}s skipped.' );
 
-            if ($process === true) {
-                $this->container->get('session')->setFlash('success', count($importer->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported. '.count($importer->getSkipped()). ' {{ entity_cc | camelCaseToTitle | lower }}s skipped.' );
-
-                return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
-            } else {
-                $this->container->get('session')->setFlash('error', 'Error importing CSV. Please try again.' );
-            }
-        }
+            return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
+        } 
 
         return array(
             'form' => $form->createView()

@@ -6,6 +6,11 @@ use Symfony\Component\HttpFoundation\Request;
 use {{ bundle_namespace }}\Entity\{{ entity }};
 use {{ bundle_namespace }}\Entity\{{ entity }}Manager;
 
+/*
+ * {{ entity | camelCaseToTitle }} Form Handler
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
+ */
 class {{ entity }}FormHandler
 {
     protected $form;
@@ -19,6 +24,14 @@ class {{ entity }}FormHandler
         $this->{{ entity_cc }}Manager = ${{ entity_cc }}Manager;
     }
 
+    /*
+     * Process the form
+     *
+     * @param {{ entity }} 
+     *
+     * @return boolean true if successful
+     * @return array $errors if unsuccessful
+     */
     public function process({{ entity }} ${{ entity_cc }} = null)
     {
         if (null === ${{ entity_cc }}) {
@@ -45,13 +58,18 @@ class {{ entity }}FormHandler
                 }
 
                 return $response;
-{% endif %}
             }
+{% endif %}
         }
 
         return false;
     }
 
+    /*
+     * Update {{ entity }} if valid
+     *
+     * @param {{ entity }}
+     */
     protected function onSuccess({{ entity }} ${{ entity_cc }})
     {
         $this->{{ entity_cc }}Manager->update(${{ entity_cc }});

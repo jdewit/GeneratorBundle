@@ -53,31 +53,29 @@ class AvroEntityGenerator extends Generator
                 ));
             }  
 
-            if ($dialog->askConfirmation($output, $dialog->getQuestion('Overwrite '.$entity.'Manager', 'no', '?'), false)) {
-                $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
-                try {
-                    $this->generateEntityManager();
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                }  
+            $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
+            try {
+                $this->generateEntityManager();
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }  
 
-                $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'ManagerInterface.php: ');       
-                try {
-                    $this->generateEntityManagerInterface();
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                } 
-            }
+            $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'ManagerInterface.php: ');       
+            try {
+                $this->generateEntityManagerInterface();
+                $this->output->writeln('<info>Ok</info>');
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            } 
         } else {
             $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'.php: ');        
             try {
@@ -91,31 +89,22 @@ class AvroEntityGenerator extends Generator
                 ));
             }        
             
-            if (file_exists($this->bundlePath.'/Entity/'.$this->entityCC.'Manager.php')) {
-                $write = $this->dialog->askConfirmation($this->output, $this->dialog->getQuestion($this->entityCC.'Manager exists. Overwrite?', 'no', '?'), false);
-            } else {
-                $write = true;
-            }
-
-            if ($write) {
-                $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
-                try {
-                    $this->generateEntityManager();
-                    $this->output->writeln('<info>Ok</info>');
-                } catch (\RuntimeException $e) {
-                    $this->output->writeln(array(
-                        '<error>Fail</error>',
-                        $e->getMessage(),
-                        ''
-                    ));
-                }  
-
-            } else {
+            $this->output->write('Generating '.$this->bundleName.'/Entity/'.$this->entity.'Manager.php: ');        
+            try {
+                $this->generateEntityManager();
                 $this->output->writeln('<info>Ok</info>');
-            }
+            } catch (\RuntimeException $e) {
+                $this->output->writeln(array(
+                    '<error>Fail</error>',
+                    $e->getMessage(),
+                    ''
+                ));
+            }  
         }
         // update the database
-        if ($this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Update the database', 'yes', '?'), true)) {
+        if ($this->updateDb !== false) {
+            $this->updateDb = $this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Update the database', 'yes', '?'), true);
+
             $this->output->write('Updating database: ');        
             try {
                 $this->runConsole("doctrine:schema:update", array("--force" => true));

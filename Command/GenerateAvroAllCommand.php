@@ -26,12 +26,12 @@ use Avro\GeneratorBundle\Generator\AvroEntityGenerator;
 use Avro\GeneratorBundle\Generator\AvroConfigGenerator;
 use Avro\GeneratorBundle\Generator\AvroControllerGenerator;
 use Avro\GeneratorBundle\Generator\AvroViewGenerator;
-use Avro\GeneratorBundle\Generator\AvroKnockoutGenerator;
+use Avro\GeneratorBundle\Generator\AvroKnockoutModelGenerator;
 use Avro\GeneratorBundle\Generator\AvroFormGenerator;
 use Avro\GeneratorBundle\Generator\AvroReadmeGenerator;
 use Avro\GeneratorBundle\Generator\AvroFeatureGenerator;
 use Avro\GeneratorBundle\Generator\AvroServicesGenerator;
-use Avro\GeneratorBundle\Generator\AvroImporterGenerator;
+use Avro\GeneratorBundle\Generator\AvroImportHandlerGenerator;
 
 /**
  * Generates entity, controller, form, view, and configuration code in a bundle.
@@ -90,8 +90,8 @@ EOT
         
         if ($style == 'knockout') {
             //Generate Knockout model files
-            $avroKnockoutGenerator = new AvroKnockoutGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-            $avroKnockoutGenerator->generate();  
+            $avroKnockoutModelGenerator = new AvroKnockoutModelGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroKnockoutModelGenerator->generate();  
         }
         
         //Generate Form files
@@ -99,8 +99,8 @@ EOT
         $avroFormGenerator->generate();
 
         //Generate importer
-        $avroImporterGenerator = new AvroImporterGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroImporterGenerator->generate();  
+        $avroImportHandlerGenerator = new AvroImportHandlerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+        $avroImportHandlerGenerator->generate();  
         
         //Generate Feature files
         $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);

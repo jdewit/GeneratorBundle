@@ -32,8 +32,11 @@ class AvroControllerGenerator extends Generator
     public function generate()
     {
         $this->output->write('');
-        $routingFormat = $this->dialog->ask($this->output, $this->dialog->getQuestion('Enter the bundles routing file format', 'yml', ':'), 'yml');
-        
+
+        if (!$this->routingFormat) {
+            $this->routingFormat = $this->dialog->ask($this->output, $this->dialog->getQuestion('Enter the bundles routing file format', 'yml', ':'), 'yml');
+        }
+
         switch ($this->style) {
             case 'knockout': 
                 $this->output->write('Generating '.$this->bundleName.'/Controller/'.$this->entity.'Controller.php: ');
@@ -63,9 +66,9 @@ class AvroControllerGenerator extends Generator
             break;
         }
 
-        $this->output->write('Adding controller routing to '.$this->bundleName.'/app/config/routing.'.$routingFormat.': ');
+        $this->output->write('Adding controller routing to '.$this->bundleName.'/app/config/routing.'.$this->routingFormat.': ');
         try {
-            $this->UpdateRouting($routingFormat);
+            $this->UpdateRouting();
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -103,11 +106,11 @@ class AvroControllerGenerator extends Generator
      *
      * @param $format
      */
-    protected function updateRouting($format)
+    protected function updateRouting()
     {
-        $filename = $this->bundlePath.'/Resources/config/routing.'.$format;
+        $filename = $this->bundlePath.'/Resources/config/routing.'.$this->routingFormat;
 
-        $routingManipulator = new RoutingManipulator($filename, $format);
+        $routingManipulator = new RoutingManipulator($filename, $this->routingFormat);
         $routingManipulator->updateBundleRouting($this->bundleName, $this->bundleAlias, $this->entityUS, $this->entity);
     }
 }

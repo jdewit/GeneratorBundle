@@ -8,6 +8,11 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
 {% endif %}
 
+/*
+ * {{ entity }} Form Type
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
+ */
 class {{ entity }}FormType extends AbstractType
 { 
     protected $owner;

@@ -51,22 +51,61 @@ class {{ entity }}SearchFormType extends AbstractType
             ))
 {% endif %}
 {% endfor %}
-            ->add('isDeleted', 'checkbox', array(
-                'label' => 'Search Deleted',
-                'required' => false,
-                'attr' => array(
-                    'title' => 'Search deleted expenses?',
-                )
-            ))
             ->add('orderBy', 'choice', array(
                 'label' => 'Sort By',
                 'choices' => array(
-{% for field in fields %}
+{% for field in fields %}{% if field.type != 'oneToMany' or field.type != 'manyToOne' %}
                     '{{ field.fieldName }}' => '{{ field.fieldName | camelCaseToTitle }}',
-{% endfor %}
+{% endif %}{% endfor %}
                 ),
                 'attr' => array(
                     'title' => 'Sort by column'
+                )
+            ))
+            ->add('limit', 'choice', array(
+                'required' => false,
+                'label' => 'Show',
+                'choices' => array(20 => '20', 50 => '50', 100 => '100'),
+                'attr' => array(
+                    'title' => 'Show results',
+                    'data-bind' => "
+                        chosen: true,
+                        value: limit 
+                    "
+                )
+            ))
+            ->add('isDeleted', 'choice', array(
+                'label' => 'Search Deleted',
+                'choices' => array(0 => 'No', 1 => 'Yes'),
+                'attr' => array(
+                    'title' => 'Search deleted?',
+                    'data-bind' => "
+                        chosen: true
+                    "
+                )
+            ))
+            ->add('direction', 'hidden', array(
+                'required' => false,
+                'attr' => array(
+                    'data-bind' => "
+                        value: direction
+                    "
+                )
+            ))
+            ->add('offset', 'hidden', array(
+                'required' => false,
+                'attr' => array(
+                    'data-bind' => "
+                        value: offset
+                    "
+                )
+            ))
+            ->add('filter', 'hidden', array(
+                'required' => false,
+                'attr' => array(
+                    'data-bind' => "
+                        value: filter
+                    "
                 )
             ))
 

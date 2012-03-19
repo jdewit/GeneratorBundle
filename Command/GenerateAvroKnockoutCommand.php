@@ -16,8 +16,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
 use Avro\GeneratorBundle\Generator\AvroKnockoutGenerator;
 
 
@@ -53,8 +51,8 @@ class GenerateAvroKnockoutCommand extends GenerateAvroCommand
         list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         //Generate Knockout model files
-        $avroKnockoutGenerator = new AvroKnockoutGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroKnockoutGenerator->generate();        
+        $avroKnockoutModelGenerator = new AvroKnockoutModelGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+        $avroKnockoutModelGenerator->generate();        
         
         $output->writeln('Knockout models created succesfully!');
     }

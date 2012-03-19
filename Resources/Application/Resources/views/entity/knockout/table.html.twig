@@ -1,0 +1,54 @@
+<table id="{{ entity_cc }}-table">
+    <thead class="ui-state-default">
+        <tr>
+            <th class="check-all" title="Select All"><input name="check-all" type="checkbox" data-bind="checked: checkAll"/></th>
+{% for field in fields %}
+            <th data-bind="orderBy: '{{ field.fieldName }}'">{{ field.fieldName | camelCaseToTitle }}</th>
+{% endfor %}
+            <th min-width="75px">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: {{ entity_cc }}s">
+            <tr>
+                <td><input class="selector" type="checkbox" name="selected[]" data-bind="value: id, checked: $parent.checkAll(), attr: {'id': 'selector-' + id}"/></td>
+{% for field in fields %}
+{% if field.type == 'manyToOne' %}
+                <td data-bind="text: ({{ field.fieldName | camelCaseToUnderscore }} ? {{ field.fieldName | camelCaseToUnderscore }}.name : null)"></td>
+{% elseif field.type == 'datetime' %}
+                <td data-bind="text: ({{ field.fieldName | camelCaseToUnderscore }} ? {{ field.fieldName | camelCaseToUnderscore }}.substring(0, 10) : null)"></td>
+{% else %}
+                <td data-bind="text: {{ field.fieldName | camelCaseToUnderscore }}"></td>
+{% endif %}
+{% endfor %}
+                <td><a class="btn-edit" title="Edit this {{ entity | camelCaseToTitle | lower }}" href="#" data-bind="click: function(data, event) { $parent.edit{{ entity }}(data, event) }"><i class="sprite-pencil"></i>edit</a></td>
+            </tr>
+    </tbody>
+    <tbody data-bind="if: {{ entity_cc }}s().length == 0">
+        <tr>
+            <td colspan="0" class="left-align">0 {{ entity | camelCaseToTitle | lower }}s found.</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><a title="Select all" data-bind="click: function(data, event) { checkAll() ? checkAll(false) : checkAll(true) }"><i class="sprite-arrow_left_up"></i></a></td> 
+            <td colspan="100%" class="left-align">
+                <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_getForm') }}" }}" class="btn-edit" title="Batch edit" data-bind="click: batchEdit"><i class="sprite-pencil"></i>edit</a>
+                {{ "{% if is_granted('ROLE_ADMIN') %}" }}
+                    |
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'"><i class="sprite-delete"></i>Delete</a>
+                    <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow_refresh"></i>Restore</a>
+                    <span class="pull-right">
+                        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_import') }}" }}"><i class="sprite-table_add"></i>import</a>
+                    </span>
+                {{ "{% endif %}" }}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="100%" class="center-align">
+                <a class="btn" href="#" data-bind="paginate: 'prev', target: {{ entity_cc }}s"><i class="ui-icon ui-icon-triangle-1-w"></i>Prev</a>
+                <a href="#" data-bind="text: avro.add(avro.divide(offset(), limit(), 0), 1, 0)"></a>
+                <a class="btn" href="#" data-bind="paginate: 'next', target: {{ entity_cc }}s">Next<i class="ui-icon ui-icon-triangle-1-e"></i></a>
+            </td>
+        </tr>
+    </tfoot>
+</table>
