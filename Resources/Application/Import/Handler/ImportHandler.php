@@ -53,7 +53,8 @@ class {{ entity }}ImportHandler
      * @return boolean true if valid
      * @return array errors if invalid
      */
-    public function process() {
+    public function process() 
+    {
         if ('POST' == $this->request->getMethod()) {
             $this->form->bindRequest($this->request);
 
@@ -101,7 +102,8 @@ class {{ entity }}ImportHandler
      * @param boolean $andClear Clear em if true
      * @return true if successful
      */
-    public function import($row, $andFlush, $andClear) {
+    public function import($row, $andFlush, $andClear) 
+    {
             ${{ entity_cc }}Id = $row[array_search('id', $this->headers)];
             if (${{ entity_cc }}Id) {
                 ${{ entity_cc }} = $this->{{ entity_cc }}Manager->create();
@@ -165,4 +167,11 @@ class {{ entity }}ImportHandler
         return $this->skipped;
     }
 
+    /*
+     * Set batch size
+     */
+    public function setBatchSize($batchSize) 
+    {
+        $this->batchSize = $batchSize;
+    }
 }

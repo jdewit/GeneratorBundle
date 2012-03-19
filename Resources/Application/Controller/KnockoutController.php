@@ -289,7 +289,7 @@ class {{ entity }}Controller extends ContainerAware
 
         $process = $importHandler->process();
         if ($process) {
-            $this->container->get('session')->setFlash('success', count($importer->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported.<br />'.count($importer->getSkipped()). ' {{ entity_cc | camelCaseToTitle | lower }}s skipped.' );
+            $this->container->get('session')->setFlash('success', count($importHandler->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported.');
 
             return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
         } 
