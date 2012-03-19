@@ -1,5 +1,5 @@
 {
-    "name": "jdewit/generator-bundle",
+    "name": "avro/generator-bundle",
     "type": "symfony-bundle",
     "description": "Symfony2 Generator Bundle",
     "keywords": [],
