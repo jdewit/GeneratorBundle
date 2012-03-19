@@ -2,8 +2,8 @@
     "name": "avro/generator-bundle",
     "type": "symfony-bundle",
     "description": "Symfony2 Generator Bundle",
-    "keywords": [],
-    "homepage": "http://github.com/jdewit/GeneratorBundle",
+    "keywords": ["code generator"],
+    "homepage": "http://github.com/avro/GeneratorBundle",
     "license": "MIT",
     "authors": [
         {
