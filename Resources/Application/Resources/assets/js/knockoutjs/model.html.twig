@@ -57,9 +57,7 @@ function {{ entity_cc }}Model(options) {
             success: function(response){
                 if (response['status'] == "OK") {
                     avro.createNotice(response['notice']);
-                    if (self.list.dialogQueue.queue('dialogs').length === 0) {
-                        self.list.refreshList();
-                    }
+                    self.list.refreshList();
                     $form.closest('.ui-dialog-content').dialog('close');
                 } else {
                     $.each( response['errors'], function(field, message) {

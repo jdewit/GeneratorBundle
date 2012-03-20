@@ -21,8 +21,10 @@ function {{ entity_cc }}ListModel(options) {
     self.dialogQueue = $({}); 
 
     self.refreshList = function() {
-        avro.ajaxManager.clearCache();
-        self.offset.valueHasMutated();
+        if (self.dialogQueue.queue('dialogs').length === 0) {
+            avro.ajaxManager.clearCache();
+            self.offset.valueHasMutated();
+        }
     }
 
     self.new{{ entity }} = function(data, event) { 
