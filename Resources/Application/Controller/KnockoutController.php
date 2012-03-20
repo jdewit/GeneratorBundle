@@ -148,8 +148,6 @@ class {{ entity }}Controller extends ContainerAware
         $process = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->softDelete(${{ entity_cc }});
 
         if ($process) {
-            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
-
             $response = new Response(json_encode(array(
                 'status' => 'OK',
                 'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} deleted.'
