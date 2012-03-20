@@ -78,7 +78,7 @@ class Generator
             $this->entity = $entity;
             $this->entityCC = $this->toCamelCase($entity);
             $this->entityUS = $this->toUnderscore($entity);
-            $this->fields = $fields;
+            $this->fields = $this->customizeFields($fields);
 
             $this->parameters = array(
                 'entity' => $this->entity,
@@ -250,6 +250,33 @@ class Generator
      */
     function setServiceConfigFormat($format) {
         $this->serviceConfigFormat = $format;
+    }
+
+    /*
+     * Add custom attributes to fields
+     *
+     * @param array $fields
+     * @return array $customizedFields 
+     */
+    function customizeFields($fields)
+    {
+        $customFields = array();
+        foreach ($fields as $field) {
+            switch($field['type']) {
+                case 'manyToOne':
+                    $targetEntity = $field['targetEntity'];
+                    $arr = explode('\\', $targetEntity);
+                    $field['targetVendor'] = $arr[0];
+                    $field['targetBundle'] = $arr[1];
+                    $field['targetBundleAlias'] = strtolower($arr[0].'_'.str_replace('Bundle', '', $arr[1]));
+                    $field['targetEntityName'] = lcfirst($arr[3]);
+                break;
+            }
+
+            $customFields[] = $field;
+        }
+
+        return $customFields;
     }
 
 }

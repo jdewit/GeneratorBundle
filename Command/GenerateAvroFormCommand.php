@@ -54,14 +54,19 @@ class GenerateAvroFormCommand extends GenerateAvroCommand
         $dialog->writeSection($output, 'Welcome to the Avro form generator!');
         
         // initiate base command
-        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entities, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
-        // confirm
         $dialog->writeSection($output, 'Generating code for '. $bundle->getName() );
 
-        //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroFormGenerator->generate();
+        foreach($entities as $entity) {
+            $fields = $entity['fields'];
+            $entity = $entity['name'];
+
+
+            //Generate Form files
+            $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroFormGenerator->generate();
+        }
     }
     
 }

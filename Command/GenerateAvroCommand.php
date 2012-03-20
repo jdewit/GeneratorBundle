@@ -10,8 +10,8 @@
 
 namespace Avro\GeneratorBundle\Command;
 
-use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
-use Symfony\Bundle\DoctrineBundle\Command\DoctrineCommand;
+use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
+use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,6 +30,76 @@ use Avro\GeneratorBundle\Command\Validators;
  */
 abstract class GenerateAvroCommand extends ContainerAwareCommand
 {
+
+    /*
+     * Base command function
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return array 
+     */
+    protected function baseCommand(InputInterface $input, OutputInterface $output, $dialog) { 
+        $output->writeln(array('Enter the name of the entity you wish to create code for. (ie. AcmeTestBundle:Blog',
+            '',
+            'If you wish to generate code for all of the entities in the bundle, provide only the bundle name. (ie. AcmeTestBundle'
+        ));
+
+        $input = $dialog->ask($output, $dialog->getQuestion('Bundle name with or without entity name', '', ':'));
+
+        if (false === $pos = strpos($input, ':')) {
+            $bundleName = $input;
+            $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
+            $cmf = $this->em->getMetadataFactory();
+            $metadatas = $cmf->getAllMetadata();
+            $entities = array();
+            foreach($metadatas as $metadata) {
+                $entityNamespaceArray = explode("\\", $metadata->getName()); 
+                $vendor = $entityNamespaceArray[0];
+                $bn = $vendor.$entityNamespaceArray[1];
+                if ($bn === $bundleName) {
+                    $entities[] = $entityNamespaceArray[3];
+                }
+            }
+        } else {
+            list($bundleName, $entities) = $this->parseShortcutNotation($input);
+        }
+
+        try {
+            $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist.', $bundleName));
+        }
+
+        $dialog->writeSection($output, array('This entity exists. Would you like to overwrite existing code?',
+            'If not, enter false and generated code will be written in a temp folder in your bundle.'
+        ));
+        $overwrite = $dialog->askConfirmation($output, $dialog->getQuestion('Overwrite existing code', 'no', '?'), false);
+        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1. default, 2. knockout)', '1. default', '?'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle'), '2'); 
+
+        $entitiesArray = array();
+        foreach ($entities as $entity) {
+            $arr = array();
+            if (file_exists($bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
+                $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundleName).'\\'.$entity;
+                $metadata = $this->getEntityMetadata($entityClass);
+                $arr['name'] = $entity;
+                $arr['fields'] = $this->getFieldsFromMetadata($metadata[0]);
+            }    
+
+            $entitiesArray[] = $arr;
+        }
+    
+
+        return array($bundle, $entitiesArray, $style, $overwrite);
+    }
+
+    /*
+     * Parse shortcut notation
+     *
+     * @param string $shortcut
+     * @return array
+     */
     protected function parseShortcutNotation($shortcut)
     {
         $entity = str_replace('/', '\\', $shortcut);
@@ -38,7 +108,7 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
             throw new \InvalidArgumentException(sprintf('The entity name must contain a : ("%s" given, expecting something like AcmeBlogBundle:Blog/Post)', $entity));
         }
 
-        return array(substr($entity, 0, $pos), substr($entity, $pos + 1));
+        return array(substr($entity, 0, $pos), array(substr($entity, $pos + 1)));
     }
 
     protected function getEntityMetadata($entity)
@@ -48,6 +118,12 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
         return $factory->getClassMetadata($entity)->getMetadata();
     }
 
+    /*
+     * Get fields from metadata
+     *
+     * @param ClassMetadataInfo $metadata
+     * @return array $fields
+     */
     protected function getFieldsFromMetadata(ClassMetadataInfo $metadata)
     {
         $fieldMappings = $metadata->fieldMappings;
@@ -96,51 +172,22 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
         return $dialog;
     }    
 
-    protected function addFields(InputInterface $input, OutputInterface $output, DialogHelper $dialog, $entity)
-    {
-        return $fields;
-    }
-
-    protected function baseCommand($input, $output, $dialog) { 
-        $output->writeln('Enter the name of the entity you wish to create. (ie. AcmeTestBundle:Blog');
-
-        $entity = $dialog->askAndValidate($output, $dialog->getQuestion('The Entity shortcut name', $input->getOption('entity')), array('Avro\GeneratorBundle\Command\Validators', 'validateEntityName'), false, $input->getOption('entity'));
-
-        list($bundleName, $entity) = $this->parseShortcutNotation($entity);
-
-        try {
-            $bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
-        } catch (\Exception $e) {
-            throw new \InvalidArgumentException(sprintf('Bundle "%s" does not exist.', $bundleName));
-        }
-
-        $fields = false;
-        $overwrite = true;
-        if (file_exists($bundle->getPath().'/Entity/'.str_replace('\\', '/', $entity).'.php')) {
-            $entityClass = $this->getContainer()->get('doctrine')->getEntityNamespace($bundleName).'\\'.$entity;
-            $metadata = $this->getEntityMetadata($entityClass);
-            $fields = $this->getFieldsFromMetadata($metadata[0]);
-
-            $dialog->writeSection($output, array('This entity exists. Would you like to overwrite existing code?',
-                'If not, enter false and generated code will be written in a temp folder in your bundle.'
-            ));
-            $overwrite = $dialog->askConfirmation($output, $dialog->getQuestion('Overwrite existing code', 'no', '?'), false);
-        }    
-
-        $style = $dialog->askAndValidate($output, $dialog->getQuestion('Enter code style you would like to generate. (1. default, 2. knockout)', '1. default', '?'), array('Avro\GeneratorBundle\Command\Validators', 'validateStyle'), '2'); 
-
-        return array($bundle, $entity, $fields, $style, $overwrite);
-
-    }
-
+    /*
+     * Field Generator 
+     * Prompt user to add more fields
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param $dialog
+     * @param $entity
+     * @param $oldFields
+     * @return array $fields
+     */
     protected function fieldGenerator($input, $output, $dialog, $entity, $oldFields) {
         // fields
         $fields = $input->getOption('fields');
-        $output->writeln(array(
-            '',
-            'Add some fields to your entity',
-            '',
-        ));
+
+        $dialog->writeSection($output, 'Add some fields to your '.$entity.' entity');
         $output->write('<info>Available types:</info> ');
 
         $types = array_keys(Type::getTypesMap());
@@ -269,4 +316,5 @@ abstract class GenerateAvroCommand extends ContainerAwareCommand
         
         return array($fields);
     }
+
 }

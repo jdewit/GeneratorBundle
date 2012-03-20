@@ -11,16 +11,10 @@
 
 namespace Avro\GeneratorBundle\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Bundle\DoctrineBundle\Mapping\MetadataFactory;
 use Avro\GeneratorBundle\Generator\AvroControllerGenerator;
-use Avro\GeneratorBundle\Generator\AvroViewGenerator;
-
 
 /**
  * Generates a form type class for a given Doctrine entity.
@@ -37,7 +31,7 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
         $this
             ->setName('generate:avro:controller')
             ->setAliases(array('generate:avro:controller'))
-            ->setDescription('Generates controller in a bundle.')
+            ->setDescription('Generates a controller in a bundle.')
             ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)');
     }
 
@@ -55,7 +49,7 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
         if ($dialog->askConfirmation($output, $dialog->getQuestion('Is this controller based on an entity?', 'yes', '?'), true)) {           
 
             // initiate base command
-            list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
+            list($bundle, $entities, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         } else {
             $output->writeln(array(
@@ -64,14 +58,24 @@ class GenerateAvroControllerCommand extends GenerateAvroCommand
             ));
             $bundleName = $dialog->ask($output, '<info>Bundle name:</info> ');
             $bundle = Validators::validateBundleName($bundleName);
-            $entity = false;
+            $entities = false;
         }
 
-        //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroControllerGenerator->generate();
+        if (is_array($entities)) {
+            foreach($entities as $entity) {
+                $fields = $entity['fields'];
+                $entity = $entity['name'];
+
+                //Generate Controller file
+                $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+                $avroControllerGenerator->generate();
+            }
+        } else {
+            $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, false, $fields, $style, $overwrite);
+            $avroControllerGenerator->generate();
+        }
         
         $output->writeln('Controller created succesfully!');
     }
 
-}
+}       

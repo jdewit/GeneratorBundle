@@ -72,8 +72,7 @@ class {{ entity }}Manager
             $this->em->flush();
         }
         if ($andClear) {
-            $this->em->clear();
-            $this->owner = $this->context->getToken()->getUser()->getOwner();
+            $this->em->clear($this->getClass());
         }
     }
 
@@ -96,8 +95,7 @@ class {{ entity }}Manager
         }
 
         if ($andClear) {
-            $this->em->clear();
-            $this->owner = $this->context->getToken()->getUser()->getOwner();
+            $this->em->clear($this->getClass());
         }
 
         return true;
@@ -122,8 +120,7 @@ class {{ entity }}Manager
         }
 
         if ($andClear) {
-            $this->em->clear();
-            $this->owner = $this->context->getToken()->getUser()->getOwner();
+            $this->em->clear($this->getClass());
         }
 
         return true;
@@ -145,8 +142,7 @@ class {{ entity }}Manager
         }
 
         if ($andClear) {
-            $this->em->clear();
-            $this->owner = $this->context->getToken()->getUser()->getOwner();
+            $this->em->clear($this->getClass());
         }
 
         return true;

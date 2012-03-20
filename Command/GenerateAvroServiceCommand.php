@@ -51,11 +51,15 @@ class GenerateAvroServiceCommand extends GenerateAvroCommand
         
         $dialog->writeSection($output, 'Welcome to the Avro service configuration generator!');
 
-        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entities, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
-        //Update services.yml
-        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroServicesGenerator->generate(true);        
+        foreach($entities as $entity) {
+            $fields = $entity['fields'];
+            $entity = $entity['name'];
+
+            $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroServicesGenerator->generate(true);        
+        }
         
         $output->writeln('Service configuration created succesfully!');
     }

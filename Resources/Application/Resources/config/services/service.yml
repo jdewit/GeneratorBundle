@@ -38,4 +38,4 @@ services:
     {{ bundle_alias }}.{{ entity_cc }}_import.handler:
         class: {{ bundle_namespace }}\Import\{{ entity }}ImportHandler
         scope: request
-        arguments: ["@avro_csv.csv.form", "@request", "@avro_csv.reader", "@security.context", "@{{ bundle_alias }}.{{ entity_cc }}_manager"{% for field in fields %}{% if field.type == 'manyToOne' %}, "@{{ bundle_alias }}.{{ field.fieldName }}_manager"{% endif %}{% endfor %}]
+        arguments: ["@avro_csv.csv.form", "@request", "@avro_csv.reader", "@security.context", "@{{ bundle_alias }}.{{ entity_cc }}_manager"{% for field in fields %}{% if field.type == 'manyToOne' %}, "@{{ field.targetBundleAlias }}.{{ field.targetEntityName }}_manager"{% endif %}{% endfor %}]

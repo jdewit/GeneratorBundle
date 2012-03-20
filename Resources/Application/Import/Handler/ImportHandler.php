@@ -22,18 +22,18 @@ class {{ entity }}ImportHandler
     protected $form;
     protected $request;
     protected $reader;
-    protected $batchSize = 10;
+    protected $batchSize = 20;
     protected $imported = array();
     protected $skipped = array();
     protected $user;
     protected ${{ entity_cc }}Manager;
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}
-    protected ${{ field.fieldName }}Manager;
+    protected ${{ field.targetEntityName }}Manager;
 {% endif %}
 {% endfor %}
 
-    public function __construct(Form $form, Request $request, Reader $reader, SecurityContextInterface $context, {{ entity }}Manager ${{ entity_cc }}Manager{% for field in fields %}{% if field.type == 'manyToOne' %}, {{ field.fieldName | ucFirst }}Manager ${{ field.fieldName }}Manager{% endif %}{% endfor %})
+    public function __construct(Form $form, Request $request, Reader $reader, SecurityContextInterface $context, {{ entity }}Manager ${{ entity_cc }}Manager{% for field in fields %}{% if field.type == 'manyToOne' %}, {{ field.fieldName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endif %}{% endfor %})
     {
         $this->form = $form;
         $this->request = $request;
@@ -68,7 +68,7 @@ class {{ entity }}ImportHandler
 
                 $i = 0;
                 while ($row = $this->reader->getRow()) {
-                    if (($i % $this->batchSize) == 0) {
+                    if ((($i % $this->batchSize) == 0) || !next( ) {
                         $this->import($row, true, true);
                     } else {
                         $this->import($row, false, false);
@@ -118,7 +118,7 @@ class {{ entity }}ImportHandler
                     }
                 }
 {% else %}
-            ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
+                ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
 {% endif %}
 {% endfor %}
             }

@@ -52,14 +52,19 @@ class GenerateAvroImportCommand extends GenerateAvroCommand
         $dialog->writeSection($output, 'Welcome to the Avro Import generator!');
         
         // initiate base command
-        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entities, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
         // confirm
         $dialog->writeSection($output, 'Generating import code for '. $bundle->getName() );
 
-        //Generate Import Handler files
-        $avroImportHandlerGenerator = new AvroImportHandlerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroImportHandlerGenerator->generate();
+        foreach($entities as $entity) {
+            $fields = $entity['fields'];
+            $entity = $entity['name'];
+
+            //Generate Import Handler files
+            $avroImportHandlerGenerator = new AvroImportHandlerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroImportHandlerGenerator->generate();
+        }
     }
     
 }

@@ -52,11 +52,16 @@ class GenerateAvroViewCommand extends GenerateAvroCommand
         
         $dialog->writeSection($output, 'Welcome to the Avro view generator!');
 
-        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entities, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
-        //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroViewGenerator->generate();        
+        foreach($entities as $entity) {
+            $fields = $entity['fields'];
+            $entity = $entity['name'];
+
+            //Generate View files
+            $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroViewGenerator->generate();        
+        }
         
         $output->writeln('Views created succesfully!');
     }
