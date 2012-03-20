@@ -42,7 +42,7 @@ class {{ entity }}ImportHandler
         $this->{{ entity_cc }}Manager = ${{ entity_cc }}Manager;
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}
-        $this->{{ field.fieldName }}Manager = ${{ field.fieldName }}Manager;
+        $this->{{ field.targetEntityName }}Manager = ${{ field.targetEntityName }}Manager;
 {% endif %}
 {% endfor %}
     }
