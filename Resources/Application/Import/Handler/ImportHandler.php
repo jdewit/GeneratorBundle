@@ -33,7 +33,7 @@ class {{ entity }}ImportHandler
 {% endif %}
 {% endfor %}
 
-    public function __construct(Form $form, Request $request, Reader $reader, SecurityContextInterface $context, {{ entity }}Manager ${{ entity_cc }}Manager{% for field in fields %}{% if field.type == 'manyToOne' %}, {{ field.fieldName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endif %}{% endfor %})
+    public function __construct(Form $form, Request $request, Reader $reader, SecurityContextInterface $context, {{ entity }}Manager ${{ entity_cc }}Manager{% for field in fields %}{% if field.type == 'manyToOne' %}, {{ field.targetEntityName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endif %}{% endfor %})
     {
         $this->form = $form;
         $this->request = $request;

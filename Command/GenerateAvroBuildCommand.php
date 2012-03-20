@@ -48,7 +48,7 @@ class GenerateAvroBuildCommand extends GenerateAvroCommand
         $this
             ->setName('generate:avro:build')
             ->setAliases(array('generate:avro:build'))
-            ->setDescription('Generates entity, controller, form, view, and configuration code in a bundle.')
+            ->setDescription('Generates all code in the entire application.')
             ->addOption('entity', null, InputOption::VALUE_REQUIRED, 'The entity class name to initialize (shortcut notation)')
             ->addOption('fields', null, InputOption::VALUE_REQUIRED, 'The fields to create with the new entity')   
             ->addOption('dbDriver', null, InputOption::VALUE_REQUIRED, 'The database you are using (orm, couchdb, mongodb', 'orm')     

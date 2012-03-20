@@ -58,7 +58,14 @@ Generate a bundle skeleton with:
 ``` bash
 $ php app/console generate:avro:bundle
 ```
-Generate THE WORKS with:
+
+Generate all code for all mapped entities in the entire application with:
+
+``` bash
+$ php app/console generate:avro:build
+```
+
+Generate all code for a given entity with:
 
 ``` bash
 $ php app/console generate:avro:all
@@ -110,7 +117,7 @@ Generate csv importer with:
 *requires AvroCsvBundle
 
 ``` bash
-$ php app/console generate:avro:importer
+$ php app/console generate:avro:import
 ```
 
 Installation

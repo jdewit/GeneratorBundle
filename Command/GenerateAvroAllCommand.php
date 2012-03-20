@@ -68,47 +68,55 @@ EOT
         $dialog->writeSection($output, 'Welcome to the Avro create all generator!');
 
         // initiate base command
-        list($bundle, $entity, $fields, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
+        list($bundle, $entities, $style, $overwrite) = $this->baseCommand($input, $output, $dialog);
 
-        // add fields
-        list($fields) = $this->fieldGenerator($input, $output, $dialog, $entity, $fields);      
+        foreach($entities as $entity) {
+            $fields = $entity['fields'];
+            $entity = $entity['name'];
 
-        // confirm
-        $dialog->writeSection($output, 'Generating code for '. $bundle->getName() );
-                       
-        //Generate Bundle/Entity files
-        $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);    
-        $avroEntityGenerator->generate();  
-        
-        //Generate Controller file
-        $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroControllerGenerator->generate();
+            // add fields
+            list($fields) = $this->fieldGenerator($input, $output, $dialog, $entity, $fields);      
 
-        //Generate View files
-        $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroViewGenerator->generate();    
-        
-        if ($style == 'knockout') {
-            //Generate Knockout model files
-            $avroKnockoutModelGenerator = new AvroKnockoutModelGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-            $avroKnockoutModelGenerator->generate();  
+            // confirm
+            $dialog->writeSection($output, 'Generating code for '. $bundle->getName() );
+                           
+            //Generate Bundle/Entity files
+            $avroEntityGenerator = new AvroEntityGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);    
+            if (next($entities)) {
+                $avroEntityGenerator->setUpdateDb(false);
+            }
+            $avroEntityGenerator->generate();  
+            
+            //Generate Controller file
+            $avroControllerGenerator = new AvroControllerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroControllerGenerator->generate();
+
+            //Generate View files
+            $avroViewGenerator = new AvroViewGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroViewGenerator->generate();    
+            
+            if ($style == 'knockout') {
+                //Generate Knockout model files
+                $avroKnockoutModelGenerator = new AvroKnockoutModelGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+                $avroKnockoutModelGenerator->generate();  
+            }
+            
+            //Generate Form files
+            $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroFormGenerator->generate();
+
+            //Generate importer
+            $avroImportHandlerGenerator = new AvroImportHandlerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroImportHandlerGenerator->generate();  
+            
+            //Generate Feature files
+            $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroFeatureGenerator->generate();
+
+            //Update services.yml
+            $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
+            $avroServicesGenerator->generate();     
         }
-        
-        //Generate Form files
-        $avroFormGenerator = new AvroFormGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroFormGenerator->generate();
-
-        //Generate importer
-        $avroImportHandlerGenerator = new AvroImportHandlerGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroImportHandlerGenerator->generate();  
-        
-        //Generate Feature files
-        $avroFeatureGenerator = new AvroFeatureGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroFeatureGenerator->generate();
-
-        //Update services.yml
-        $avroServicesGenerator = new AvroServicesGenerator($container, $dialog, $output, $bundle, $entity, $fields, $style, $overwrite);
-        $avroServicesGenerator->generate();     
 
         $dialog->writeSection($output, 'Everything was created succesfully!');
     }

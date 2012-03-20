@@ -123,7 +123,7 @@
                 ),
             ))
 {% elseif field.type == 'manyToOne' %}
-{% if field.fieldName == 'image' %}
+{% if field.fieldName == 'image' or field.fieldName == 'logo' %}
             ->add('image', new \Avro\AssetBundle\Form\Type\ImageFormType(), array(
                 'required' => false,
                 'label' => 'false'
@@ -139,7 +139,7 @@
                     'title' => 'Choose a {{ field.fieldName }}',  
                     'class' => '',
 {% if style == 'knockout' %}
-                    'data-href' => $this->router->generate('{{ bundle_alias }}_{{ field.fieldName }}_getForm'),
+                    'data-href' => $this->router->generate('{{ field.targetBundleAlias }}_{{ field.targetEntityName }}_getForm'),
                     'data-bind' => "
                         value: selected{{ field.fieldName | ucFirst }},
                         newSelect: selected{{ field.fieldName | ucFirst }}

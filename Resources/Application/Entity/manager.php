@@ -177,7 +177,7 @@ class {{ entity }}Manager
     {
         $criteria['owner'] = $this->owner->getId();
         
-        return  $this->repository->findOneBy($criteria);
+        return $this->repository->findOneBy($criteria);
     }
 
     /**
