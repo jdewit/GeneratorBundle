@@ -123,11 +123,11 @@ class {{ entity }}ImportHandler
             ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
 {% endif %}
 {% endfor %}
-        }
-    
-        $this->{{ entity_cc }}Manager->update(${{ entity_cc }}, $andFlush, $andClear);
 
-        $this->addImported(${{ entity_cc }}Id);
+            $this->{{ entity_cc }}Manager->update(${{ entity_cc }}, $andFlush, $andClear);
+            $this->addImported(${{ entity_cc }}Id);
+        }
+
 
         return true;
     }
