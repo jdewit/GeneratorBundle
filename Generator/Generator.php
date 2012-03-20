@@ -103,7 +103,6 @@ class Generator
      * 
      * @param $template The file to use as a template
      * @param $filename The location of the new file
-     * @param $append Appends new code to existing file
      * 
      */
     protected function renderFile($template, $filename)
