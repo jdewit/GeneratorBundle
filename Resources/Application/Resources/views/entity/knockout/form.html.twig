@@ -1,5 +1,5 @@
-<div class="form-container" data-bind="dialog: {title: {{ entity_cc }}Id() ? 'Edit {{ entity_cc | camelCaseToTitle }}' : 'New {{ entity_cc | camelCaseToTitle }}'}">
-    <form class="form-horizontal hide" data-bind="submit: bindForm, attr: {'action': {{ entity_cc }}Id() ? '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit') }}" }}/'+ {{ entity_cc }}Id() : '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}' }" method="post" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>
+<div class="form-container hide" data-bind="dialog: dialogOptions()">
+    <form class="form-horizontal" data-bind="submit: bindForm, attr: {'action': {{ entity_cc }}Id() ? '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit') }}" }}/'+ {{ entity_cc }}Id() : '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}' }" method="post" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>
         <div id="error-container"></div>
         <div class="form-content">
 {% for field in fields %}{% if field.type == 'oneToMany' or field.type == 'manyToMany' %}

@@ -59,18 +59,17 @@ class {{ entity }}SearchFormType extends AbstractType
 {% endif %}{% endfor %}
                 ),
                 'attr' => array(
-                    'title' => 'Sort by column'
+                    'title' => 'Sort by column',
+                    'chosen' => true
                 )
             ))
             ->add('limit', 'choice', array(
-                'required' => false,
                 'label' => 'Show',
                 'choices' => array(20 => '20', 50 => '50', 100 => '100'),
                 'attr' => array(
                     'title' => 'Show results',
                     'data-bind' => "
-                        chosen: true,
-                        value: limit 
+                        limit: true
                     "
                 )
             ))

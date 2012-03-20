@@ -36,6 +36,20 @@ class {{ entity }}Manager
         return $this->class;
     }
 
+    /*
+     * Flush the entity manager
+     *
+     * @param boolean $andClear Clears instances of this class from the entity manager 
+     */
+    public function flush($andClear)
+    {
+        $this->em->flush();
+
+        if ($andClear) {
+            $this->em->clear($this->getClass());
+        }
+    }
+
     /**
      * Creates a {{ entity }}
      *
@@ -68,11 +82,9 @@ class {{ entity }}Manager
 {% endif %}
 {% endfor %}
         $this->em->persist(${{ entity_cc }});
+
         if ($andFlush) {
-            $this->em->flush();
-        }
-        if ($andClear) {
-            $this->em->clear($this->getClass());
+            $this->flush($andClear);
         }
     }
 
@@ -91,11 +103,7 @@ class {{ entity }}Manager
         $this->em->persist(${{ entity_cc }});
 
         if ($andFlush) {
-            $this->em->flush();
-        }
-
-        if ($andClear) {
-            $this->em->clear($this->getClass());
+            $this->flush($andClear);
         }
 
         return true;
@@ -116,11 +124,7 @@ class {{ entity }}Manager
         $this->em->persist(${{ entity_cc }});
 
         if ($andFlush) {
-            $this->em->flush();
-        }
-
-        if ($andClear) {
-            $this->em->clear($this->getClass());
+            $this->flush($andClear);
         }
 
         return true;
@@ -138,11 +142,7 @@ class {{ entity }}Manager
         $this->em->remove(${{ entity }});
 
         if ($andFlush) {
-            $this->em->flush();
-        }
-
-        if ($andClear) {
-            $this->em->clear($this->getClass());
+            $this->flush($andClear);
         }
 
         return true;
@@ -211,6 +211,9 @@ class {{ entity }}Manager
         $qb->where('e.owner = ?1')->setParameter('1', $this->owner);
 
         switch($query['filter']) {
+            case 'Active':
+                $qb->andWhere('e.isDeleted = ?2')->setParameter(2, false);
+            break;
             case 'Deleted':
                 $qb->andWhere('e.isDeleted = ?2')->setParameter(2, true);
             break;

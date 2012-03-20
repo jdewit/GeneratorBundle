@@ -68,13 +68,15 @@ class {{ entity }}ImportHandler
 
                 $i = 0;
                 while ($row = $this->reader->getRow()) {
-                    if ((($i % $this->batchSize) == 0) || !next( ) {
+                    if (($i % $this->batchSize) == 0) {
                         $this->import($row, true, true);
                     } else {
                         $this->import($row, false, false);
                     }
                     ++$i;
                 }
+
+                $this->{{ entity_cc }}Manager->flush(true);
 
                 return true;
             } else { 
@@ -104,31 +106,30 @@ class {{ entity }}ImportHandler
      */
     public function import($row, $andFlush, $andClear) 
     {
-            ${{ entity_cc }}Id = $row[array_search('id', $this->headers)];
-            if (${{ entity_cc }}Id) {
-                ${{ entity_cc }} = $this->{{ entity_cc }}Manager->create();
-                ${{ entity_cc }}->setLegacyId(${{ entity_cc }}Id); 
+        ${{ entity_cc }}Id = $row[array_search('id', $this->headers)];
+        if (${{ entity_cc }}Id) {
+            ${{ entity_cc }} = $this->{{ entity_cc }}Manager->create();
+            ${{ entity_cc }}->setLegacyId(${{ entity_cc }}Id); 
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}
-                ${{ field.fieldName }}Id = $row[array_search('{{ field.fieldName }}_id', $this->headers)];
-                if (${{ field.fieldName }}Id) {
-                    ${{ field.fieldName }} = $this->{{ field.fieldName }}Manager->findOneBy(array('legacyId' => ${{ field.fieldName }}Id));
-                    if (${{ field.fieldName }}) {
-                        ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(${{ field.fieldName }});
-                    }
+            ${{ field.fieldName }}Id = $row[array_search('{{ field.fieldName }}_id', $this->headers)];
+            if (${{ field.fieldName }}Id) {
+                ${{ field.fieldName }} = $this->{{ field.fieldName }}Manager->findOneBy(array('legacyId' => ${{ field.fieldName }}Id));
+                if (${{ field.fieldName }}) {
+                    ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(${{ field.fieldName }});
                 }
+            }
 {% else %}
-                ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
+            ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
 {% endif %}
 {% endfor %}
-            }
-        
-            $this->{{ entity_cc }}Manager->update(${{ entity_cc }}, $andFlush, $andClear);
-
-            $this->addImported(${{ entity_cc }}Id);
-
-            return true;
         }
+    
+        $this->{{ entity_cc }}Manager->update(${{ entity_cc }}, $andFlush, $andClear);
+
+        $this->addImported(${{ entity_cc }}Id);
+
+        return true;
     }
 
     /*

@@ -1,5 +1,5 @@
 <div class="search-form-container hide" data-bind="dialog: searchDialogOptions()">
-    <form id="{{ entity_cc }}-search-form" class="form-horizontal hide" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}" method="post" {{ "{{ form_enctype(searchForm) }}" }} data-bind="searchForm: clients">
+    <form id="{{ entity_cc }}-search-form" class="form-horizontal" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}" method="post" {{ "{{ form_enctype(searchForm) }}" }} data-bind="searchForm: {{ entity_cc }}s">
         <div class="error-container"></div>
         <div class="form-content">
 {% for field in fields %}

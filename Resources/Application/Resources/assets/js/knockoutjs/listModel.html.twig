@@ -3,7 +3,7 @@ function {{ entity_cc }}ListModel(options) {
 
     self.{{ entity_cc }}s = ko.observableArray(options.{{ entity_cc }}s);
     self.checkAll = ko.observable(false);
-    self.filter = ko.observable();
+    self.filter = ko.observable('Active');
     self.orderBy = ko.observable();
     self.direction = ko.observable();
     self.offset = ko.observable();
@@ -19,6 +19,11 @@ function {{ entity_cc }}ListModel(options) {
 
     self.searchDialogOptions = ko.observable({});
     self.dialogQueue = $({}); 
+
+    self.refreshList = function() {
+        avro.ajaxManager.clearCache();
+        self.offset.valueHasMutated();
+    }
 
     self.new{{ entity }} = function(data, event) { 
         avro.{{ entity_cc }}Model.set{{ entity_cc | ucFirst }}(null); 
@@ -70,8 +75,8 @@ function {{ entity_cc }}ListModel(options) {
                 url: href,
                 success: function(response){
                     if (response['status'] === 'OK') {
+                        self.refreshList();
                         avro.createSuccess(response['notice']);
-                        self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; })
                         $(target).closest('.ui-dialog-content').dialog('close');
                     } else {
                         avro.createError(response['notice']);
@@ -89,11 +94,8 @@ function {{ entity_cc }}ListModel(options) {
                     data: checked,
                     success: function(response){
                         if (response['status'] === 'OK') {
+                            self.refreshList();
                             avro.createSuccess(response['notice']);
-                            checked.each(function() {
-                                var id = $(this).val();
-                                self.{{ entity_cc }}s.remove(function({{ entity_cc }} ) { return {{ entity_cc }}.id == id; });
-                            });
                         } else {
                             avro.createError(response['notice']);
                         }
@@ -112,8 +114,8 @@ function {{ entity_cc }}ListModel(options) {
             url: href,
             success: function(response){
                 if (response['status'] === 'OK') {
+                    self.refreshList();
                     avro.createSuccess(response['notice']);
-                    self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == response['data']['id']; })
                     $(target).closest('.ui-dialog-content').dialog('close');
                 } else {
                     avro.createError(response['notice']);
@@ -130,12 +132,9 @@ function {{ entity_cc }}ListModel(options) {
                     url: href,
                     data: checked,
                     success: function(response){
-                        if (response['status']) { 
+                        if (response['status'] === 'OK') { 
                             avro.createSuccess(response['notice']);
-                            checked.each(function() {
-                                var id = $(this).val();
-                                self.{{ entity_cc }}s.remove(function({{ entity_cc }}) { return {{ entity_cc }}.id == id; });
-                            });
+                            self.refreshList();
                         } else {
                             avro.createError(response['notice']);
                         }

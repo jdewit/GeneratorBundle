@@ -39,8 +39,7 @@ class {{ entity }}Controller extends ContainerAware
             } else {
                 $response = new Response(json_encode(array(
                     'status' => 'FAIL',
-                    'notice' => 'Search failed.', 
-                    'data' => $form->getErrors()
+                    'notice' => 'Search failed. Please try again.' 
                 )));
             }
             $response->headers->set('Content-Type', 'application/json');
@@ -68,11 +67,7 @@ class {{ entity }}Controller extends ContainerAware
     {
         $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form');
 
-        if ($id) {
-            ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
-        } else {
-            ${{ entity_cc }} = null;
-        }
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
 
         return array(
             '{{ entity_cc }}' => ${{ entity_cc }},
@@ -93,19 +88,15 @@ class {{ entity }}Controller extends ContainerAware
 
         $process = $formHandler->process();
         if ($process) {
-            ${{ entity_cc }} = $form->getData('{{ entity_cc }}');
-            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'array');
-
             $response = new Response(json_encode(array(
                 'status' => 'OK',
-                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} created.',
-                'data' => ${{ entity_cc }}
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} created.'
             )));
         } else {
             $response = new Response(json_encode(array(
                 'status' => 'FAIL',
                 'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} not created.',
-                'data' => $process
+                'errors' => $process
             )));
         }
 
@@ -128,19 +119,15 @@ class {{ entity }}Controller extends ContainerAware
 
         $process = $formHandler->process(${{ entity_cc }});
         if ($process) {
-            ${{ entity_cc }} = $form->getData('{{ entity_cc }}');
-            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'array');
-
             $response = new Response(json_encode(array(
                 'status' => 'OK',
-                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} updated.',
-                'data' => ${{ entity_cc }}
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} updated.'
             )));
         } else {
             $response = new Response(json_encode(array(
                 'status' => 'FAIL',
                 'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} not updated.',
-                'data' => $process
+                'errors' => $process
             )));
         }
 
@@ -165,14 +152,12 @@ class {{ entity }}Controller extends ContainerAware
 
             $response = new Response(json_encode(array(
                 'status' => 'OK',
-                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} deleted.',
-                'data' => ${{ entity_cc }}
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} deleted.'
             )));
         } else {
             $response = new Response(json_encode(array(
                 'status' => 'FAIL',
-                'notice' => 'Unable to delete {{ entity | camelCaseToTitle | lower | ucFirst }}.',
-                'data' => $process
+                'notice' => 'Unable to delete {{ entity | camelCaseToTitle | lower | ucFirst }}.'
             )));
         }
         $response->headers->set('Content-Type', 'application/json');
@@ -191,18 +176,14 @@ class {{ entity }}Controller extends ContainerAware
         ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
         $process = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->restore(${{ entity_cc }});
         if ($process) {
-            ${{ entity_cc }} = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'array');
-
             $response = new Response(json_encode(array(
                 'status' => 'OK',
-                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} restored.',
-                'data' => ${{ entity_cc }}
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} restored.'
             )));
         } else {
             $response = new Response(json_encode(array(
                 'status' => 'FAIL',
-                'notice' => 'Unable to restore {{ entity | camelCaseToTitle | lower | ucFirst }}.',
-                'data' => $process
+                'notice' => 'Unable to restore {{ entity | camelCaseToTitle | lower | ucFirst }}.'
             )));
         } 
         $response->headers->set('Content-Type', 'application/json');

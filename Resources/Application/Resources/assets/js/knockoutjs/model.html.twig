@@ -58,12 +58,11 @@ function {{ entity_cc }}Model(options) {
                 if (response['status'] == "OK") {
                     avro.createNotice(response['notice']);
                     if (self.list.dialogQueue.queue('dialogs').length === 0) {
-                        avro.ajaxManager.clearCache();
-                        self.list.offset.valueHasMutated();
+                        self.list.refreshList();
                     }
                     $form.closest('.ui-dialog-content').dialog('close');
                 } else {
-                    $.each( response['data'], function(field, message) {
+                    $.each( response['errors'], function(field, message) {
                         $form.find('#error-container').append('<i class="sprite-error"></i> '+ message +'.').show();
                         $form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).closest('.control-group').addClass('error');
                     });
