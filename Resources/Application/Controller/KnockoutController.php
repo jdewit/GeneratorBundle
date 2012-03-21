@@ -58,6 +58,24 @@ class {{ entity }}Controller extends ContainerAware
     }
 
     /**
+     * Get {{ entity | camelCaseToTitle | lower }}s.
+     *
+     * @Route("/get/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_get", defaults={"id" = false})
+     * @method("post")     
+     */
+    public function getAction($id)
+    {
+        ${{ entity_cc }}s = $this->container->get('avro_crm.job_manager')->findBy(array('isDeleted' => false));
+
+        ${{ entity_cc }}s = $this->container->get('serializer')->serialize(${{ entity_cc }}, 'json');
+
+        $response = new Response('{"filter": "'.$id.'", "data": '.${{ entity_cc }}s.' }');
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response; 
+    }
+
+    /**
      *  Get {{ entity_cc | camelCaseToTitle | lower }} form.
      *
      * @Route("/getForm/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_getForm", defaults={"id"=false})
@@ -264,7 +282,7 @@ class {{ entity }}Controller extends ContainerAware
     public function importAction()
     {
         $form = $this->container->get('avro_csv.csv.form');
-        $importHandler = $this->container->get('avro_crm.client_import.handler');
+        $importHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_import.handler');
 
         $process = $importHandler->process();
         if ($process) {
