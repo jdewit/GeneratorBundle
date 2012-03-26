@@ -96,7 +96,7 @@ class {{ entity }}
     /**
      * @var decimal
      *
-     * @ORM\Column(type="decimal"{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.scale is defined %}, scale={{ field.precision }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     * @ORM\Column(type="decimal"{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.scale is defined %}, scale={{ field.scale }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 

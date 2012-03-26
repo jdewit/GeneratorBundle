@@ -106,9 +106,11 @@ class {{ entity }}Controller extends ContainerAware
 
         $process = $formHandler->process();
         if ($process) {
+            ${{ entity_cc }} = $this->container->get('serializer')->serialize($form->getData(), 'array');
             $response = new Response(json_encode(array(
                 'status' => 'OK',
-                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} created.'
+                'notice' => '{{ entity | camelCaseToTitle | lower | ucFirst }} created.',
+                'data' => ${{ entity_cc }}
             )));
         } else {
             $response = new Response(json_encode(array(
