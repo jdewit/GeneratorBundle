@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Symfony2 Generator Bundle",
     "keywords": ["code generator"],
-    "homepage": "http://github.com/avro/GeneratorBundle",
+    "homepage": "http://github.com/jdewit/AvroGeneratorBundle",
     "license": "MIT",
     "authors": [
         {
