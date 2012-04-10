@@ -69,7 +69,7 @@ EOT
             'Enter the name of the entity you wish to create code for.',
             '(ex. AvroDemoBundle:Blog)',
             '',
-            'If you wish to generate code for all entities in the bundle,' 
+            'If you wish to generate code for all entities in the bundle,', 
             'enter just the bundle name. (ex. AvroDemoBundle)'
         ));
 
