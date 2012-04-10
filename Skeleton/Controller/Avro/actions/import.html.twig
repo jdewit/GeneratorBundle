@@ -1,0 +1,23 @@
+    /**
+     *  Import {{ entity_cc | camelCaseToTitle | lower }}s via csv.
+     *
+     * @Route("/import", name="{{ bundle_alias }}_{{ entity_cc }}_import")
+     * @Template
+     */
+    public function importAction()
+    {
+        $form = $this->container->get('avro_csv.csv.form');
+        $importHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_import.handler');
+
+        $process = $importHandler->process();
+        if ($process === true) {
+            $this->container->get('session')->getFlashBag()->set('success', count($importHandler->getImported()).' {{ entity_cc | camelCaseToTitle | lower }}s imported.');
+
+            return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
+        } 
+
+        return array(
+            'form' => $form->createView()
+        );
+    }
+

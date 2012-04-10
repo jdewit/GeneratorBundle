@@ -1,0 +1,2 @@
+parameters:
+    avro_generator.views: ['fos', 'form']

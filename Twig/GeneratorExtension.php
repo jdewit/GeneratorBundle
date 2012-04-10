@@ -15,6 +15,10 @@ class GeneratorExtension extends \Twig_Extension {
             'camelCaseToUnderscore'   => new \Twig_Filter_Function(
                 '\Avro\GeneratorBundle\Twig\GeneratorExtension::camelCaseToUnderscore'
             ),
+            'unique'   => new \Twig_Filter_Function(
+                '\Avro\GeneratorBundle\Twig\GeneratorExtension::unique'
+            ),
+
         );
     }
 
@@ -47,4 +51,9 @@ class GeneratorExtension extends \Twig_Extension {
 
         return preg_replace_callback('/([A-Z])/', $func, $str);
     }
+    public static function unique($array)
+    {
+        return array_unique($array);
+    }
+
 }

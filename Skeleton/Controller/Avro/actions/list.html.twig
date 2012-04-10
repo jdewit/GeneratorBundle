@@ -1,0 +1,40 @@
+    /**
+     * Show all {{ entity }}s.
+     *
+     * @Route("/list/{filter}", name="{{ bundle_alias }}_{{ entity_cc }}_list", defaults={"filter" = "All"})
+     * @Template()     
+     */
+    public function listAction($filter)
+    {
+        $form = $this->container->get('avro_crm.clientSearch.form');
+        $request = $this->container->get('request');
+        $form->bindRequest($request);
+
+        if ('POST' == $this->container->get('request')->getMethod()) {
+            if ($form->isValid()) {
+                switch($request->request->get('action')) {
+                    case 'Edit':
+                        $selected = $request->request->get('selected');
+                        $session = $request->getSession();
+                        $session->set('queue', array('path' => '{{ bundle_alias }}_{{ entity_cc }}_edit', 'ids' => $selected));
+
+                        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_edit', {'id': reset($selected) }));
+                    break;
+                    case 'Export':
+
+                    break;
+                    default:
+                        ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search($form->getData());
+                    break;
+                }
+            }
+        } else {
+            ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search();
+        }
+
+        return array(
+            '{{ entity_cc }}s' => ${{ entity_cc }}s,
+            'form' => $form->createView(),
+            'filter' => $filter
+        );
+    }    

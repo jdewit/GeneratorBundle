@@ -10,21 +10,41 @@ namespace Avro\GeneratorBundle\Manipulator;
  */
 class ConfigurationManipulator extends Manipulator
 {
-    private $filename;
-    private $reflected;
-    private $parameters;
+    protected $rootDir;
+    protected $bundleDir;
+    protected $format;
+    protected $filename;
+    protected $parameters;
 
-    /**
-     * Constructor.
-     *
-     * @param $filename
-     * @param $bundleNamespace
-     */
-    public function __construct($filename, $parameters)
+    public function setRootDir($rootDir)
     {
-        $this->filename = $filename;  
+        $this->rootDir = $rootDir;
+    }
+
+    public function setBundleDir($bundleDir)
+    {
+        $this->bundleDir = $bundleDir;
+    }
+
+    public function setFormat($format) 
+    {
+        $this->format = $format;
+    }
+
+    public function setFilename($filename) 
+    {
+        $this->filename = $filename;
+    }
+
+    public function setParameters($parameters) 
+    {
         $this->parameters = $parameters;
-        $this->reflected = new \ReflectionClass($parameters['bundle_namespace'].'\DependencyInjection\Configuration'); 
+    }
+
+
+    public function execute()
+    {
+
     }
 
     /**
@@ -109,5 +129,40 @@ class ConfigurationManipulator extends Manipulator
         file_put_contents($this->filename, implode('', $updatedCodeFinal));
         return true;
     }
-            
+
+    public function updateBundleConfig()
+    {
+        $filename = $this->bundleDir.'/'.$this->filename;
+
+        switch ($this->format) {
+            case 'yml':
+                if (file_exists($filename)) {
+                    $current = file_get_contents($filename);
+        
+                    $parser = new Parser();
+                    $array = $parser->parse($current);
+                } else {
+                    $array = array();
+                    $current = '';
+                }
+
+                print_r($array); exit;
+                if (empty($array[$this->parameters['bundle_alias'].'_'.$this->parameters['entity_us']])) {
+                    $code = $this->parameters['bundle_alias'].'_'.$this->parameters['entity_us'].':';
+                    $code .= "\n";
+                    $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $this->parameters['bundle_name'], $this->parameters['entity']);
+                    $code .= "\n";
+                    $code .= sprintf("    type:     annotation ");
+                    $code .= "\n \n";
+                    $code .= $current;
+
+                    if (false === file_put_contents($filename, $code)) {
+                        throw new \RuntimeException('Could not write to routing.yml');
+                    }
+                }
+
+            break;
+        }
+
+    }
 }

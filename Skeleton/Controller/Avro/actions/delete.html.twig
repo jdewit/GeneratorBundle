@@ -1,0 +1,20 @@
+    /**
+     * Delete one {{ entity }}.
+     *
+     * @Route("/delete/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_delete")
+     */
+    public function deleteAction($id)
+    {
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
+        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+        
+        if (${{ entity_cc }}Manager->delete(${{ entity_cc }})) {
+
+            $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} deleted.');
+        } else {
+            $this->container->get('session')->getFlashBag()->set('error', 'Unable to delete {{ entity | title }}.');
+        }     
+
+        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'), 301);     
+    }
+

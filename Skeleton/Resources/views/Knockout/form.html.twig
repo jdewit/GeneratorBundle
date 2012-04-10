@@ -1,0 +1,32 @@
+<div id="{{ entity_cc }}FormModal" class="modal hide">
+    <form class="form-horizontal" data-bind="submit: bindForm, attr: {'action': {{ entity_cc }}Id() ? '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit') }}" }}/'+ {{ entity_cc }}Id() : '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}' }" method="post" {{ "{{ form_enctype("~ entity_cc ~"Form) }}" }}>
+        <div class="modal-header">
+            <a class="close" data-bind="click: closeFormModal">×</a>
+            <h3 data-bind="text: modalHeading"></h3>
+        </div>
+        <div class="modal-body">
+            <div id="error-container"></div>
+            <div class="form-content">
+    {% for field in fields %}{% if field.type == 'oneToMany' or field.type == 'manyToMany' %}
+                {{ "{{ form_row("~ entity_cc ~"Form."~ field.fieldName ~") }}" }}    
+    {% else %}
+                {{ "{{ form_row("~ entity_cc ~"Form."~ field.fieldName ~") }}" }}    
+    {% endif %}{% endfor %} 
+                {{ "{{ form_widget("~ entity_cc ~"Form._token) }}" }}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-bind="click: closeFormModal"><i class="ui-icon ui-icon-closethick"></i>Cancel</a>
+            <span data-bind="visible: !{{ entity_cc }}Id()">
+                <button type="submit" class="btn btn-primary"><i class="sprite-tick"></i>Create {{ entity | camelCaseToTitle }}</button>
+            </span>
+            <span data-bind="visible: {{ entity_cc }}Id()">
+                <button type="submit" class="btn btn-primary"><i class="sprite-tick"></i>Update {{ entity | camelCaseToTitle }}</button>
+                {{ "{% if is_granted('ROLE_ADMIN') %}" }}
+                    <a class="btn pull-left" title="Delete {{ entity_cc | camelCaseToTitle | lower }}" data-bind="click: avro.{{ entity_cc }}ListModel.delete{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_delete') }}" }}/'+ {{ entity_cc }}Id() }, visible: !isDeleted()"><i class="sprite-delete"></i>Delete</a>
+                    <a class="btn pull-left" title="Restore {{ entity_cc | camelCaseToTitle | lower }}" data-bind="click: avro.{{ entity_cc }}ListModel.restore{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_restore') }}" }}/'+ {{ entity_cc }}Id() }, visible: isDeleted()"><i class="sprite-arrow_refresh"></i>Restore</a>
+                {{ "{% endif %}" }}
+            </span>
+        </div>
+    </form>
+</div>

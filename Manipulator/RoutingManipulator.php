@@ -17,23 +17,10 @@ use Symfony\Component\Yaml\Parser;
  * Changes the PHP code of a YAML routing file.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class RoutingManipulator extends Manipulator
 {
-    private $filename;
-    private $format;
-    
-    /**
-     * Constructor.
-     *
-     * @param string $file The YAML routing file path
-     */
-    public function __construct($filename, $format = 'yml')
-    {
-        $this->filename = $filename;
-        $this->format = $format;
-    }
-
     /*
      * update the applications routing file
      * 
@@ -49,14 +36,14 @@ class RoutingManipulator extends Manipulator
                 $routingArray = $parser->parse(file_get_contents($this->filename));
                 
                 // only update if node does not exist
-                if (in_array($bundleName, $routingArray)) {
+                if (in_array($this->parameters['bundleName'], $routingArray)) {
                     return true;
                 }
                         
                 $current = file_get_contents($this->filename);
-                $code = $bundleName.':';
+                $code = $this->parameters['bundleName'].':';
                 $code .= "\n";
-                $code .= sprintf("    resource: \"@%s/Resources/config/routing.yml\"", $bundleName);
+                $code .= sprintf("    resource: \"@%s/Resources/config/routing.yml\"", $this->parameters['bundleName']);
                 $code .= "\n \n";
                 $code .= $current;
 
@@ -93,19 +80,15 @@ class RoutingManipulator extends Manipulator
 
     /*
      * update a bundles routing file
-     *
-     * @param $bundleName
-     * @param $bundleAlias
-     * @param $entityUS
-     * @param $entityCC
-     *
      */
-    public function updateBundleRouting($bundleName, $bundleAlias, $entityUS, $entity)
+    public function updateBundleRouting()
     {
+        $filename = $this->parameters['bundle_path'].'/'.$this->filename;
+
         switch ($this->format) {
             case 'yml':
-                if (file_exists($this->filename)) {
-                    $current = file_get_contents($this->filename);
+                if (file_exists($filename)) {
+                    $current = file_get_contents($filename);
         
                     $parser = new Parser();
                     $array = $parser->parse($current);
@@ -114,16 +97,16 @@ class RoutingManipulator extends Manipulator
                     $current = '';
                 }
                 
-                if (empty($array[$bundleAlias.'_'.$entityUS])) {
-                    $code = $bundleAlias.'_'.$entityUS.':';
+                if (empty($array[$this->parameters['bundle_alias'].'_'.$this->parameters['entity_us']])) {
+                    $code = $this->parameters['bundle_alias'].'_'.$this->parameters['entity_us'].':';
                     $code .= "\n";
-                    $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $bundleName, $entity);
+                    $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $this->parameters['bundle_name'], $this->parameters['entity']);
                     $code .= "\n";
                     $code .= sprintf("    type:     annotation ");
                     $code .= "\n \n";
                     $code .= $current;
 
-                    if (false === file_put_contents($this->filename, $code)) {
+                    if (false === file_put_contents($filename, $code)) {
                         throw new \RuntimeException('Could not write to routing.yml');
                     }
                 }

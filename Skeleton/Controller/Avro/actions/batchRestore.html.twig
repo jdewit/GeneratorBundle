@@ -1,0 +1,28 @@
+    /**
+     * Batch restore {{ entity_cc | camelCaseToTitle | lower }}.
+     *  
+     * @Route("/batchRestore", name="{{ bundle_alias }}_{{ entity_cc }}_batchRestore")
+     * @method("post")
+     */
+    public function batchRestoreAction()
+    {
+        $selected = $this->container->get('request')->get('selected');
+        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+
+        $i = 0;
+        foreach ($selected as $id) {
+            ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
+
+            if (!next($selected) || ($i % 10 == 0)) {
+                ${{ entity_cc }}Manager->restore(${{ entity_cc }}, true, true);
+            } else {
+                ${{ entity_cc }}Manager->restore(${{ entity_cc }}, false);
+            }
+            ++$i;
+        }
+
+        $this->container->get('session')->setFlash('success', $i.' {{ entity_cc | camelCaseToTitle | lower }}s restored.');
+
+        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
+    }
+

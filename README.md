@@ -4,10 +4,8 @@ Generate Symfony2 code from the command line!
 With this bundle you can generate or update 
 all classes related to an entity with just a few commands!
 
-This bundle generates code that is customised to my personal 
-preferences so it won't be for everyone. However, I am open 
-to collaborating with others in improving this bundle and 
-making it more suitable for more people. 
+This bundle is highly configurable. Create your own templates and render them 
+in the path of your choice. 
 
 Status
 ------
@@ -19,38 +17,55 @@ it does generate is pretty solid.
 
 Any help would be much appreciated!
 
-Styles
-------
-Currently, two "styles" of code are supported. 
-
-###FOS 
-Generates <a href="https://github.com/FriendsOfSymfony/FOSUserBundle">FOSUserBundle</a> inspired code.
-
-###Knockout
-Implements <a href="http://knockoutjs.com">KnockoutJS</a> in the view layer along 
-with FOSUserBundle inspired code.
-Generates data-binds in the form classes as well as viewModels.
-
 Dependencies
 ------------
-###FOS
-- None
+- none 
 
-###Knockout
-- <a href="http://knockoutjs.com">KnockoutJS</a>
-- <a href="http://jquery.com">JQuery</a>
-- <a href="http://jquery.malsup.com/form/">JQuery Form Plugin</a>
-- <a href="https://github.com/schmittjoh/JMSSerializerBundle">JMSSerializerBundle</a>
-- some custom javascript functions, I will create a bundle of these soon
+Configuration
+-------------
+``` php
+avro_generator:
+    style: Avro // choose from several built in styles
+    overwrite: false // overwrite current code if true, write to Temp folder if false
+```
 
-Optional Dependencies
----------------------
-- The view generator generates some <a href="http://jqueryui.com">JQueryUI</a> classes
-- Form fields have classes that work with <a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">JQuery Validation</a>
-- The CSV importer requires <a href="https://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a>
+You can override and build onto the default styles through paramaters in a yml configuration file. Checkout 
+the <a href="http://www.github.com/jdewit/GeneratorBundle/Resources/config/avro.yml">avro.yml</a> config file 
+for a good example on how to specify your templates. 
+
+The generator bundle parses all nodes specified under the parameter avro_generator.files
+``` php
+//config.yml
+parameters:
+    avro_generator.files
+        list_view: 
+            filename: 'Resources/views/%s/list.html.twig' // the target location for the generated file relative to the bundle path
+            template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' //the path to the template file 
+            tags: ['view', 'crud'] // tags allow you to specify which files you want to generate
+```
+
+The generator also allows you pass your own parameters to the template and call manipulator services to manipulate code
+
+``` php
+parameters:
+    avro_generator.files:
+        controller: 
+            filename: 'Controller/%sController.php'
+            template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'
+            parameters: // specify custom parameters you want available in your template
+                actions: ['list', 'new', 'edit', 'delete', 'restore', 'import']
+            tags: ['controller', 'crud']
+            manipulator: 
+                service: 'avro_generator.routing.manipulator' // the manipulators service name
+                method: 'updateBundleRouting' // the method you want the generator to execute
+                filename: 'Resources/config/routing.yml' // the file you want to manipulate
+                setters: // specify any setters you want the generate to set
+                    format: 'yml' // variable passed to the setter
+```
 
 USAGE
 -----
+
 Enter the following commands in the console and follow the prompts!
 
 Generate a bundle skeleton with:
@@ -59,66 +74,43 @@ Generate a bundle skeleton with:
 $ php app/console generate:avro:bundle
 ```
 
-Generate all code for all mapped entities in the entire application with:
+Generate code for one entity or all mapped entities in the entire application with:
 
 ``` bash
 $ php app/console generate:avro:build
 ```
 
-Generate all code for a given entity with:
+Parameters
+----------
+Variables available in twig templates
+    - entity // entity name 
+    - entity_cc // entity name in camel-case
+    - entity_us // entity name in underscore
+    - fields // array of the entities fields
+        - type // field type (string, integter, manyToOne, etc)
+        - fieldName // field name
+        - targetEntity // field target entity
+        - length // field length
+        - cascade // array
+    - uniqueRelations // unique many to one relations
+    - bundle_vendor // bundles vendor name
+    - bundle_basename // bundles base name
+    - bundle_name // bundles name
+    - bundle_corename // bundle core name
+    - bundle_path // bundle path
+    - bundle_namespace // bundle namespace
+    - bundle_alias // bundle alias
+    - db_driver // bundle db 
+    - style // style
 
-``` bash
-$ php app/console generate:avro:all
-```
+Twig Filters
+------------
 
-Generate an entity and entityManager with:
+Several handy twig filters are included
+- camelCaseToTitle
+- camelCaseToUnderscore
+- ucFirst
 
-``` bash
-$ php app/console generate:avro:entity
-```
-
-Generate a controller and views with:
-
-``` bash
-$ php app/console generate:avro:crud
-```
-
-Generate a controller with:
-
-``` bash
-$ php app/console generate:avro:controller
-```
-
-Generate views with:
-
-``` bash
-$ php app/console generate:avro:view
-```
-
-Generate a formType and formHandler with:
-
-``` bash
-$ php app/console generate:avro:form
-```
-
-Generate a Dependency Injection configuration file for supported services:
-
-``` bash
-$ php app/console generate:avro:service
-```
-
-Generate behat features with:
-
-``` bash
-$ php app/console generate:avro:feature
-```
-
-Generate csv importer with:
-*requires AvroCsvBundle
-
-``` bash
-$ php app/console generate:avro:import
-```
 
 Installation
 ------------
@@ -162,6 +154,5 @@ $ bin/vendors update
 
 SOMEDAY FEATURES
 ----------------
-- Improve compatibility 
 - MongoDB support
 - CouchDB support

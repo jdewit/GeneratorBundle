@@ -1,0 +1,21 @@
+{
+    "name": "{{ bundle_vendor | lower }}/{{ bundle_corename | lower }}-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony2 {{ bundle_corename }} Bundle",
+    "keywords": ["{{ bundle_corename | lower }}"],
+    "homepage": "http://github.com/{{ bundle_vendor | lower }}/{{ bundle_basename }}",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joris de Wit",
+            "email": "joris.w.dewit@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": { "{{ bundle_vendor }}\\{{ bundle_basename }}": "" }
+    },
+    "target-dir": "{{ bundle_vendor }}/{{ bundle_basename }}"
+}

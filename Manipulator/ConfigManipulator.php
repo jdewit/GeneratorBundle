@@ -22,17 +22,6 @@ use Avro\GeneratorBundle\Yaml\Dumper;
  */
 class ConfigManipulator extends Manipulator
 {
-    private $file;
-    
-    /**
-     * Constructor.
-     *
-     * @param string $file The config.yml file path
-     */
-    public function __construct($file)
-    {
-        $this->file = $file;
-    }
 
     /**
      * Includes bundle config.yml to applications config.yml
@@ -60,7 +49,7 @@ class ConfigManipulator extends Manipulator
 
     }
     
-    protected function updateConfigFile()
+    protected function updateAppConfigFile()
     {
         $parser = new Parser();
         $dumper = new Dumper();
@@ -80,21 +69,32 @@ class ConfigManipulator extends Manipulator
     /**
      * Add a resource to the imports node of a yaml file
      */
-    public function addResourceToImports($resource)
+    public function addResource()
     {
+        $filename = $this->bundleDir.'/Resources/config/config.yml';
+        $resource = '@'.$this->parameters['bundle_name'].'/Resources/config/services/'.$this->parameters['entity_cc'].'.yml';
         $parser = new Parser();
         $dumper = new Dumper();
 
         // get the applications config.yml and convert to php array      
-        $config = $parser->parse(file_get_contents($this->file));
+        $config = $parser->parse(file_get_contents($filename));
 
-        $config['imports'][] = array('resource' => '@'.$resource);
-        
-        $updatedConfig = $dumper->dump($config, 2);
-        
-        //file_put_contents($parameters['bundle_path'].'/Resources/config/config_temp.yml', );
-        file_put_contents($this->file, $updatedConfig);
-          
+        //check if resource exists
+        $resourceExists = false;
+        foreach($config['imports'] as $k => $v) {
+            if ($v['resource'] == $resource) {
+                $resourceExists = true;
+            }
+        }
+
+        if ($resourceExists === false) {
+            $config['imports'][] = array('resource' => $resource);
+            
+            $updatedConfig = $dumper->dump($config, 2);
+            
+            //file_put_contents($parameters['bundle_path'].'/Resources/config/config_temp.yml', );
+            file_put_contents($filename, $updatedConfig);
+        }
     }
    
 }

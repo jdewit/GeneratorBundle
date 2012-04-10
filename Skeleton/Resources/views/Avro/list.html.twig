@@ -1,0 +1,17 @@
+{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% block content %}" }}
+    <div class="page-header">
+        <h1>{{ entity }} List
+            <select data-bind="filter: filter">
+                <option value="All">All</option>
+                <option value="Deleted">Deleted</option>
+                <option value="Search">Search</option>
+            </select>
+        </h1>
+        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}" class="btn btn-primary throw-right">+ New {{ entity }}</a>
+    </div>
+    <div>
+        {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+    </div>
+{{ "{% endblock %}" }}
+

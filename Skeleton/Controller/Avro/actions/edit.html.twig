@@ -1,0 +1,25 @@
+    /**
+     * Edit one {{ entity_cc | title }}, show the edit form.
+     *
+     * @Route("/edit/{id}", name="{{ bundle_alias }}_{{ entity_cc }}_edit")
+     * @Template()
+     */
+    public function editAction($id)
+    {
+        ${{ entity_cc }} = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->find($id);
+        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form');
+        $formHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form.handler');
+
+        $process = $formHandler->process(${{ entity_cc }});
+        if ($process) {
+            $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} updated.');
+
+            return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
+        }
+
+        return array(
+            'form' => $form->createView(),
+            '{{ entity_cc }}' => ${{ entity_cc }},
+        );
+    }
+

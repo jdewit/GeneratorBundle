@@ -59,7 +59,7 @@ class Validators
     static public function validateBundleName($bundle)
     {
         if (!preg_match('/Bundle$/', $bundle)) {
-            throw new \InvalidArgumentException('The bundle name must end with Bundle.');
+            throw new \InvalidArgumentException('The bundle name must be in camel case and end with Bundle. (ex. AvroDemoBundle)');
         }
 
         return $bundle;
@@ -80,28 +80,6 @@ class Validators
         }
 
         return $format;
-    }
-
-    static public function validateStyle($style)
-    {
-        $style = strtolower($style);
-
-        if (!in_array($style, array('1', '2'))) {
-            throw new \RuntimeException(sprintf('Option "%s" is not supported.', $style));
-        }
-        switch ($style) {
-            case '1':
-                $style = 'default';
-            break;
-            case '2':
-                $style = 'knockout';
-            break;
-            default: 
-                $style = 'default';
-            break;
-        }
-
-        return $style;
     }
 
     static public function validateDbDriver($dbDriver)

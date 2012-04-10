@@ -1,0 +1,59 @@
+<form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}">  
+    <table class="table-condensed table-bordered table-striped">
+        <thead>
+            <tr>
+                <th title="Select All"><input id="checkAll" type="checkbox"/></th>
+{% for field in fields %}
+{% if field.type != 'oneToMany' and field.type != 'manyToMany' %}
+                <th>{{ field.fieldName | title }}</th>
+{% endif %}
+{% endfor %}
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ "{% for "~ entity_cc ~" in "~ entity_cc ~"s %}" }}
+                <tr>
+                    <td class="center_align"><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_cc ~".id }}" }}"/></td>
+{% for field in fields %}
+{% if field.type != 'oneToMany' and field.type != 'manyToMany' %}
+                    <td>{{ "{{ " ~ entity_cc ~ "." ~ field.fieldName ~" }}" }}</td>
+{% endif %}
+{% endfor %}
+                    <td><a title="Edit this {{ entity_cc }}" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit', {'id': "~ entity_cc ~".id }) }}" }}"><i class="sprite-pencil"></i>Edit</a></td>
+{% for field in fields %}
+{% endfor %}
+                </tr>
+            {{ "{% else %}" }}
+                <tr>
+                    <td colspan="0">0 {{ entity_cc }}s Found</td>
+                </tr>
+            {{ "{% endfor %}" }}
+        </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="100%">
+                        {{ "{% if "~ entity_cc ~"s %}" }}
+                            <i class="sprite-arrow_left_up"></i>
+                            <button name="action" value="Edit" class="no-style confirm" title="Are you sure you want to edit these {{ entity_cc | title }}s?"><i class="sprite-pencil"></i> Edit</button>
+                            {{ "{% if is_granted('ROLE_ADMIN') %}" }}
+                           {{ "{% if filter != 'Deleted' %}" }}
+                                <button type="submit" name="action" value="Delete" class="no-style confirm" title="Are you sure you want to delete these {{ entity_cc }}s?"><i class="sprite-delete"></i> Delete</button>
+                            {{ "{% else %}" }}
+                                <button type="submit" name="action" value="Restore" class="no-style confirm" title="Are you sure you want to restore these {{ entity_cc }}s?"><i class="sprite-arrow_refresh"></i> Restore</button>
+                            {{ "{% endif %}" }}
+                            <button name="action" value="Export" class="no-style confirm" title="Are you sure you want to export these {{ entity_cc | title }}s?"><i class="sprite-table_save"></i> Export</button>
+                        {{ "{% else %}" }}
+                            &nbsp;
+                        {{ "{% endif %}" }}
+                        <span class="pull-right">
+                            <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_import') }}" }}"><i class="sprite-table_add"></i> Import</a>
+                        </span>
+
+                        {{ "{% endif %}" }}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    {{ "{{ form_widget(form._token) }}" }}
+</form>

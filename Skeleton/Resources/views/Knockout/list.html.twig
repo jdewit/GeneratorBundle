@@ -1,0 +1,37 @@
+{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% block content %}" }}
+    <div id="{{ entity_cc }}-list-container">
+        <div class="page-header">
+            <h1>
+                {{ entity | camelCaseToTitle }}s
+                <select data-bind="filter: filter">
+                    <option value="All">All</option>
+                    <option value="Deleted">Deleted</option>
+                    <option value="Search">Search</option>
+                </select>
+            </h1>
+            <a href="#" class="btn btn-primary throw-right" data-bind="click: new{{ entity }}"><i class="sprite-add"></i>New {{ entity | camelCaseToTitle }}</a>
+        </div>
+        {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+    </div>
+    <div id="{{ entity_cc }}-container">
+        {{ "{% include '"~ bundle_name~":"~ entity ~":form.html.twig' %}" }}
+    </div>
+{{ "{% endblock %}" }}
+{{ "{% block customJS %}" }}
+
+    ;(function(avro, $, undefined) {
+        avro.{{ entity_cc }}ListModel = new {{ entity_cc }}ListModel({
+            {{ entity_cc }}s: {{ "{{ "~ entity_cc ~"s | serialize | raw }}" }}
+        });
+        avro.{{ entity_cc }}Model = new {{ entity_cc }}Model();
+{% for field in uniqueRelations %}
+        avro.available{{ entity }}s = {{ "{{ app.request.attributes.get('"~ entity_cc ~"s') | serialize | raw }}" }};
+{% endfor %}
+    }(window.avro = window.avro || {}, jQuery)); 
+
+    ko.applyBindings(avro.{{ entity_cc }}ListModel, $("#{{ entity_cc }}-list-container")[0]);
+    ko.applyBindings(avro.{{ entity_cc }}Model, $("#{{ entity_cc }}-container")[0]);
+{{ "{% endblock %}" }}
+
+

@@ -17,11 +17,42 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * Changes the PHP code of a Kernel.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class Manipulator
 {
+    protected $rootDir;
+    protected $bundleDir;
+    protected $format;
+    protected $filename;
+    protected $parameters;
     protected $tokens;
     protected $line;
+
+    public function setRootDir($rootDir)
+    {
+        $this->rootDir = $rootDir;
+    }
+
+    public function setBundleDir($bundleDir)
+    {
+        $this->bundleDir = $bundleDir;
+    }
+
+    public function setFormat($format) 
+    {
+        $this->format = $format;
+    }
+
+    public function setFilename($filename) 
+    {
+        $this->filename = $filename;
+    }
+
+    public function setParameters($parameters) 
+    {
+        $this->parameters = $parameters;
+    }
 
     /**
      * Sets the code to manipulate.
