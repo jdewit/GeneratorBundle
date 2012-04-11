@@ -98,26 +98,32 @@ Since you are basing your templates off of an entity, there
 are a number of variables available to you in your twig templates.
 
 Variables available in twig templates
-    *entity // The entity name 
-    *entity_cc // The entity name in camel-case format
-    *entity_us // The entity name in underscore format
-    *fields // array of the entities fields
-        - type // field type (string, integter, manyToOne, etc)
-        - fieldName // field name
-        - fieldTitle // field name in title format
-        - targetEntity // field target entity
-        - length // field length
-        - cascade // array
-    *uniqueRelations // unique many to one relations
-    *bundle_vendor // bundles vendor name (ex. Avro)
-    *bundle_basename // bundles base name (ex. GeneratorBundle)
-    *bundle_name // bundles name (ex. AvroGeneratorBundle)
-    *bundle_corename // bundle core name (ex. Generator)
-    *bundle_path // bundle path
-    *bundle_namespace // bundle namespace 
-    *bundle_alias // bundle alias (ex. Avro_generator)
-    *db_driver // bundle db 
-    *style // style
+- entity // The entity name 
+- entity_cc // The entity name in camel-case format
+- entity_us // The entity name in underscore format
+- fields // array of the entities fields
+- type // field type (string, integter, manyToOne, etc)
+ - fieldName // field name
+ - fieldTitle // field name in title format
+ - targetEntity // field target entity
+ - length // field length
+ - cascade // array
+ - targetVendor *
+ - targetBundle *
+ - targetBundleAlias *
+ - targetEntityName *
+- uniqueRelations // unique many to one relations
+- bundle_vendor // bundles vendor name (ex. Avro)
+- bundle_basename // bundles base name (ex. GeneratorBundle)
+- bundle_name // bundles name (ex. AvroGeneratorBundle)
+- bundle_corename // bundle core name (ex. Generator)
+- bundle_path // bundle path
+- bundle_namespace // bundle namespace 
+- bundle_alias // bundle alias (ex. Avro_generator)
+- db_driver // bundle db 
+- style // style
+
+(*If field is a manyToOne relation)
 
 Installation
 ------------
