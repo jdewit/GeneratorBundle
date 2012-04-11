@@ -98,6 +98,7 @@ Since you are basing your templates off of an entity, there
 are a number of variables available to you in your twig templates.
 
 Variables available in twig templates
+
 - entity // The entity name 
 - entity_cc // The entity name in camel-case format
 - entity_us // The entity name in underscore format
