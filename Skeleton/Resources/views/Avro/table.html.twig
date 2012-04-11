@@ -5,7 +5,7 @@
             <tr>
                 <th title="Select All"><input id="checkAll" type="checkbox"/></th>
 {% for field in fields %}
-{% if field.type != 'oneToMany' and field.type != 'manyToMany' %}
+{% if field.type != 'manyToOne' and field.type != 'oneToMany' and field.type != 'manyToMany' %}
                 <th>{{ field.fieldTitle }}</th>
 {% endif %}
 {% endfor %}

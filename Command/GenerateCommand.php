@@ -136,7 +136,6 @@ Or just press <enter> to generate all files.'
             $avroGenerator->generateEntityParameters($entity, $fields);
 
             $files = $this->container->getParameter('avro_generator.files');
-            print_r($files); exit;
             if (is_array($files)) {
                 foreach($files as $file) {
                     if ($tag) {

@@ -92,7 +92,7 @@ parameters:
                 setters: 
                     format: 'yml'
 
-    avro_generator.avro.single_files:
+    avro_generator.avro.standalone_files:
 
     avro_generator.avro.bundle_folders:
         controller:

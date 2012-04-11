@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('avro_generator');
 
-        $supportedStyles = array('Fos', 'Avro', 'none');
+        $supportedStyles = array('Avro', 'none');
 
         $rootNode
             ->children()

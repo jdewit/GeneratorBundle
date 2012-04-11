@@ -24,7 +24,7 @@ Configuration
 -------------
 ``` yml
 avro_generator:
-    style: none # build onto several built in styles or roll your own
+    style: 'none' # build onto several built in styles or roll your own
     overwrite: false # overwrite current code if true, write to Temp folder if false
 ```
 
@@ -32,7 +32,7 @@ You can override or build onto the default styles by means of yml configuration.
 the <a href="https://github.com/jdewit/GeneratorBundle/blob/master/Resources/config/avro.yml">avro.yml</a> config file 
 for a good example on how you specify your templates and even call services. 
 
-You can tell the generator to run your own templates by specifying them in your config like so:
+You can tell the generator to run your own templates by specifying them in your config_dev.yml like so:
 
 ``` yml
 parameters:
@@ -61,6 +61,7 @@ The generator also allows you to create a bundle skeleton.
 Specify bundle folders and files in the same way.
 
 ``` yml
+parameters:
     avro_generator.my.bundle_folders:
         controller:
             path: 'Controller'
@@ -76,7 +77,7 @@ only generate the files you specify in your configuration.
 
 The generator also allows you to pass your own parameters to the template and even call services to manipulate code.
 
-Take following configuration for generating a controller. The controllers actions are added to the parameters node
+Take the following configuration for generating a controller. The controllers actions are added to the parameters node
 which are now available in the template. The manipulator node is also set to manipulate the bundles routing
 file so that the new controller is added.
 
@@ -122,8 +123,12 @@ you to only generate files you have marked with a specific
 tag in your configuration. Just press <enter> if you 
 want to generate all of the files in your config.
 
-Variables
+Templates
 ----------
+
+Check the <a href="https://github.com/jdewit/GeneratorBundle/tree/master/Skeleton">Skeleton</a> directory to see the included templates. 
+
+Templates are parsed with twig so all the normal twig filters are available to you.
 
 Since you are basing your templates off of an entity, there 
 are a number of variables available to you in your twig templates.
@@ -156,6 +161,20 @@ Variables available in twig templates
 - {{ style }} // style specified in your config
 
 (* only if field is of manyToOne type)
+
+Built-in Styles
+---------------
+
+The 'Avro' style is a work in progress. It provides basic crud
+functionality using some similar techniques as the FOSUserBundle.
+
+It is designed to be used along with: 
+- <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a>
+- <a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a>
+- <a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a>
+
+Sharing is caring. 
+Submit some of your own templates!
 
 Installation
 ------------
