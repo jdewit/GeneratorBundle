@@ -36,7 +36,7 @@ You can tell the generator to run your own templates by specifying them under th
 ``` yml
 //config.yml
 parameters:
-    avro_generator.my_files
+    avro_generator.my_files:
         list_view: 
             filename: 'Resources/views/{{ entity }}/list.html.twig' // the target location for the generated file relative to the bundle path
             template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' //the path to the template file 
