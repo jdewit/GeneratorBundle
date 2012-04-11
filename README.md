@@ -38,7 +38,7 @@ You can tell the generator to run your own templates by specifying them under th
 parameters:
     avro_generator.my_files
         list_view: 
-            filename: 'Resources/views/%s/list.html.twig' // the target location for the generated file relative to the bundle path
+            filename: 'Resources/views/{{ entity }}/list.html.twig' // the target location for the generated file relative to the bundle path
             template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' //the path to the template file 
             tags: ['view', 'crud'] // tags allow you to specify which files you want to generate
 ```
@@ -56,7 +56,7 @@ file so that the new controller is added.
 parameters:
     avro_generator.files:
         controller: 
-            filename: 'Controller/%sController.php'
+            filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'
             parameters: // specify custom parameters you want available in your template
                 actions: ['list', 'new', 'edit', 'delete', 'restore', 'import']
