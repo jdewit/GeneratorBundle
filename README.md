@@ -33,8 +33,8 @@ the <a href="http://www.github.com/jdewit/GeneratorBundle/Resources/config/avro.
 for a good example on how you specify your templates and even call services. 
 
 You can tell the generator to run your own templates by specifying them under the avro_generator.my_files node like so:
+
 ``` yml
-//config.yml
 parameters:
     avro_generator.my_files:
         list_view: 
