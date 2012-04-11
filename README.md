@@ -115,12 +115,12 @@ Omit the entity, and you can generate code for all of the entities
 mapped in a bundle!
 (ex. AvroDemoBundle)
 
-If the bundle does not exist, it will prompt you whether or not you would like 
+If the bundle does not exist, it will prompt you whether or not you would like to
 create it.
 
 The generator also prompts you for a tag. This allows 
 you to only generate files you have marked with a specific 
-tag in your configuration. Just press <enter> if you 
+tag in your configuration. Just press "enter" if you 
 want to generate all of the files in your config.
 
 Templates
@@ -131,9 +131,7 @@ Check the <a href="https://github.com/jdewit/GeneratorBundle/tree/master/Skeleto
 Templates are parsed with twig so all the normal twig filters are available to you.
 
 Since you are basing your templates off of an entity, there 
-are a number of variables available to you in your twig templates.
-
-Variables available in twig templates
+are a number of variables available to you in your twig templates:
 
 - {{ entity }} // The entity name 
 - {{ entity_cc }} // The entity name in camel-case format
@@ -169,6 +167,7 @@ The 'Avro' style is a work in progress. It provides basic crud
 functionality using some similar techniques as the FOSUserBundle.
 
 It is designed to be used along with: 
+
 - <a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a>
 - <a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a>
 - <a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a>
