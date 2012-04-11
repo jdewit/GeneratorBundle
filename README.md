@@ -99,32 +99,32 @@ are a number of variables available to you in your twig templates.
 
 Variables available in twig templates
 
-- entity // The entity name 
-- entity_cc // The entity name in camel-case format
-- entity_us // The entity name in underscore format
-- fields // array of the entities fields
-- type // field type (string, integter, manyToOne, etc)
- - fieldName // field name
- - fieldTitle // field name in title format
- - targetEntity // field target entity
- - length // field length
- - cascade // array
- - targetVendor *
- - targetBundle *
- - targetBundleAlias *
- - targetEntityName *
-- uniqueRelations // unique many to one relations
-- bundle_vendor // bundles vendor name (ex. Avro)
-- bundle_basename // bundles base name (ex. GeneratorBundle)
-- bundle_name // bundles name (ex. AvroGeneratorBundle)
-- bundle_corename // bundle core name (ex. Generator)
-- bundle_path // bundle path
-- bundle_namespace // bundle namespace 
-- bundle_alias // bundle alias (ex. Avro_generator)
-- db_driver // bundle db 
-- style // style
+- {{ entity }} // The entity name 
+- {{ entity_cc }} // The entity name in camel-case format
+- {{ entity_us }} // The entity name in underscore format
+- {{ fields }} // array of the entities fields
+ - {{ field.type }} // field type (string, integter, manyToOne, etc)
+ - {{ field.fieldName }} // field name
+ - {{ field.fieldTitle }} // field name in title format
+ - {{ field.targetEntity }} // field target entity
+ - {{ field.length }} // field length
+ - {{ field.cascade }} // array
+ - {{ field.targetVendor }} *
+ - {{ field.targetBundle }} *
+ - {{ field.targetBundleAlias }} *
+ - {{ targetEntityName }} *
+- {{ uniqueRelations }} // array of unique manyToOne relations
+- {{ bundle_vendor }} // bundles vendor name (ex. Avro)
+- {{ bundle_basename }} // bundles base name (ex. GeneratorBundle)
+- {{ bundle_name }} // bundles name (ex. AvroGeneratorBundle)
+- {{ bundle_corename }} // bundle core name (ex. Generator)
+- {{ bundle_path }} // bundle path
+- {{ bundle_namespace }} // bundle namespace 
+- {{ bundle_alias }} // bundle alias (ex. Avro_generator)
+- {{ db_driver }} // bundle db 
+- {{ style }} // style specified in your config
 
-(*If field is a manyToOne relation)
+(* only if field is of manyToOne type)
 
 Installation
 ------------
