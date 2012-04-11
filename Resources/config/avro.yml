@@ -1,5 +1,5 @@
 parameters:
-    avro_generator.files:
+    avro_generator.avro_files:
         controller: 
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'
@@ -30,6 +30,10 @@ parameters:
         table_view:
             filename: 'Resources/views/{{ entity }}/table.html.twig'
             template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/table.html.twig'
+            tags: ['view', 'crud']
+        searchForm_view:
+            filename: 'Resources/views/{{ entity }}/searchForm.html.twig'
+            template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/searchForm.html.twig'
             tags: ['view', 'crud']
 
         form_view:

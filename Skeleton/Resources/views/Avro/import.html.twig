@@ -1,7 +1,7 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
     <div class="page-heading">
-        <h1>Import {{ entity_cc | camelCaseToTitle }}s</h1>
+        <h1>Import {{ entity_title }}s</h1>
     </div>
     <form class="form-horizontal" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_import') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
         <div id="error-container"></div>
@@ -9,8 +9,8 @@
             {{ "{{ form_widget(form) }}" }}   
         </div>
         <div class="form-actions">
-            <a href="#" class="btn"><i class="ui-icon ui-icon-closethick"></i>Cancel</a>
             <button type="submit" class="btn btn-primary"><i class="sprite-tick"></i>Import CSV</button>
+            <a href="#" class="btn"><i class="ui-icon ui-icon-closethick"></i>Cancel</a>
         </div>
     </form>
 {{ "{% endblock %}" }}

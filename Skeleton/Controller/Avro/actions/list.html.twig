@@ -16,12 +16,27 @@
                     case 'Edit':
                         $selected = $request->request->get('selected');
                         $session = $request->getSession();
-                        $session->set('queue', array('path' => '{{ bundle_alias }}_{{ entity_cc }}_edit', 'ids' => $selected));
+                        $session->set('queue', array('route' => '{{ bundle_alias }}_{{ entity_cc }}_edit', 'ids' => $selected));
 
-                        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_edit', {'id': reset($selected) }));
+                        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_edit', array('id' => reset($selected))));
                     break;
                     case 'Export':
+                        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+                        $writer = $this->container->get('avro_csv.writer');
+                        $selected = $request->request->get('selected');
+                        foreach ($selected as $id) {
+                            ${{ entity_cc }} = ${{ entity_cc }}Manager->findAsArray($id);
+                            if ($id === reset($selected)) {
+                                $content = $writer->convertRow(array_keys(${{ entity_cc }}));
+                            }
 
+                            $content .= $writer->convertRow(array_values(${{ entity_cc }}));
+                        }
+                        $response = new Response($content);
+                        $response->headers->set('Content-Type', 'application/csv');
+                        $response->headers->set('Content-Disposition', 'attachment; filename="{{ entity_cc }}.csv"');
+
+                        return $response; 
                     break;
                     default:
                         ${{ entity_cc }}s = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager')->search($form->getData());

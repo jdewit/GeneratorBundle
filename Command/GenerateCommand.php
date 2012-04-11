@@ -84,10 +84,10 @@ EOT
             $bundleExists = false;
         }
 
-        $tag = $dialog->ask($output, $dialog->getQuestion(array(
-            'Enter the tag for the files you wish to generate.', 
-            'Or just press <enter> to generate all files.'
-        ), '', ':'));
+        $tag = $dialog->ask($output, $dialog->getQuestion(
+'Enter the tag for the files you wish to generate.
+Or just press <enter> to generate all files.'
+        , '', ':'));
 
         if ($bundleExists) {
             $this->generateCodeFromEntities($bundle, $entities, $tag);
@@ -136,6 +136,7 @@ EOT
             $avroGenerator->generateEntityParameters($entity, $fields);
 
             $files = $this->container->getParameter('avro_generator.files');
+            print_r($files); exit;
             if (is_array($files)) {
                 foreach($files as $file) {
                     if ($tag) {

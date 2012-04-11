@@ -16,11 +16,8 @@ class AvroGeneratorExtension extends Extension
         $configuration = new Configuration();
 
         $config = $processor->processConfiguration($configuration, $configs);
-
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('config.yml');
-        $loader->load('services/manipulators/routing.yml');
-        $loader->load('services/manipulators/config.yml');
+        $loader->load('services/manipulator.yml');
 
         $container->setParameter('avro_generator.style', $config['style']);
         $container->setParameter('avro_generator.overwrite', $config['overwrite']);
@@ -28,9 +25,14 @@ class AvroGeneratorExtension extends Extension
         switch ($config['style']) {
             case 'Avro':
                 $loader->load('avro.yml');
+                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.avro_files'), $container->getParameter('avro_generator.my_files')));
             break;
             case 'Fos':
                 $loader->load('fos.yml');
+                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.fos_files'), $container->getParameter('avro_generator.my_files')));
+            break;
+            case 'none':
+                $container->setParameter('avro_generator.files', $container->getParameter('avro_generator.my_files'));
             break;
         }
     }

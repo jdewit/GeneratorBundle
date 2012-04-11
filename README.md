@@ -1,11 +1,13 @@
 AvroGeneratorBundle
 -------------------
-Generate Symfony2 code from the command line!
+Generate Symfony2 related code from the command line!
 With this bundle you can generate or update 
 all classes related to an entity with just a few commands!
+You can even build onto an existing entity.
 
-This bundle is highly configurable. Create your own templates and render them 
-in the path of your choice. 
+This bundle allows you to easily create your own templates, place and render them 
+in the path of your choice, and generate code from a mapped
+entity. 
 
 Status
 ------
@@ -17,36 +19,40 @@ it does generate is pretty solid.
 
 Any help would be much appreciated!
 
-Dependencies
-------------
-- none 
 
 Configuration
 -------------
-``` php
+``` yml
 avro_generator:
-    style: Avro // choose from several built in styles
+    style: none // build onto several built in styles or roll your own
     overwrite: false // overwrite current code if true, write to Temp folder if false
 ```
 
-You can override and build onto the default styles through paramaters in a yml configuration file. Checkout 
+You can override or build onto the default styles by means of yml configuration. Checkout 
 the <a href="http://www.github.com/jdewit/GeneratorBundle/Resources/config/avro.yml">avro.yml</a> config file 
-for a good example on how to specify your templates. 
+for a good example on how you specify your templates and even call services. 
 
-The generator bundle parses all nodes specified under the parameter avro_generator.files
-``` php
+You can tell the generator to run your own templates by specifying them under the avro_generator.my_files node like so:
+``` yml
 //config.yml
 parameters:
-    avro_generator.files
+    avro_generator.my_files
         list_view: 
             filename: 'Resources/views/%s/list.html.twig' // the target location for the generated file relative to the bundle path
             template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' //the path to the template file 
             tags: ['view', 'crud'] // tags allow you to specify which files you want to generate
 ```
 
-The generator also allows you pass your own parameters to the template and call manipulator services to manipulate code
+If you have a the style option set to a built in style, it will add your file to the other files. If you have it set to 'none', it will
+only generate the files you specify.
 
-``` php
+The generator also allows you pass your own parameters to the template and even call services to manipulate code.
+
+Take following configuration for generating a controller. The controllers actions are added to the parameters node
+which are now available in the template. The manipulator node is also set to manipulate the bundles routing
+file so that the new controller is added.
+
+``` yml
 parameters:
     avro_generator.files:
         controller: 
@@ -66,54 +72,58 @@ parameters:
 USAGE
 -----
 
-Enter the following commands in the console and follow the prompts!
-
-Generate a bundle skeleton with:
+One command does it all!
 
 ``` bash
-$ php app/console generate:avro:bundle
+$ php app/console avro:generate
 ```
 
-Generate code for one entity or all mapped entities in the entire application with:
+The generator will prompt you to specify an entity you wish to 
+generate code from. Specify an entity using shortcut notation.
+(Ex. AvroDemoBundle:Post)
 
-``` bash
-$ php app/console generate:avro:build
-```
+Omit the entity, and you can generate code for all of the entities
+mapped in a bundle!
+(ex. AvroDemoBundle)
 
-Parameters
+The generator also prompts you for a tag. This allows 
+you to only generate files you have marked with a specific 
+tag in your configuration. Just press <enter> if you 
+want to generate all of the files in your config.
+
+Variables
 ----------
+
+Since you are basing your templates off of an entity, there 
+are a number of variables available to you in your twig templates.
+
 Variables available in twig templates
-    - entity // entity name 
-    - entity_cc // entity name in camel-case
-    - entity_us // entity name in underscore
-    - fields // array of the entities fields
+``` yml
+    entity // The entity name 
+    entity_cc // The entity name in camel-case format
+    entity_us // The entity name in underscore format
+    fields // array of the entities fields
         - type // field type (string, integter, manyToOne, etc)
         - fieldName // field name
+        - fieldTitle // field name in title format
         - targetEntity // field target entity
         - length // field length
         - cascade // array
-    - uniqueRelations // unique many to one relations
-    - bundle_vendor // bundles vendor name
-    - bundle_basename // bundles base name
-    - bundle_name // bundles name
-    - bundle_corename // bundle core name
-    - bundle_path // bundle path
-    - bundle_namespace // bundle namespace
-    - bundle_alias // bundle alias
-    - db_driver // bundle db 
-    - style // style
-
-Twig Filters
-------------
-
-Several handy twig filters are included
-- camelCaseToTitle
-- camelCaseToUnderscore
-- ucFirst
-
+    uniqueRelations // unique many to one relations
+    bundle_vendor // bundles vendor name (ex. Avro)
+    bundle_basename // bundles base name (ex. GeneratorBundle)
+    bundle_name // bundles name (ex. AvroGeneratorBundle)
+    bundle_corename // bundle core name (ex. Generator)
+    bundle_path // bundle path
+    bundle_namespace // bundle namespace 
+    bundle_alias // bundle alias (ex. Avro_generator)
+    db_driver // bundle db 
+    style // style
+```
 
 Installation
 ------------
+
 Add the `Avro` namespace to your autoloader:
 
 ``` php

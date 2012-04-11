@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('avro_generator');
 
-        $supportedStyles = array('Fos', 'Avro');
+        $supportedStyles = array('Fos', 'Avro', 'none');
 
         $rootNode
             ->children()
@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                         ->ifNotInArray($supportedStyles)
                         ->thenInvalid('The style %s is not supported. Please choose one of '.json_encode($supportedStyles))
                     ->end()
-                    ->defaultValue('Fos')
+                    ->defaultValue('Avro')
                 ->end()
                 ->booleanNode('overwrite')->defaultFalse()->end()
              ->end();

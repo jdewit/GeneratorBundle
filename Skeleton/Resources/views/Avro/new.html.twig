@@ -1,12 +1,12 @@
 {{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
     <div class="page-header">
-        <h1>New {{ entity }}</h1>
+        <h1>New {{ entity_title }}</h1>
     </div>
     <form id="{{ bundle_alias }}_{{ entity_cc }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}" {{ "{{ form_enctype(form) }}" }}>  
         {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
         <div class="form-actions">
-            <input type="submit" class="btn btn-primary" title="Create this {{ entity_cc }}." value="Create {{ entity }}"/>
+            <input type="submit" class="btn btn-primary" title="Create this {{ entity_cc }}." value="Create {{ entity_title }}"/>
             <a class="btn" title="Go back to the list." href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}">Back to list</a>
         </div>
     </form>

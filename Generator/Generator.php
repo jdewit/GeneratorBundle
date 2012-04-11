@@ -87,7 +87,7 @@ class Generator
      * Generate parameters
      *
      * @param string $entity The entity name
-     * @param array $fields An arrow of the entities fields
+     * @param array $fields Array of the entities fields
      */
     public function generateEntityParameters($entity, $fields)
     {
@@ -95,6 +95,8 @@ class Generator
             'entity' => $entity,
             'entity_cc' => $this->toCamelCase($entity),
             'entity_us' => $this->toUnderscore($entity),
+            'entity_title' => $this->toTitle($entity),
+            'entity_title_lc' => strtolower($this->toTitle($entity)),
             'fields' => $this->customizeFields($fields),
             'uniqueManyToOneRelations' => $this->uniqueManyToOneRelations($this->customizeFields($fields)),
         );
@@ -104,12 +106,13 @@ class Generator
 
     /**
      * Generates a file if it does not exist.
+     *
+     * @param $file
      */
     public function generate($file)
     {
         $filename = $file['filename'];
         $template = $file['template'];
-        $manipulator = array_key_exists('manipulator', $file) ? $file['manipulator'] : false;
 
         // Add user defined parameters
         if (array_key_exists('parameters', $file)) {
@@ -143,6 +146,15 @@ class Generator
             $this->renderFile($template, $filename2);
         }
 
+        $this->executeManipulators($file);
+    }
+
+    /*
+     * Execute code manipulators
+     */
+    public function executeManipulators($file)
+    {
+        $manipulator = array_key_exists('manipulator', $file) ? $file['manipulator'] : false;
         if ($manipulator) {
             $manipulatorService = $this->container->get($manipulator['service']);
             $manipulatorService->setParameters($this->parameters);
@@ -161,12 +173,14 @@ class Generator
      * 
      * @param $template The file to use as a template
      * @param $filename The location of the new file
-     * 
      */
     public function renderFile($template, $filename)
     {   
-        $arr = explode(":", $template); 
-        $template = $this->container->get('kernel')->getBundle($arr[0])->getPath().'/'.$arr[1];
+
+        if (strpos($template, ':')) {
+            $arr = explode(":", $template); 
+            $template = $this->container->get('kernel')->getBundle($arr[0])->getPath().'/'.$arr[1];
+        } 
 
         $filename = $this->parameters['bundle_path'].'/'.$filename;
 
@@ -191,7 +205,7 @@ class Generator
         try {
             $skeletonDir = __DIR__.'/../Skeleton';
 
-            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(array($skeletonDir, '/')), array(
+            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(array($skeletonDir, '/', $this->container->get('kernel')->getRootDir())), array(
                 'debug'            => true,
                 'cache'            => false,
                 'strict_variables' => true,
@@ -215,7 +229,6 @@ class Generator
      * Renders a new folder
      * 
      * @param $path The path of the new folder
-     * 
      */
     public function renderFolder($path)
     {   
@@ -223,7 +236,6 @@ class Generator
 
         try {
             $this->filesystem->mkdir($path);
-
             $this->output->writeln('<info>Ok</info>');
         } catch (\RuntimeException $e) {
             $this->output->writeln(array(
@@ -255,7 +267,6 @@ class Generator
     * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
     *
     * @param  string $str String in camel case format
-    *
     * @return string $str Translated into underscore format
     */
     public function toUnderscore($str) {
@@ -292,27 +303,6 @@ class Generator
     }
 
     /*
-     * Set bundles routing format
-     */
-    public function setRoutingFormat($format) {
-        $this->routingFormat = $format;
-    }
-
-    /*
-     * Set update database trigger
-     */
-    public function setUpdateDb($updateDb) {
-        $this->updateDb = $updateDb;
-    }
-
-    /*
-     * Set service configuration format
-     */
-    public function setServiceConfigFormat($format) {
-        $this->serviceConfigFormat = $format;
-    }
-
-    /*
      * Add custom attributes to fields
      *
      * @param array $fields
@@ -322,6 +312,7 @@ class Generator
     {
         $customFields = array();
         foreach ($fields as $field) {
+            $field['fieldTitle'] = $this->toTitle($field['fieldName']);
             if ($field['type'] == 'manyToOne' || $field['type'] == 'oneToMany' || $field['type'] == 'manyToMany') {
                 $targetEntity = $field['targetEntity'];
                 $arr = explode('\\', $targetEntity);

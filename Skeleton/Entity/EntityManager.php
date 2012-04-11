@@ -25,7 +25,11 @@ class {{ entity }}Manager
         $this->class = $metadata->name;
         $this->repository = $em->getRepository($class);
         $this->context = $context;
-        $this->owner = $context->getToken()->getUser()->getOwner();
+        if ($context->getToken()) {
+            if (is_object($context->getToken()->getUser())) {
+                $this->owner = $context->getToken()->getUser()->getOwner();
+            }
+        }
     }
 
     /**
