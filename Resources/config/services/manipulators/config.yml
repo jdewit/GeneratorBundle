@@ -1,3 +1,0 @@
-services:
-    avro_generator.config.manipulator:
-        class: Avro\GeneratorBundle\Manipulator\ConfigManipulator

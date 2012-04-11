@@ -1,3 +1,0 @@
-services:
-    avro_generator.routing.manipulator:
-        class: Avro\GeneratorBundle\Manipulator\RoutingManipulator

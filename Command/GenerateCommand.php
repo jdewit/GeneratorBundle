@@ -151,9 +151,9 @@ Or just press <enter> to generate all files.'
             
         }
 
-        $singleFiles = $this->container->getParameter('avro_generator.single_files');
-        if (is_array($singleFiles)) {
-            foreach($singleFiles as $file) {
+        $standaloneFiles = $this->container->getParameter('avro_generator.standalone_files');
+        if (is_array($standaloneFiles)) {
+            foreach($standaloneFiles as $file) {
                 if ($tag) {
                     if (in_array($tag, $file['tags'])) {
                         $avroGenerator->generate($file);  

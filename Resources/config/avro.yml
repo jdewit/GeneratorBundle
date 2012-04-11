@@ -1,5 +1,5 @@
 parameters:
-    avro_generator.avro_files:
+    avro_generator.avro.files:
         controller: 
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'
@@ -92,9 +92,9 @@ parameters:
                 setters: 
                     format: 'yml'
 
-    avro_generator.single_files:
+    avro_generator.avro.single_files:
 
-    avro_generator.bundle_folders:
+    avro_generator.avro.bundle_folders:
         controller:
             path: 'Controller'
         entity:
@@ -132,7 +132,7 @@ parameters:
         services:
             path: 'Resources/config/services'
 
-    avro_generator.bundle_files:
+    avro_generator.avro.bundle_files:
         bundle:
             filename: '{{ bundle_name }}.php'
             template: 'AvroGeneratorBundle:Skeleton/Bundle.php'

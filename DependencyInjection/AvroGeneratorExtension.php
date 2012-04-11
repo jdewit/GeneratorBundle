@@ -25,14 +25,20 @@ class AvroGeneratorExtension extends Extension
         switch ($config['style']) {
             case 'Avro':
                 $loader->load('avro.yml');
-                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.avro_files'), $container->getParameter('avro_generator.my_files')));
+                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.avro.files'), $container->getParameter('avro_generator.my.files')));
+                $container->setParameter('avro_generator.standalone_files', array_merge($container->getParameter('avro_generator.avro.standalone_files'), $container->getParameter('avro_generator.my.standalone_files')));
+                $container->setParameter('avro_generator.bundle_folders', array_merge($container->getParameter('avro_generator.avro.bundle_folders'), $container->getParameter('avro_generator.my.bundle_folders')));
+                $container->setParameter('avro_generator.bundle_files', array_merge($container->getParameter('avro_generator.avro.bundle_files'), $container->getParameter('avro_generator.my.bundle_files')));
             break;
             case 'Fos':
                 $loader->load('fos.yml');
-                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.fos_files'), $container->getParameter('avro_generator.my_files')));
+                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.fos.files'), $container->getParameter('avro_generator.my_files')));
             break;
             case 'none':
-                $container->setParameter('avro_generator.files', $container->getParameter('avro_generator.my_files'));
+                $container->setParameter('avro_generator.files', $container->getParameter('avro_generator.my.files'));
+                $container->setParameter('avro_generator.standalone_files', $container->getParameter('avro_generator.my.standalone_files'));
+                $container->setParameter('avro_generator.bundle_folders', $container->getParameter('avro_generator.my.bundle_folders'));
+                $container->setParameter('avro_generator.bundle_files', $container->getParameter('avro_generator.my.bundle_files'));
             break;
         }
     }

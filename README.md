@@ -24,29 +24,57 @@ Configuration
 -------------
 ``` yml
 avro_generator:
-    style: none // build onto several built in styles or roll your own
-    overwrite: false // overwrite current code if true, write to Temp folder if false
+    style: none # build onto several built in styles or roll your own
+    overwrite: false # overwrite current code if true, write to Temp folder if false
 ```
 
 You can override or build onto the default styles by means of yml configuration. Checkout 
-the <a href="http://www.github.com/jdewit/GeneratorBundle/Resources/config/avro.yml">avro.yml</a> config file 
+the <a href="https://github.com/jdewit/GeneratorBundle/blob/master/Resources/config/avro.yml">avro.yml</a> config file 
 for a good example on how you specify your templates and even call services. 
 
-You can tell the generator to run your own templates by specifying them under the avro_generator.my_files node like so:
+You can tell the generator to run your own templates by specifying them in your config like so:
 
 ``` yml
 parameters:
-    avro_generator.my_files:
+    avro_generator.my.files:
         list_view: 
-            filename: 'Resources/views/{{ entity }}/list.html.twig' // the target location for the generated file relative to the bundle path
-            template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' //the path to the template file 
-            tags: ['view', 'crud'] // tags allow you to specify which files you want to generate
+            filename: 'Resources/views/{{ entity }}/list.html.twig' # the target location for the generated file relative to the bundle path
+            template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' # the path to the template file, 
+                # use shortcut notation to have it relative to a bundle (ex. AvroDemoBundle:Skeleton/myfile.html.twig) 
+                # otherwise, it can be relative to your system path "/"
+                # or your applications 'app' folder
+            tags: ['view', 'crud'] # tags allow you to specify which files you want to generate
 ```
 
-If you have a the style option set to a built in style, it will add your file to the other files. If you have it set to 'none', it will
-only generate the files you specify.
+You can also generate standalone files that are not based off an entity
 
-The generator also allows you pass your own parameters to the template and even call services to manipulate code.
+``` yml
+parameters:
+    avro_generator.my.standalone_files:
+        README: 
+            filename: 'README' 
+            template: 'Resources/README' 
+            tags: ['readme'] 
+```
+
+The generator also allows you to create a bundle skeleton.
+Specify bundle folders and files in the same way.
+
+``` yml
+    avro_generator.my.bundle_folders:
+        controller:
+            path: 'Controller'
+
+    avro_generator.my.bundle_files:
+        bundle:
+            filename: '{{ bundle_name }}.php'
+            template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
+```
+
+If you have the style option set to a built-in style, it will generate your files along with the others. If you have it set to 'none', it will
+only generate the files you specify in your configuration.
+
+The generator also allows you to pass your own parameters to the template and even call services to manipulate code.
 
 Take following configuration for generating a controller. The controllers actions are added to the parameters node
 which are now available in the template. The manipulator node is also set to manipulate the bundles routing
@@ -54,19 +82,19 @@ file so that the new controller is added.
 
 ``` yml
 parameters:
-    avro_generator.my_files:
+    avro_generator.my.files:
         controller: 
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'
-            parameters: // specify custom parameters you want available in your template
+            parameters: 
                 actions: ['list', 'new', 'edit', 'delete', 'restore', 'import']
             tags: ['controller', 'crud']
             manipulator: 
-                service: 'avro_generator.routing.manipulator' // the manipulators service name
-                method: 'updateBundleRouting' // the method you want the generator to execute
-                filename: 'Resources/config/routing.yml' // the file you want to manipulate
-                setters: // specify any setters you want the generate to set
-                    format: 'yml' // variable passed to the setter
+                service: 'avro_generator.routing.manipulator' # the manipulators service name
+                method: 'updateBundleRouting' # the method you want the generator to execute
+                filename: 'Resources/config/routing.yml' # the file you want to manipulate
+                setters: # specify any setters you want the generate to set
+                    format: 'yml' # variable passed to the setter
 ```
 
 USAGE
@@ -85,6 +113,9 @@ generate code from. Specify an entity using shortcut notation.
 Omit the entity, and you can generate code for all of the entities
 mapped in a bundle!
 (ex. AvroDemoBundle)
+
+If the bundle does not exist, it will prompt you whether or not you would like 
+create it.
 
 The generator also prompts you for a tag. This allows 
 you to only generate files you have marked with a specific 
@@ -169,5 +200,8 @@ $ bin/vendors update
 
 SOMEDAY FEATURES
 ----------------
+- TESTS!
+- travis 
+- xml 
 - MongoDB support
 - CouchDB support
