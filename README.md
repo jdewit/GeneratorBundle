@@ -163,7 +163,8 @@ are a number of variables available to you in your twig templates:
 Built-in Styles
 ---------------
 
-The 'Avro' style is a work in progress. It provides basic crud
+### Avro
+A work in progress. It provides basic crud
 functionality using some similar techniques as the FOSUserBundle.
 
 It is designed to be used along with: 

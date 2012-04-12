@@ -21,7 +21,7 @@
             ++$i;
         }
 
-        $this->container->get('session')->setFlash('success', $i.' {{ entity_cc | camelCaseToTitle | lower }}s deleted.');
+        $this->container->get('session')->getFlashBag()->set('success', $i.' {{ entity_title_lc }}s deleted.');
 
         return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
     }

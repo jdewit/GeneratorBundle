@@ -113,7 +113,7 @@ class {{ entity }}ImportHandler
                     ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(${{ field.fieldName }});
                 }
             }
-{% else %}
+{% elseif field.type != 'oneToMany' and field.type != 'manyToMany' %}
             ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
 {% endif %}
 {% endfor %}

@@ -143,7 +143,7 @@ class {{ entity }}Manager
      */  
     public function delete({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
     {
-        $this->em->remove(${{ entity }});
+        $this->em->remove(${{ entity_cc }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -169,6 +169,22 @@ class {{ entity }}Manager
         ${{ entity_cc }} = $this->repository->findOneBy($criteria);
 
         return ${{ entity_cc }};
+    }
+
+    /*
+     * Fine one {{ entity_cc }} by id as array
+     *
+     * @param string $id
+     */
+    public function findAsArray($id)
+    {
+        $qb = $this->em->createQueryBuilder()->select('{{ entity_cc }}')->from($this->class, '{{ entity_cc }}');
+        $qb->where('{{ entity_cc }}.owner = ?1')->setParameter('1', $this->owner);
+        $qb->andWhere('{{ entity_cc }}.id = ?2')->setParameter('2', $id);
+
+        $result = $qb->getQuery()->getArrayResult();
+
+        return current($result); 
     }
 
     /**
