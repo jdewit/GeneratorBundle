@@ -32,8 +32,13 @@ class {{ entity }}FormType extends AbstractType
     {
         $owner = $this->owner;
 
+{% for field in uniqueRelations %}
+        ${{ field.targetEntityName }}s = $this->{{ field.targetEntityName }}Manager->findAllActive();
+        $this->request->attributes->set('{{ field.targetEntityName }}s', ${{ field.targetEntityName }}s);
+{% endfor %}
+
         $builder
-{% include 'Form/Type/'~ style ~'/Fields.html.twig' %}
+{% include 'Form/Type/Avro/Fields.html.twig' %}
         ;
     }
 

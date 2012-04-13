@@ -12,5 +12,12 @@
     </form>
 {{ "{% endblock %}" }}
 {% block customJS %}
+    ;(function(avro, $, undefined) {
+        avro.{{ entity_cc }}Model = new {{ entity_cc }}Model();
+{% for field in uniqueRelations %}
+        avro.available{{ entity }}s = {{ "{{ app.request.attributes.get('"~ entity_cc ~"s') | serialize | raw }}" }};
+{% endfor %}
+    }(window.avro = window.avro || {}, jQuery)); 
 
+    ko.applyBindings(avro.{{ entity_cc }}Model);
 {% endblock %}

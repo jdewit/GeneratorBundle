@@ -23,7 +23,7 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('avro_generator');
 
-        $supportedStyles = array('Avro', 'none');
+        $supportedStyles = array('avro', false);
 
         $rootNode
             ->children()
@@ -32,9 +32,52 @@ class Configuration implements ConfigurationInterface
                         ->ifNotInArray($supportedStyles)
                         ->thenInvalid('The style %s is not supported. Please choose one of '.json_encode($supportedStyles))
                     ->end()
-                    ->defaultValue('Avro')
+                    ->defaultValue(false)
                 ->end()
                 ->booleanNode('overwrite')->defaultFalse()->end()
+                ->arrayNode('files')
+                    ->useAttributeAsKey('file')->prototype('array')
+                        ->children()
+                            ->scalarNode('filename')->end()
+                            ->scalarNode('template')->end()
+                            ->arrayNode('tags')
+                                ->useAttributeAsKey('tag')->prototype('scalar')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('standalone_files')
+                ->useAttributeAsKey('standalone_file')->prototype('array')
+                        ->children()
+                            ->scalarNode('filename')->end()
+                            ->scalarNode('template')->end()
+                            ->arrayNode('tags')
+                                ->useAttributeAsKey('tag')->prototype('scalar')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('bundle_folders')
+                    ->useAttributeAsKey('bundle_folder')->prototype('array')
+                        ->children()
+                            ->scalarNode('path')->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('bundle_files')
+                    ->useAttributeAsKey('bundle_file')->prototype('array')
+                        ->children()
+                            ->scalarNode('filename')->end()
+                            ->scalarNode('template')->end()
+                            ->arrayNode('tags')
+                                ->useAttributeAsKey('tag')->prototype('scalar')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
              ->end();
 
 

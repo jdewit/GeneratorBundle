@@ -3,7 +3,7 @@
     <table class="table-condensed table-bordered table-striped">
         <thead>
             <tr>
-                <th title="Select All"><input id="checkAll" type="checkbox"/></th>
+                <th title="Select All"><input id="selectAll" type="checkbox"/></th>
 {% for field in fields %}
 {% if field.type != 'manyToOne' and field.type != 'oneToMany' and field.type != 'manyToMany' %}
                 <th>{{ field.fieldTitle }}</th>
@@ -16,7 +16,7 @@
         <tbody>
             {{ "{% for "~ entity_cc ~" in "~ entity_cc ~"s %}" }}
                 <tr>
-                    <td class="center_align"><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_cc ~".id }}" }}"/></td>
+                    <td class="center_align"><input class="selected" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_cc ~".id }}" }}"/></td>
 {% for field in fields %}
 {% if field.type != 'manyToOne' and field.type != 'oneToMany' and field.type != 'manyToMany' %}
                     <td>{{ "{{ " ~ entity_cc ~ "." ~ field.fieldName ~" }}" }}</td>
@@ -37,7 +37,7 @@
             <tr>
                 <td colspan="100%">
                     <i class="sprite-arrow_left_up"></i>
-                    <button name="action" value="Edit" class="no-style confirm" title="Are you sure you want to edit these {{ entity_title_lc }}s?"><i class="sprite-pencil"></i> Edit</button>
+                    <button name="action" value="Edit" class="no-style" title="Edit selected {{ entity_title_lc }}s"><i class="sprite-pencil"></i> Edit</button>
                     {{ "{% if is_granted('ROLE_ADMIN') %}" }}
                         {{ "{% if filter != 'Deleted' %}" }}
                             <button type="submit" name="action" value="Delete" class="no-style confirm" title="Are you sure you want to delete these {{ entity_title_lc }}s?"><i class="sprite-delete"></i> Delete</button>

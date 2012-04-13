@@ -7,6 +7,11 @@
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => 'email',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
             ))          
 {% elseif field.fieldName == 'date' %}
@@ -18,6 +23,12 @@
                 'format' => 'yyyy-MM-dd', 
                 'attr' => array(
                     'title' => 'Pick a date',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }},
+                        datepicker: true
+                    "
+{% endif %}
                 ),
             ))
 {% elseif field.fieldName == 'country' %}
@@ -27,6 +38,11 @@
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => '',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
             ))   
 {% elseif field.fieldName == 'zipCode' %}
@@ -36,6 +52,11 @@
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => 'zipCode',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
             ))   
 {% else %}
@@ -45,6 +66,11 @@
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => 'capitalize',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
             ))   
 {% endif %}
@@ -56,6 +82,11 @@
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => 'number',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
 
                 )
             ))      
@@ -66,6 +97,12 @@
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => '',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
+
                 )
             ))          
 {% elseif field.type == 'datetime' %}
@@ -77,6 +114,12 @@
                 'format' => 'yyyy-MM-dd', 
                 'attr' => array(
                     'title' => 'Pick a date',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }},
+                        datepicker: true
+                    "
+{% endif %}
                 ),
             ))
 {% elseif field.type == 'manyToOne' %}
@@ -91,9 +134,29 @@
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'class' =>'{{ field.targetEntity }}',
+{% if searchForm is not defined %}
+                'choices' => ${{ field.targetEntityName }}s,
+{% else %}
+                'choices' => array(),                
+{% endif %}
                 'attr' => array(
                     'title' => 'Choose a {{ field.fieldName }}',  
                     'class' => '',
+{% if searchForm is defined %}
+                    'data-bind' => "
+                        options: avro.available{{ field.targetEntityName | ucFirst }}s,
+                        optionsValue: 'id',
+                        optionsText: 'name',
+                        chosen: true
+                    "
+{% endif %}
+{% if searchForm is not defined %}
+                    'data-href' => $this->router->generate('{{ field.targetBundleAlias }}_{{ field.targetEntityName }}_getForm'),
+                    'data-bind' => "
+                        value: selected{{ field.fieldName | ucFirst }},
+                        newSelect: selected{{ field.fieldName | ucFirst }}
+                    "
+{% endif %}
                 )
             ))  
 {% endif %}
@@ -129,6 +192,11 @@
                 'required' => false,
                 'attr' => array(
                     'title' => '{{ field.fieldName | camelCaseToTitle }}?',  
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        checked: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
             ))   
 {% else %}
@@ -138,6 +206,11 @@
                  'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
                     'class' => '',
+{% if searchForm is not defined %}
+                    'data-bind' => "
+                        value: {{ field.fieldName }}
+                    "
+{% endif %}
                 )
            ))            
 {% endif %}

@@ -6,12 +6,19 @@
     <form id="{{ bundle_alias }}_{{ entity_cc }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit', { 'id': "~ entity_cc ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>  
         {{ "{% include '"~ bundle_name ~":"~ entity ~":form.html.twig' %}" }}
         <div class="form-actions">
-            <button class="btn btn-primary" title="Update the {{ entity_cc }}"><i class="sprite-tick"></i> Update {{ entity_title }}</button>
-            <a class="btn" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}">Cancel</a>
+            <button class="btn btn-primary" title="Update the {{ entity_title }}"><i class="sprite-tick"></i> Update {{ entity_title }}</button>
+            <a class="btn" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}" title="Go back to {{ entity_title }} list.">Back to list</a>
             <a class="btn confirm btn-danger pull-right" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_delete', { 'id': "~ entity_cc ~".id }) }}" }}" title="Are you sure you want to delete this {{ entity_title_lc }}?">Delete</a>
         </div>
     </form>
 {{ "{% endblock %}" }}
 {% block customJS %}
+    ;(function(avro, $, undefined) {
+        avro.{{ entity_cc }}Model = new {{ entity_cc }}Model();
+{% for field in uniqueRelations %}
+        avro.available{{ entity }}s = {{ "{{ app.request.attributes.get('"~ entity_cc ~"s') | serialize | raw }}" }};
+{% endfor %}
+    }(window.avro = window.avro || {}, jQuery)); 
 
+    ko.applyBindings(avro.{{ entity_cc }}Model);
 {% endblock %}

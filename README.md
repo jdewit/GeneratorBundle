@@ -24,7 +24,7 @@ Configuration
 -------------
 ``` yml
 avro_generator:
-    style: 'none' # build onto several built in styles or roll your own
+    style: 'avro' # build onto several built in styles or roll your own
     overwrite: false # overwrite current code if true, write to Temp folder if false
 ```
 
@@ -35,8 +35,10 @@ for a good example on how you specify your templates and even call services.
 You can tell the generator to run your own templates by specifying them in your config_dev.yml like so:
 
 ``` yml
-parameters:
-    avro_generator.my.files:
+avro_generator:
+    style: false
+    overwrite: true
+    files:
         list_view: 
             filename: 'Resources/views/{{ entity }}/list.html.twig' # the target location for the generated file relative to the bundle path
             template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' # the path to the template file, 
@@ -50,7 +52,9 @@ You can also generate standalone files that are not based off an entity
 
 ``` yml
 parameters:
-    avro_generator.my.standalone_files:
+avro_generator:
+    #...
+    standalone_files:
         README: 
             filename: 'README' 
             template: 'Resources/README' 
@@ -61,18 +65,19 @@ The generator also allows you to create a bundle skeleton.
 Specify bundle folders and files in the same way.
 
 ``` yml
-parameters:
-    avro_generator.my.bundle_folders:
+avro_generator:
+    #...
+    bundle_folders:
         controller:
-            path: 'Controller'
+            path: 'Controller' #relative to bundle root path
 
-    avro_generator.my.bundle_files:
+    bundle_files:
         bundle:
             filename: '{{ bundle_name }}.php'
             template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
 ```
 
-If you have the style option set to a built-in style, it will generate your files along with the others. If you have it set to 'none', it will
+If you have the style option set to a built-in style, it will generate your files along with the others. If you have it set to false, it will
 only generate the files you specify in your configuration.
 
 The generator also allows you to pass your own parameters to the template and even call services to manipulate code.
@@ -82,8 +87,9 @@ which are now available in the template. The manipulator node is also set to man
 file so that the new controller is added.
 
 ``` yml
-parameters:
-    avro_generator.my.files:
+avro_generator:
+    #...
+    files:
         controller: 
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'

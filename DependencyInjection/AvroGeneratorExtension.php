@@ -21,45 +21,34 @@ class AvroGeneratorExtension extends Extension
 
         $container->setParameter('avro_generator.style', $config['style']);
         $container->setParameter('avro_generator.overwrite', $config['overwrite']);
+        $container->setParameter('avro_generator.files', $config['files']);
 
-        switch ($config['style']) {
-            case 'Avro':
-                $loader->load('avro.yml');
 
-                if ($container->hasParameter('avro_generator.my.files')) {
-                    $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.avro.files'), $container->getParameter('avro_generator.my.files')));
-                } else {
-                    $container->setParameter('avro_generator.files', $container->getParameter('avro_generator.avro.files'));
-                }
+        $supportedStyles = array('avro');
 
-                if ($container->hasParameter('avro_generator.my.standalone_files')) {
-                    $container->setParameter('avro_generator.standalone_files', array_merge($container->getParameter('avro_generator.avro.standalone_files'), $container->getParameter('avro_generator.my.standalone_files')));
-                } else {
-                    $container->setParameter('avro_generator.standalone_files', $container->getParameter('avro_generator.avro.standalone_files'));
-                }
+        if (in_array($config['style'], $supportedStyles)) {
+            $loader->load(sprintf('%s.yml', $config['style']));
+        }
 
-                if ($container->hasParameter('avro_generator.my.bundle_folders')) {
-                    $container->setParameter('avro_generator.bundle_folders', array_merge($container->getParameter('avro_generator.avro.bundle_folders'), $container->getParameter('avro_generator.my.bundle_folders')));
-                } else {
-                    $container->setParameter('avro_generator.bundle_folders', $container->getParameter('avro_generator.avro.bundle_folders'));
-                }
-
-                if ($container->hasParameter('avro_generator.my.bundle_files')) {
-                    $container->setParameter('avro_generator.bundle_files', array_merge($container->getParameter('avro_generator.avro.bundle_files'), $container->getParameter('avro_generator.my.bundle_files')));
-                } else {
-                    $container->setParameter('avro_generator.bundle_files', $container->getParameter('avro_generator.avro.bundle_files'));
-                }
-            break;
-            case 'Fos':
-                $loader->load('fos.yml');
-                $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.fos.files'), $container->getParameter('avro_generator.my_files')));
-            break;
-            case 'none':
-                $container->setParameter('avro_generator.files', $container->getParameter('avro_generator.my.files'));
-                $container->setParameter('avro_generator.standalone_files', $container->getParameter('avro_generator.my.standalone_files'));
-                $container->setParameter('avro_generator.bundle_folders', $container->getParameter('avro_generator.my.bundle_folders'));
-                $container->setParameter('avro_generator.bundle_files', $container->getParameter('avro_generator.my.bundle_files'));
-            break;
+        if ($container->hasParameter('avro_generator.files')) {
+            $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.files'), $config['files'])); 
+        } else {
+            $container->setParameter('avro_generator.files', $config['files']); 
+        }
+        if ($container->hasParameter('avro_generator.standalone_files')) {
+            $container->setParameter('avro_generator.standalone_files', array_merge($container->getParameter('avro_generator.standalone_files'), $config['standalone_files'])); 
+        } else {
+            $container->setParameter('avro_generator.standalone_files', $config['standalone_files']); 
+        }
+        if ($container->hasParameter('avro_generator.bundle_folders')) {
+            $container->setParameter('avro_generator.bundle_folders', array_merge($container->getParameter('avro_generator.bundle_folders'), $config['bundle_folders'])); 
+        } else {
+            $container->setParameter('avro_generator.bundle_folders', $config['bundle_folders']); 
+        }
+        if ($container->hasParameter('avro_generator.bundle_files')) {
+            $container->setParameter('avro_generator.bundle_files', array_merge($container->getParameter('avro_generator.bundle_files'), $config['bundle_files'])); 
+        } else {
+            $container->setParameter('avro_generator.bundle_files', $config['bundle_files']); 
         }
     }
 }
