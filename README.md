@@ -51,7 +51,6 @@ avro_generator:
 You can also generate standalone files that are not based off an entity
 
 ``` yml
-parameters:
 avro_generator:
     #...
     standalone_files:
@@ -76,6 +75,8 @@ avro_generator:
             filename: '{{ bundle_name }}.php'
             template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
 ```
+
+Notice that the parameters are available in the filename as well. 
 
 If you have the style option set to a built-in style, it will generate your files along with the others. If you have it set to false, it will
 only generate the files you specify in your configuration.
