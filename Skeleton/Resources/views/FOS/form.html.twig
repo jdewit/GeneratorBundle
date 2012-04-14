@@ -1,9 +1,0 @@
-<div id="error-container">{{ form_errors(form) }}</div>
-<div class="form-content">
-{% for field in fields %}{% if field.type == 'oneToMany' or field.type == 'manyToMany' %}
-    {{ "{{ form_row(form."~ field.fieldName ~") }}" }}    
-{% else %}
-    {{ "{{ form_row(form."~ field.fieldName ~") }}" }}    
-{% endif %}{% endfor %} 
-    {{ "{{ form_widget(form._token) }}" }}
-</div>

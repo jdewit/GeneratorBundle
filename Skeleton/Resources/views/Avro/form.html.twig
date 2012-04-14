@@ -1,6 +1,0 @@
-{% for field in fields %}
-{% if field.type != 'oneToMany' and field.type != 'manyToMany' %}
-{{ "{{ form_row(form."~ field.fieldName ~") }}" }}    
-{% endif %}
-{% endfor %} 
-{{ "{{ form_widget(form._token) }}" }}
