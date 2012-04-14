@@ -2,13 +2,12 @@
 layout: default
 title: Avro Generator Bundle
 ---
-<img style="float: right" src="assets/images/happy_programmer.jpg" width="400px">
-<div class="hero-unit">
+<img class="pull-right" src="assets/images/happy_programmer.jpg" width="200px">
+<div class="well">
     <h1>Generate Symfony2 related code from the command line!</h1>
 </div>
-<p>Use twig templates to generate commonly repeated code for your mapped entities. It's easy.</p>
 <div class="page-header">
-    <h3>1. <small>Create your template</small></h3>
+    <h3>Step 1. <small>Create your template</small></h3>
 </div>
 <pre class="prettify lang-php">
 // AcmeDemoBundle/Skeleton/Controller/Controller.php
@@ -54,7 +53,7 @@ class {{ entity }}Controller extends ContainerAware
 }
 </pre>
 <div class="page-header">
-    <h3>2. <small>Add configuration</small> 
+    <h3>Step 2. <small>Add configuration</small></h3> 
 </div>
 <pre class="prettify lang-yaml">
 avro_generator:
@@ -64,7 +63,7 @@ avro_generator:
             template: 'AcmeDemoBundle:Skeleton/Controller/Controller.php' 
 </pre>
 <div class="page-header">
-    <h3>3. <small>Run Generator</small> 
+    <h3>Step 3. <small>Run Generator</small></h3> 
 </div>
 <pre class="prettyprint lang-bsh">
     $ php app/console avro:generate
