@@ -30,7 +30,7 @@ class Generator
     public $registry;
     public $filesystem;
     public $output;
-    public $parameters = array();
+    public $parameters;
 
     public function __construct($container, $output)
     {
@@ -38,6 +38,7 @@ class Generator
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
+        $this->parameters = $container->getParameterBag()->all();
     }
 
     /*
@@ -76,11 +77,9 @@ class Generator
             'bundlePath' => $bundlePath,
             'bundleNamespace' => $bundleNamespace,  
             'bundleAlias' => $bundleAlias,          
-            'dbDriver' => $this->container->hasParameter($bundleAlias.'.db_driver') ? $container->getParameter($bundleAlias.'.db_driver') : 'orm',
-            'style' => $this->container->getParameter('avro_generator.style'),
         );
 
-        $this->parameters = array_merge($parameters, $this->parameters);
+        $this->parameters = array_merge($this->parameters, $parameters);
     }
 
     /*
@@ -101,7 +100,7 @@ class Generator
             'uniqueManyToOneRelations' => $this->uniqueManyToOneRelations($this->customizeFields($fields)),
         );
 
-        $this->parameters = array_merge($parameters, $this->parameters);
+        $this->parameters = array_merge($this->parameters, $parameters);
     }
 
     /**
@@ -120,7 +119,7 @@ class Generator
                 $this->parameters[$k] = $v;
             }
         }
-        
+
         // change filename if overwrite is true
         if ($this->container->getParameter('avro_generator.overwrite')) {
             if (!is_dir(dirname($filename))) {
