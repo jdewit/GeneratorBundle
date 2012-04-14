@@ -11,89 +11,91 @@ title: Avro Generator Bundle
     <p>Templates are parsed with twig so all the normal twig filters are available to you.</p>
     <p>Since you are basing your templates off of an entity, there are a number of unique variables available to you in your twig templates:</p>
     <h3>Available Twig Variables</h3>
-    <table class="table-bordered table-striped table-condensed span11">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>entity</td>
-                <td>string</td>
-                <td>The entity name</td>
-            </tr>
-            <tr>
-                <td>entityCC</td>
-                <td>string</td>
-                <td>The entity name in camel-case format</td>
-            </tr>
-            <tr>
-                <td>entityUS</td>
-                <td>string</td>
-                <td>The entity name in underscore format</td>
-            </tr>
-            <tr>
-                <td>entityTitle</td>
-                <td>string</td>
-                <td>The entity name in title format</td>
-            </tr>
-            <tr>
-                <td>entityTitleLC</td>
-                <td>string</td>
-                <td>The entity name in lowercase title format</td>
-            </tr>
-            <tr>
-                <td>fields</td>
-                <td>array</td>
-                <td>The entities fields. (<a href="#fields-modal" data-toggle="modal">Click to view</a>)</td>
-            </tr>
-            <tr>
-                <td>uniqueManyToOneRelations</td>
-                <td>array</td>
-                <td>An array of unique manyToOne relations.</td>
-            </tr>
-            <tr>
-                <td>bundleVendor</td>
-                <td>string</td>
-                <td>The bundles vendor name (ex. Avro).</td>
-            </tr>
-            <tr>
-                <td>bundleBaseName</td>
-                <td>string</td>
-                <td>The bundles base name (ex. GeneratorBundle).</td>
-            </tr>
-            <tr>
-                <td>bundleName</td>
-                <td>string</td>
-                <td>The bundles name (ex. AvroGeneratorBundle).</td>
-            </tr>
-            <tr>
-                <td>bundleCorename</td>
-                <td>string</td>
-                <td>The bundles core name (ex. generator).</td>
-            </tr>
-            <tr>
-                <td>bundlePath</td>
-                <td>string</td>
-                <td>The bundle path relative to system path.</td>
-            </tr>
-            <tr>
-                <td>bundleNamespace</td>
-                <td>string</td>
-                <td>The bundles namespace (ex. Avro\GeneratorBundle).</td>
-            </tr>
-            <tr>
-                <td>bundleAlias</td>
-                <td>string</td>
-                <td>The bundles alias (ex. avro_generator)</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <table class="table-bordered table-striped table-condensed span11">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>entity</td>
+                    <td>string</td>
+                    <td>The entity name</td>
+                </tr>
+                <tr>
+                    <td>entityCC</td>
+                    <td>string</td>
+                    <td>The entity name in camel-case format</td>
+                </tr>
+                <tr>
+                    <td>entityUS</td>
+                    <td>string</td>
+                    <td>The entity name in underscore format</td>
+                </tr>
+                <tr>
+                    <td>entityTitle</td>
+                    <td>string</td>
+                    <td>The entity name in title format</td>
+                </tr>
+                <tr>
+                    <td>entityTitleLC</td>
+                    <td>string</td>
+                    <td>The entity name in lowercase title format</td>
+                </tr>
+                <tr>
+                    <td>fields</td>
+                    <td>array</td>
+                    <td>The entities fields. (<a href="#fields-modal" data-toggle="modal">Click to view</a>)</td>
+                </tr>
+                <tr>
+                    <td>uniqueManyToOneRelations</td>
+                    <td>array</td>
+                    <td>An array of unique manyToOne relations.</td>
+                </tr>
+                <tr>
+                    <td>bundleVendor</td>
+                    <td>string</td>
+                    <td>The bundles vendor name (ex. Avro).</td>
+                </tr>
+                <tr>
+                    <td>bundleBaseName</td>
+                    <td>string</td>
+                    <td>The bundles base name (ex. GeneratorBundle).</td>
+                </tr>
+                <tr>
+                    <td>bundleName</td>
+                    <td>string</td>
+                    <td>The bundles name (ex. AvroGeneratorBundle).</td>
+                </tr>
+                <tr>
+                    <td>bundleCorename</td>
+                    <td>string</td>
+                    <td>The bundles core name (ex. generator).</td>
+                </tr>
+                <tr>
+                    <td>bundlePath</td>
+                    <td>string</td>
+                    <td>The bundle path relative to system path.</td>
+                </tr>
+                <tr>
+                    <td>bundleNamespace</td>
+                    <td>string</td>
+                    <td>The bundles namespace (ex. Avro\GeneratorBundle).</td>
+                </tr>
+                <tr>
+                    <td>bundleAlias</td>
+                    <td>string</td>
+                    <td>The bundles alias (ex. avro_generator)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <br />
-    <div class="well">
+    <div class="alert alert-info">
         <p><strong>FYI:</strong> All system parameters are also available as variables. (ex. {{ framework.default_locale }})</p>
     </div>
     <div id="fields-modal" class="modal hide fade" style="width: 50%; margin-left: -25%;">
