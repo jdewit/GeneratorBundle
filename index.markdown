@@ -161,7 +161,7 @@ title: Avro Generator Bundle
         Since you are basing your templates off of an entity, there 
         are a number of variables available to you in your twig templates:
     </p>
-    <table class="table-bordered table-striped table-condensed span12">
+    <table class="table-bordered table-striped table-condensed span11">
         <thead>
             <tr>
                 <th>Name</th>
@@ -252,13 +252,14 @@ title: Avro Generator Bundle
             </tr>
         </tbody>
     </table>
+    <br />
     <div id="fields-modal" class="modal hide fade" style="width: 50%; margin-left: -25%;">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             <h3>Field Variables</h3>
         </div>
         <div class="modal-body">
-            <table class="table-condensed table-bordered table-striped span11">
+            <table class="table-condensed table-bordered table-striped" style="width: 100%;>
                 <thead>
                     <tr>
                         <th>Name</th>
