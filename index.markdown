@@ -197,7 +197,7 @@ title: Avro Generator Bundle
             </tr>
             <tr>
                 <td>fields</td>
-                <td><a data-original-title="Field Variables" href="#" rel="popover" data-content="
+                <td><a class="popover-with-html" data-original-title="Field Variables" href="#" rel="popover" data-content="
                     <table>
                         <thead>
                             <tr>
