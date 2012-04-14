@@ -2,4 +2,7 @@
 /gitflow
 *.swp
 /catalog.xml
+/_layouts
+/_plugins
+/_site
 
