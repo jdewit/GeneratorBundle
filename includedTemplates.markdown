@@ -34,5 +34,5 @@ title: Avro Generator Bundle - Templates
     </table>
 </div>
 <br />
-<a class="btn pull-left" href="templating.html">Templating<i class="icon-arrow-left"></i></a>
-<a class="btn pull-right" href="generating.html">Generating<i class="icon-arrow-right"></i></a>
+<a class="btn pull-left" href="templating.html">&larr; Templating</a>
+<a class="btn pull-right" href="generating.html">Generating &rarr;</a>

@@ -121,4 +121,4 @@ class TestController extends ContainerAware
     <p>Party on!</p>
 </div>
 <br />
-<a class="btn pull-right" href="installation.html">Installation<i class="icon-arrow-right"></i></a>
+<a class="btn pull-right" href="installation.html">Installation &rarr;</a>

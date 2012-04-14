@@ -18,4 +18,4 @@ title: Avro Generator Bundle
     </ul>
 </div>
 <br />
-<a class="btn pull-left" href="generating.html">Generating<i class="icon-arrow-left"></i></a>
+<a class="btn pull-left" href="generating.html">&larr; Generating</a>

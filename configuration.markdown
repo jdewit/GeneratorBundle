@@ -81,5 +81,5 @@ title: Avro Generator Bundle - Configuration
     </pre>
 </div>
 <br />
-<a class="btn pull-left" href="installation.html">Installation<i class="icon-arrow-left"></i></a>
-<a class="btn pull-right" href="templating.html">Templating<i class="icon-arrow-right"></i></a>
+<a class="btn pull-left" href="installation.html">&larr; Installation</a>
+<a class="btn pull-right" href="templating.html">Templating &rarr;</a>

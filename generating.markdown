@@ -22,5 +22,5 @@ title: Avro Generator Bundle - Generating
     <p>Press "enter" to bypass the tag filter and generate all of the files in your config.</p>
 </div> 
 <br />
-<a class="btn pull-left" href="includedTemplates.html">Included Templates<i class="icon-arrow-left"></i></a>
-<a class="btn pull-right" href="todo.html">Todo<i class="icon-arrow-right"></i></a>
+<a class="btn pull-left" href="includedTemplates.html">&larr; Included Templates</a>
+<a class="btn pull-right" href="todo.html">Todo &rarr;</a>
