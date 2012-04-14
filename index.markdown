@@ -53,7 +53,7 @@ class {{ entity }}Controller extends ContainerAware
 }
 </pre>
 <div class="page-header">
-    <h3>Step 2. <small>Add configuration</small></h3> 
+    <h3>Step 2. <small>Add Template to Configuration</small></h3> 
 </div>
 <pre class="prettify lang-yaml">
 avro_generator:
@@ -67,7 +67,7 @@ avro_generator:
 </div>
 <pre class="prettyprint lang-bsh">
     $ php app/console avro:generate
-    $ <span style="color: green">Bundle name with or without entity name:</span> AcmeDemoBundle:Test
+    $ AcmeDemoBundle:Test
     $ (enter)
 </pre>
 <div class="page-header">
@@ -113,4 +113,7 @@ class TestController extends ContainerAware
     }
 }
 </pre>
-<span style="width: 100%; text-align: center;"><img style="float: right" src="assets/images/happy_programmer.jpg" width="400px"></span>
+<div style="text-align: center;">
+    <img src="assets/images/happy_programmer.jpg" width="400px">
+    <p>Party on!</p>
+</div>

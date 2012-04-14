@@ -1,28 +1,18 @@
 ---
 layout: default
-title: Avro Generator Bundle
+title: Avro Generator Bundle - Configuration
 ---
 
 <div class="page-header">
     <h3>Configuration</h3>
 </div>
 <div>
+    <p>Add your templates to the generator by creating a new node under the files node.</p>
+
     <pre class="prettyprint lang-yaml">
         avro_generator:
-            style: 'avro' # build onto several built in styles or roll your own
+            extend: 'avro' # extend on several built in templates or roll your own
             overwrite: false # overwrite current code if true, write to Temp folder if false
-    </pre>
-
-    <p>You can override or build onto the default styles by means of yml configuration. Checkout 
-    the <a href="https://github.com/jdewit/GeneratorBundle/blob/master/Resources/config/avro.yml">avro.yml</a> config file 
-    for a good example on how you specify your templates and even call services. 
-
-    You can tell the generator to run your own templates by specifying them in your config_dev.yml like so:
-    </p>
-    <pre class="prettyprint lang-yaml">
-        avro_generator:
-            style: false
-            overwrite: true
             files:
                 list_view: 
                     filename: 'Resources/views/{{ entity }}/list.html.twig' # the target location for the generated file relative to the bundle path
@@ -33,7 +23,10 @@ title: Avro Generator Bundle
                     tags: ['view', 'crud'] # tags allow you to specify which files you want to generate
     </pre>
 
-    <p>You can also generate standalone files that are not based off an entity</p>
+    <p>Checkout the <a href="https://github.com/jdewit/GeneratorBundle/blob/master/Resources/config/avro.yml">avro.yml</a> config file 
+    for a good example on how you can customize which files you want to generate.</p> 
+
+    <p>Generate standalone files that are not based off an entity</p>
 
     <pre class="prettyprint lang-yaml">
         avro_generator:
@@ -45,8 +38,7 @@ title: Avro Generator Bundle
                     tags: ['readme'] 
     </pre>
 
-    <p>The generator also allows you to create a bundle skeleton.
-    Specify bundle folders and files in the same way.</p>
+    <p>Create a bundle skeleton.</p>
 
     <pre class="prettyprint lang-yaml">
         avro_generator:
@@ -60,18 +52,16 @@ title: Avro Generator Bundle
                     filename: '{{ bundleName }}.php'
                     template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
     </pre>
-    <p>
-    Notice that the parameters are available in the filename as well. 
+    <p>Notice that the parameters are available in the filename as well.</p> 
 
-    If you have the style option set to a built-in style, it will generate your files along with the others. If you have it set to false, it will
-    only generate the files you specify in your configuration.
+    <p>If you have the extend option set to a built-in template, it will generate your files along with the others. If you have it set to false, it will
+    only generate the files you specify in your configuration.</p>
 
-    The generator also allows you to pass your own parameters to the template and even call services to manipulate code.
+    <p>The generator also allows you to pass your own parameters to the template and even call services to manipulate code.</p>
 
-    Take the following configuration for generating a controller. The controllers actions are added to the parameters node
+    <p>Take the following configuration for generating a controller. The controllers actions are added to the parameters node
     which are now available in the template. The manipulator node is also set to manipulate the bundles routing
-    file so that the new controller is added.
-    </p>
+    file so that the new controller is added.</p>
 
     <pre class="prettyprint lang-yaml">
         avro_generator:

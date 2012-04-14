@@ -7,14 +7,10 @@ title: Avro Generator Bundle
     <h3>Templating</h3>
 </div>
 <div>
-    <p>
-        Check the <a href="https://github.com/jdewit/GeneratorBundle/tree/master/Skeleton">Skeleton</a> directory to see the included templates. 
-
-        Templates are parsed with twig so all the normal twig filters are available to you.
-
-        Since you are basing your templates off of an entity, there 
-        are a number of variables available to you in your twig templates:
-    </p>
+    <p>Check out the <a href="https://github.com/jdewit/GeneratorBundle/tree/master/Skeleton">Skeleton</a> directory to see the included templates.</p>
+    <p>Templates are parsed with twig so all the normal twig filters are available to you.</p>
+    <p>Since you are basing your templates off of an entity, there are a number of variables available to you in your twig templates:</p>
+    <h3>Available Twig Variables</h3>
     <table class="table-bordered table-striped table-condensed span11">
         <thead>
             <tr>
@@ -259,24 +255,39 @@ title: Avro Generator Bundle
             <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
+    <br />
 </div>
 <div class="page-header">
     <h3>Included Templates</h3>
 </div>
 <div>
-    <h5>Avro</h5>
-    <p>
-        A work in progress. It provides basic crud
-        functionality using some similar techniques as the FOSUserBundle.
-
-        It is designed to be used along with: 
-        <ul>
-            <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
-            <li><a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a></li>
-            <li><a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a></li>
-        </ul>
-        Sharing is caring. 
-        Submit some of your own templates!
-    </p>
+    <table class="table-bordered table-condensed table-striped">
+        <thead>
+            <th>Name</th>
+            </th>Status</th>
+            <th>Dependencies</th>
+            <th>Description</th>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Avro</td>
+                <td>WIP</td>
+                <td>
+                    <ul>
+                        <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
+                        <li><a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a></li>
+                        <li><a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a></li>
+                    </ul>
+                </td>
+                <td>
+                <td>Provides basic crud functionality using some similar techniques as the FOSUserBundle.</td>
+            </tr>
+            <tr>
+                <td>Your template here!</td>
+                <td></td>
+                <td></td>
+                <td>Be smart, fork and make a pull request.</td>
+        </tbody>
+    </table>
 </div>
 
