@@ -85,3 +85,5 @@ title: Avro Generator Bundle - Configuration
 <br />
 <a class="btn pull-left" href="installation.html">&larr; Installation</a>
 <a class="btn pull-right" href="templating.html">Templating &rarr;</a>
+
+<div class="hide">{% raw %}{% endraw %}</div>

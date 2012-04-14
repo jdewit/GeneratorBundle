@@ -46,9 +46,9 @@ title: Avro Generator Bundle
                 <td>The entity name in lowercase title format</td>
             </tr>
             <tr>
-                <td><a href="#fields-modal" data-toggle="modal">fields</a></td>
-                <td><a href="#fields-modal" data-toggle="modal">array</a></td>
-                <td>The entities fields</td>
+                <td>fields</td>
+                <td>array</td>
+                <td>The entities fields. (<a href="#fields-modal" data-toggle="modal">Click to view</a>)</td>
             </tr>
             <tr>
                 <td>uniqueManyToOneRelations</td>
@@ -89,16 +89,6 @@ title: Avro Generator Bundle
                 <td>bundleAlias</td>
                 <td>string</td>
                 <td>The bundles alias (ex. avro_generator)</td>
-            </tr>
-            <tr>
-                <td>dbDriver</td>
-                <td>string</td>
-                <td>The bundles db driver</td>
-            </tr>
-            <tr>
-                <td>style</td>
-                <td>string</td>
-                <td>The style parameter specified in your config</td>
             </tr>
         </tbody>
     </table>
