@@ -7,17 +7,45 @@
     <link href="assets/prettify/prettify.css" type="text/css" rel="stylesheet" />
     <style type="text/css">
         body {
-            padding-top: 60px;
+            padding-top: 40px;
             padding-bottom: 40px;
         } 
     </style>
     <title>{{ page.title }}</title>
 </head>
 <body onload="prettyPrint()">
-    {% include nav.html %}
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="http://jdewit.github.com/GeneratorBundle">Avro Generator Bundle</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="http://jdewit.github.com/GeneratorBundle">Overview</a></li>
+              <li><a href="http://jdewit.github.com/GeneratorBundle/installation">Installation</a></li>
+              <li><a href="http://jdewit.github.com/GeneratorBundle/configuration">Configuration</a></li>
+              <li><a href="http://jdewit.github.com/GeneratorBundle/templating">Templating</a></li>
+              <li><a href="http://jdewit.github.com/GeneratorBundle/generating">Generating</a></li>
+              <li><a href="http://jdewit.github.com/GeneratorBundle/todo">Todo</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
     <div class="container">
         {{ content }}
     </div> <!-- /container -->
+    <hr />
+
+    <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>Created by <a href="http://twitter.com/joris_dewit" target="_blank">Joris de Wit</a></p> 
+        <p>Code licensed under the <a href="http://www.opensource.org/licenses/MIT" target="_blank">MIT</a></p>
+    </footer>
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script type="text/javascript" src="assets/bootstrap/js/bootstrap.js"></script>
