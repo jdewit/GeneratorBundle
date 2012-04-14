@@ -12,7 +12,7 @@ title: Avro Generator Bundle
     <p>Since you are basing your templates off of an entity, there are a number of unique variables available to you in your twig templates:</p>
     <h3>Available Twig Variables</h3>
     <div class="row">
-        <table class="table-bordered table-striped table-condensed span11">
+        <table class="table-bordered table-striped table-condensed span12">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -95,8 +95,10 @@ title: Avro Generator Bundle
         </table>
     </div>
     <br />
-    <div class="alert alert-info">
-        <p><strong>FYI:</strong> All system parameters are also available as variables. (ex. {{ framework.default_locale }})</p>
+    <div class="row">
+        <div class="alert alert-info span10">
+            <p><strong>FYI:</strong> All system parameters are also available as variables. (ex. {{ framework.default_locale }})</p>
+        </div>
     </div>
     <div id="fields-modal" class="modal hide fade" style="width: 50%; margin-left: -25%;">
         <div class="modal-header">
