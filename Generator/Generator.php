@@ -30,7 +30,7 @@ class Generator
     public $registry;
     public $filesystem;
     public $output;
-    public $parameters;
+    public $parameters = array();
 
     public function __construct($container, $output)
     {
@@ -38,7 +38,14 @@ class Generator
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
-        $this->parameters = $container->getParameterBag()->all();
+        $parameters = $container->getParameterBag()->all();
+        foreach ($parameters as $k => $v) {
+            $pos = strpos($k, '.');
+            $alias = substr($k, 0, $pos);
+            $parameter = substr($k, $pos + 1);
+
+            $this->parameters[$alias][$parameter] = $v;
+        }
     }
 
     /*
@@ -122,24 +129,10 @@ class Generator
 
         // change filename if overwrite is true
         if ($this->container->getParameter('avro_generator.overwrite')) {
-            if (!is_dir(dirname($filename))) {
-                mkdir(dirname($filename), 0777, true);
-            }
             $this->renderFile($template, $filename);
         } else {
-            $newPath1= $this->bundlePath.'/Temp/split/'.$this->parameters['entity'];
-            $filename1 = str_replace($this->parameters['bundlePath'], $newPath1, $filename);
-
-            $newPath2= $this->parameters['bundlePath'].'/Temp/src';
-            $filename2= str_replace($this->parameters['bundlePath'], $newPath2, $filename);
-
-            if (!is_dir(dirname($filename1))) {
-                mkdir(dirname($filename1), 0777, true);
-            }
-
-            if (!is_dir(dirname($filename2))) {
-                mkdir(dirname($filename2), 0777, true);
-            }
+            $filename1 = 'Temp/split/'.$this->parameters['entity'].'/'.$filename;
+            $filename2 = 'Temp/src/'.$filename;
 
             $this->renderFile($template, $filename1);
             $this->renderFile($template, $filename2);
@@ -175,13 +168,12 @@ class Generator
      */
     public function renderFile($template, $filename)
     {   
-
         if (strpos($template, ':')) {
             $arr = explode(":", $template); 
             $template = $this->container->get('kernel')->getBundle($arr[0])->getPath().'/'.$arr[1];
         } 
 
-        $filename = $this->parameters['bundlePath'].'/'.$filename;
+        $filename = $this->parameters['bundlePath'].$filename;
 
         // replace any placeholders in the filename
         $filename = str_replace(
@@ -199,7 +191,11 @@ class Generator
             $filename
         );
 
-        $this->output->write('Generating '.$filename.': ');
+        if (!is_dir(dirname($filename))) {
+            mkdir(dirname($filename), 0777, true);
+        }
+
+        $this->output->write(sprintf('Generating %s: ', str_replace($this->parameters['bundlePath'], "", $filename)));
 
         try {
             $skeletonDir = __DIR__.'/../Skeleton';
@@ -231,7 +227,7 @@ class Generator
      */
     public function renderFolder($path)
     {   
-        $this->output->write('Generating '.$path.': ');
+        $this->output->write('Creating '.$path.': ');
 
         try {
             $this->filesystem->mkdir($path);

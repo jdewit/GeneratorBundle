@@ -53,7 +53,7 @@ parameters:
 
         entity: 
             filename: 'Entity/{{ entity }}.php'
-            template: 'AvroGeneratorBundle:Skeleton/Entity/Entity.php'
+            template: 'AvroGeneratorBundle:Skeleton/Entity/Avro/Entity.html.twig'
             tags: ['entity', 'crud']
 
         entity_manager: 

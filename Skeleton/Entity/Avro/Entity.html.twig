@@ -1,0 +1,10 @@
+{% extends 'Entity/Base/Entity.html.twig' %}
+{% block stringProperty %}
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     */
+    protected ${{ field.fieldName }};
+
+{% endblock %}
