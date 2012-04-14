@@ -1,4 +1,5 @@
 parameters:
+    avro_generator.use_owner: true
     avro_generator.files:
         controller: 
             filename: 'Controller/{{ entity }}Controller.php'
