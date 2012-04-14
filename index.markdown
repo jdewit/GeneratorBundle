@@ -193,7 +193,7 @@ title: Avro Generator Bundle
             <tr>
                 <td>entityTitleLC</td>
                 <td>string</td>
-                <td>The entity name in lowercase title format<td>
+                <td>The entity name in lowercase title format</td>
             </tr>
             <tr>
                 <td>fields</td>
