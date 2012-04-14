@@ -478,10 +478,9 @@ title: Avro Generator Bundle
             <li>CouchDB support</li>
         </ul>
     </div>
-</div>
-<hr>
+    <hr>
 
-<footer>
-<p>© Company 2012</p>
-</footer>
+    <footer>
+    <p>© Company 2012</p>
+    </footer>
 
