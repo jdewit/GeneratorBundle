@@ -198,9 +198,7 @@ class Generator
         $this->output->write(sprintf('Generating %s: ', str_replace($this->parameters['bundlePath'], "", $filename)));
 
         try {
-            $skeletonDir = __DIR__.'/../Skeleton';
-
-            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(array($skeletonDir, '/', $this->container->get('kernel')->getRootDir())), array(
+            $twig = new \Twig_Environment(new \Twig_Loader_Filesystem(array(__DIR__.'/../Templates', '/', $this->container->get('kernel')->getRootDir())), array(
                 'debug'            => true,
                 'cache'            => false,
                 'strict_variables' => true,

@@ -18,6 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 class {{ entity }}Controller extends ContainerAware
 {
 {% for action in actions %}
-    {%- include 'Controller/Avro/actions/'~ action ~'.html.twig' %}
+    {%- include 'Avro/Controller/actions/'~ action ~'.html.twig' %}
 {% endfor %}
 }

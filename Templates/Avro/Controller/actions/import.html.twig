@@ -11,7 +11,7 @@
 
         $process = $formHandler->process('{{ bundleNamespace }}\Entity\{{ entityCC }}');
         if ($process === true) {
-            $this->container->get('session')->getFlashBag()->set('success', $formHandler->getImportCount()).' {{ entityTitleLC }}s imported.');
+            $this->container->get('session')->getFlashBag()->set('success', $formHandler->getImportCount().' {{ entityTitleLC }}s imported.');
 
             return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
         } 

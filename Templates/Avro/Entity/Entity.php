@@ -10,10 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 {%- endif %}
 {%- endif %}
 {% endfor %}
-{% block useStatements %}
 use JMS\SerializerBundle\Annotation\Exclude;
 use Symfony\Component\Validator\Constraints as Assert;
-{% endblock %}
 
 /**
  * {{ bundleNamespace }}\Entity\{{ entity }}
@@ -37,25 +35,20 @@ class {{ entity }}
 
 {% for field in fields %}
 {%- if field.type == "manyToOne" %}
-{% block manyToOneProperty %}
     /**
      * @var \{{ field.targetEntity }}
      *
      * @ORM\ManyToOne(targetEntity="{{ field.targetEntity }}")
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {%- elseif field.type == "oneToMany" %}
-{% block oneToManyProperty %}
     /**
      * @var ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}"{% if field.mappedBy %}, mappedBy="{{ field.mappedBy }}"{% endif %}{% if field.inversedBy %}, inversedBy="{{ field.inversedBy }}"{% endif %}{% if field.cascade is not empty %}, cascade={ {% for item in field.cascade %}{% if loop.last %}"{{ item }}"{% else %}"{{ item }}",{% endif %}{% endfor %} }{% endif %}{% if field.orphanRemoval is defined %}{% if field.orphanRemoval %}, orphanRemoval=true {% endif %}{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "manyToMany" %}
-{% block manyToManyProperty %}
     /** 
      * @var ArrayCollection
      *
@@ -63,73 +56,57 @@ class {{ entity }}
      * @ORM\JoinTable(name="{{ bundleCoreName }}_{{ entityCC }}_{{ field.fieldName }}")
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "string" %}
-{% block stringProperty %}
     /**
      * @var string
      *
      * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "text" %}
-{% block textProperty %}
     /**
      * @var text
      *
      * @ORM\Column(type="text"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "integer" %}
-{% block integerProperty %}
     /**
      * @var integer
      *
      * @ORM\Column(type="integer"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "decimal" %}
-{% block decimalProperty %}
     /**
      * @var decimal
      *
      * @ORM\Column(type="decimal"{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.scale is defined %}, scale={{ field.scale }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "float" %}
-{% block floatProperty %}
     /**
      * @var float
      *
      * @ORM\Column(type="float"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% elseif field.type == "datetime" %}
-{% block datetime %}
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% else %}
-{% block otherProperty %}
     /**
      * @var {{ field.type }}
      *
      * @ORM\Column(type="{{ field.type }}"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-{% endblock %}
 {% endif %}{% endfor %}    
 {% if avro_generator.use_owner %}
-{% block ownerProperty %}
     /**
      * @var \Avro\UserBundle\Entity\Owner
      *
@@ -137,41 +114,35 @@ class {{ entity }}
      * @exclude
      */
     protected $owner;
-{% endblock %}
 {% endif %}
-{% block createdAtProperty %}
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
      */
     protected $createdAt;
-{% endblock %}
-{% block updatedAtProperty %}
+
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $updatedAt;
-{% endblock %}
-{% block isDeletedProperty %}
+
     /**
      * @var boolean
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
     protected $isDeleted = false;
-{% endblock %}
-{% block deletedAtProperty %}
+
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $deletedAt;
-{% endblock %}
-{% block prePersist %}
+
     /** 
      * @ORM\PrePersist 
      */
@@ -180,8 +151,6 @@ class {{ entity }}
         $this->createdAt = new \DateTime('now');
     }
 
-{% endblock %}
-{% block preUpdate %}
     /** 
      * @ORM\PreUpdate 
      */
@@ -190,8 +159,6 @@ class {{ entity }}
        $this->updatedAt= new \DateTime('now');
     }
 
-{% endblock %}
-{% block constructor %}
     public function __construct() 
     {
 {%- for field in fields %}
@@ -201,7 +168,6 @@ class {{ entity }}
 {%- endfor %}
 
     }
-{% endblock %}
 
     /**
      * Get {{ entityCC }} id
@@ -212,14 +178,10 @@ class {{ entity }}
     {
         return $this->id;
     }
-{% block customMethods %}
-
-{% endblock %}
 
 {% for field in fields %}
 {% set adjustedFieldName = field.fieldName|slice(0, -1) %} 
 {% if field.type == "manyToOne" %}
-{% block manyToOneMethods %}
     /**
      * Get {{ field.fieldName }}
      * 
@@ -239,9 +201,7 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
-{% endblock %}
 {% elseif field.type == "oneToMany" %}
-{% block oneToManyMethods %}
     /**
      * Get {{ field.fieldName }}
      * 
@@ -285,10 +245,8 @@ class {{ entity }}
         $this->{{ field.fieldName }}->removeElement(${{ adjustedFieldName }});
     }
 {% endif %}
-{% endblock %}
 
 {% elseif field.type == "manyToMany" %}
-{% block manyToManyMethods %}
     /**
      * Get {{ field.fieldName }}
      * 
@@ -333,9 +291,7 @@ class {{ entity }}
     }
 {% endif %}
 
-{% endblock %}
 {% else %}
-{% block defaultMethods %}
     /**
      * Get {{ field.fieldName }}
      * 
@@ -356,9 +312,7 @@ class {{ entity }}
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }    
 
-{% endblock %}
 {% endif %}{% endfor %}
-{% block createAtMethods %}
 
     /**
     * Set createdAt
@@ -379,8 +333,7 @@ class {{ entity }}
     {
        return $this->createdAt;
     }
-{% endblock %}
-{% block updatedAtMethods %}
+
     /**
      * Set updatedAt
      *
@@ -400,8 +353,7 @@ class {{ entity }}
     {
         return $this->updatedAt;
     }
-{% endblock %}
-{% block isDeletedMethods %}
+
     /**
      * Get isDeleted
      * 
@@ -421,8 +373,7 @@ class {{ entity }}
     {
         $this->isDeleted = $isDeleted;
     }  
-{% endblock %}
-{% block deletedAtMethods %}
+
     /**
      * Set deletedAt
      *
@@ -442,8 +393,7 @@ class {{ entity }}
     {
         return $this->deletedAt;
     }
-{% endblock %}
-{% block toStringMethod %}
+
     /**
      * String output
      */
@@ -456,6 +406,5 @@ class {{ entity }}
 {% endif %}
 {% endfor %}
     } 
-{% endblock %}
 }
 

@@ -29,7 +29,7 @@ class {{ entity }}SearchFormType extends AbstractType
 
         $builder
 {% set ignoreManyFields = true %}
-{% include 'Form/Type/Avro/Fields.html.twig' %}
+{% include 'Avro/Form/Type/Fields.php' %}
 {% for field in fields %}
 {% if field.fieldName == 'date' %}
             ->add('startDate', 'date', array(

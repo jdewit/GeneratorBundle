@@ -91,7 +91,7 @@
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'class' =>'{{ field.targetEntity }}',
-                'query_builder' => function(EntityRepository $er) {
+                'query_builder' => function($er) {
                     return $er->createQueryBuilder('u');
                 },
                 'attr' => array(

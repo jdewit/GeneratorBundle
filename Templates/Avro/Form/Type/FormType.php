@@ -4,6 +4,7 @@ namespace {{ bundleNamespace }}\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Routing\RouterInterface;
 {% if avro_generator.use_owner %}
 use Symfony\Component\Security\Core\SecurityContextInterface;
 {% endif %}
@@ -34,7 +35,7 @@ class {{ entity }}FormType extends AbstractType
         $owner = $this->owner;
 
         $builder
-{% include 'Form/Type/Avro/Fields.html.twig' %}
+{% include 'Avro/Form/Type/Fields.php' %}
         ;
     }
 
