@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" />
+    <link href="assets/prettify.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        } 
+    </style>
+    <title>{{ page.title }}</title>
+</head>
+<body onload="prettyPrint()">
+    {% include nav.html %}
+    <div class="container">
+        {{ content }}
+    </div> <!-- /container -->
+
+    <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/prettify.js"></script>
+    <script type="text/javascript" src="assets/prettify.js"></script>
+</body>
+</html>
