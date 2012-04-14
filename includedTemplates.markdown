@@ -16,7 +16,7 @@ title: Avro Generator Bundle - Templates
         </thead>
         <tbody>
             <tr>
-                <td>Avro</td>
+                <td><a href="http://github.com/jdewit/GeneratorBundle/tree/master/Templates/Avro">Avro</a></td>
                 <td>WIP</td>
                 <td>
                     <ul>

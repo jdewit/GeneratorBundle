@@ -13,18 +13,17 @@ title: Avro Generator Bundle - Configuration
             extend: 'avro' # extend on several built in templates or roll your own
             overwrite: false # overwrite current code if true, write to Temp folder if false
             add_fields: true # allows you to add fields to your entity
-            use_owner: false # set to true if you have an owning entity for your entities
             files:
                 list_view: 
                     filename: 'Resources/views/{{ entity }}/list.html.twig' # the target location for the generated file relative to the bundle path
-                    template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/list.html.twig' # the path to the template file, 
-                        # use shortcut notation to have it relative to a bundle (ex. AvroDemoBundle:Skeleton/myfile.html.twig) 
+                    template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/list.html.twig' # the path to the template file, 
+                        # use shortcut notation to have it relative to a bundle (ex. AvroDemoBundle:Templates/myfile.html.twig) 
                         # otherwise, it can be relative to your system path "/"
                         # or your applications 'app' folder
                     tags: ['view', 'crud'] # tags allow you to specify which files you want to generate
     </pre>
 
-    <p>Checkout the <a href="https://github.com/jdewit/GeneratorBundle/blob/master/Resources/config/avro.yml">avro.yml</a> config file 
+    <p>Checkout the <a href="https://github.com/jdewit/GeneratorBundle/blob/master/Resources/config/templates/avro.yml">avro.yml</a> config file 
     for a good example on how you can customize which files you want to generate.</p> 
 
     <p>Generate standalone files that are not based off an entity</p>
@@ -70,7 +69,7 @@ title: Avro Generator Bundle - Configuration
             files:
                 controller: 
                     filename: 'Controller/{{ entity }}Controller.php'
-                    template: 'AvroGeneratorBundle:Skeleton/Controller/Avro/Controller.php'
+                    template: 'AvroGeneratorBundle:Templates/Acro/Controller/Controller.php'
                     parameters: 
                         actions: ['list', 'new', 'edit', 'delete', 'restore', 'import']
                     tags: ['controller', 'crud']

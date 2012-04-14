@@ -63,7 +63,7 @@ avro_generator:
     files:
         controller: 
             filename: 'Controller/{{ entity }}Controller.php'
-            template: 'AcmeDemoBundle:Skeleton/Controller/Controller.php' 
+            template: 'AcmeDemoBundle:Templates/Avro/Controller/Controller.php' 
 </pre>
 <div class="page-header">
     <h3>Step 3. <small>Run Generator From Console</small></h3> 
