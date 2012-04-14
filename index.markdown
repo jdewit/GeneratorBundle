@@ -150,7 +150,7 @@ title: Avro Generator Bundle
     </p>
 </div>
 <div class="page-header">
-    <h3>Templates Variables</h3>
+    <h3>Template Variables</h3>
 </div>
 <div>
     <p>
@@ -209,7 +209,7 @@ title: Avro Generator Bundle
                         <tbody>
                             <tr>
                                 <td>fieldName</td>
-                                <td>string</th>
+                                <td>string</td>
                                 <td>The fields name.</td>
                             </tr>
                             <tr>
