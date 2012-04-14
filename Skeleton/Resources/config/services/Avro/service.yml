@@ -1,4 +1,4 @@
-#{{ entityCC }}     
+#{{ entityTitle }} services config     
 services:
     {{ bundleAlias }}.{{ entityCC }}_manager:
         class: {{ bundleNamespace }}\Entity\{{ entity }}Manager
@@ -8,7 +8,7 @@ services:
         class: {{ bundleNamespace }}\Form\Type\{{ entity }}FormType
         tags: 
             - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }} }
-        arguments: ["@security.context", "@router"]
+        arguments: ["@router"{% if avro_generator.use_owner %}, "@security.context"{% endif %}]
        
     {{ bundleAlias }}.{{ entityCC }}.form:
         factory_method: createNamed 
@@ -33,7 +33,3 @@ services:
         class: Symfony\Component\Form\Form
         arguments: ["@{{ bundleAlias }}.{{ entityCC }}Search.form.type", {{ bundleAlias }}_{{ entityCC }}_search]
 
-    {{ bundleAlias }}.{{ entityCC }}_import.handler:
-        class: {{ bundleNamespace }}\Import\Handler\{{ entity }}ImportHandler
-        scope: request
-        arguments: ["@avro_csv.csv.form", "@request", "@avro_csv.reader", "@security.context", "@{{ bundleAlias }}.{{ entityCC }}_manager"{% for field in uniqueManyToOneRelations %}, "@{{ field.targetBundleAlias }}.{{ field.targetEntityName }}_manager"{% endfor %}]

@@ -3,13 +3,10 @@ namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
-{% for field in uniqueManyToOneRelations %}
-use {{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName }}Manager;
-{% endfor %}
-
+{% if avro_generator.use_owner %}
+use Symfony\Component\Security\Core\SecurityContextInterface;
+{% endif %}
 
 /*
  * {{ entity }} Form Type
@@ -18,13 +15,17 @@ use {{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEnti
  */
 class {{ entity }}FormType extends AbstractType
 { 
-    protected $owner;
-    protected $context;
     protected $router;
+{% if avro_generator.use_owner %}
+    protected $context;
+    protected $owner;
+{% endif %}
 
-    public function __construct(SecurityContextInterface $context, RouterInterface $router) {
+    public function __construct(RouterInterface $router{% if avro_generator.use_owner %}, SecurityContextInterface $context{% endif %}) {
+{% if avro_generator.use_owner %}
         $this->owner = $context->getToken()->getUser()->getOwner();
         $this->context = $context;
+{% endif %}
         $this->router = $router;
     }
 
