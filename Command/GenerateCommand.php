@@ -43,7 +43,7 @@ class GenerateCommand extends ContainerAwareCommand
             ->setAliases(array('avro:generate'))
             ->setDescription('Generates code from an entity.')
             ->setHelp(<<<EOT
-The <info>generate:avro:all</info> task generates entity, controller, form, view, and configuration code in a bundle.
+The <info>generate:avro:all</info> command generates code in a bundle.
 EOT
         );
     }
@@ -125,7 +125,9 @@ Or just press <enter> to generate all files.'
             $entity = $entity['name'];
 
             // add fields
-            $fields = $this->fieldGenerator($entity, $fields);      
+            if ($this->container->getParameter('avro_generator.add_fields')) {
+                $fields = $this->fieldGenerator($entity, $fields);      
+            }
 
             // confirm
             $this->dialog->writeSection($this->output, 'Generating code for '. $bundle->getName());
