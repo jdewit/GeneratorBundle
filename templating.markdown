@@ -93,7 +93,7 @@ title: Avro Generator Bundle
         </tbody>
     </table>
     <br />
-    <div class="alert alert-info">
+    <div class="well">
         <p><strong>FYI:</strong> All system parameters are also available as variables. (ex. {{ framework.default_locale }})</p>
     </div>
     <div id="fields-modal" class="modal hide fade" style="width: 50%; margin-left: -25%;">
@@ -253,3 +253,5 @@ title: Avro Generator Bundle
 <br />
 <a class="btn pull-left" href="configuration.html">&larr; Configuration</a>
 <a class="btn pull-right" href="includedTemplates.html">Included Templates &rarr;</a>
+
+<div class="hide">{% raw %}{% endraw %}</div>
