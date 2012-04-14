@@ -12,7 +12,7 @@
         $process = $formHandler->process();
         if ($process) {
             ${{ entityCC }} = $form->getData();
-            $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} created.');
+            $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} created.');
 
             return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_edit', array('id' => ${{ entityCC }}->getId())), 301);
         }

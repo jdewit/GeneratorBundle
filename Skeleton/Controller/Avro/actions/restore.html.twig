@@ -9,9 +9,9 @@
         ${{ entityCC }}Manager = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager');
         
         if (${{ entityCC }}Manager->restore(${{ entityCC }})) {
-            $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} restored.');
+            $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} restored.');
         } else {
-            $this->container->get('session')->getFlashBag()->set('error', 'Unable to restore {{ entity | title }}.');
+            $this->container->get('session')->getFlashBag()->set('error', 'Unable to restore {{ entityTitle }}.');
         }     
 
         return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'), 301);     

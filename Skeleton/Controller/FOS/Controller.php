@@ -101,12 +101,12 @@ class {{ entity }}Controller extends ContainerAware
             ${{ entityCC }} = ${{ entityCC }}Form->getData('{{ entityCC }}');
             if ($this->container->get('request')->isXmlHttpRequest()) {
                 ${{ entityCC }} = $this->container->get('serializer')->serialize(${{ entityCC }}, 'json');
-                $response = new Response('{"notice": "{{ entity | title }} updated.", "data": '.${{ entityCC }}.'}');
+                $response = new Response('{"notice": "{{ entityTitle }} updated.", "data": '.${{ entityCC }}.'}');
                 $response->headers->set('Content-Type', 'application/json');
 
                 return $response; 
             } else {
-                $this->container->get('session')->setFlash('notice', '{{ entity | title}} updated.');
+                $this->container->get('session')->setFlash('notice', '{{ entityTitle}} updated.');
 
                 return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
             }
@@ -146,12 +146,12 @@ class {{ entity }}Controller extends ContainerAware
             
             if ($this->container->get('request')->isXmlHttpRequest()) {
                 ${{ entityCC }} = $this->container->get('serializer')->serialize(${{ entityCC }}, 'json');
-                $response = new Response('{"notice": "{{ entity | title }} deleted.", "data": '.${{ entityCC }}.'}');
+                $response = new Response('{"notice": "{{ entityTitle }} deleted.", "data": '.${{ entityCC }}.'}');
                 $response->headers->set('Content-Type', 'application/json');
 
                 return $response; 
             } else {
-                $this->container->get('session')->setFlash('success', '{{ entity | title }} deleted.');
+                $this->container->get('session')->setFlash('success', '{{ entityTitle }} deleted.');
             }     
         }
 
@@ -171,12 +171,12 @@ class {{ entity }}Controller extends ContainerAware
             
             if ($this->container->get('request')->isXmlHttpRequest()) {
                 ${{ entityCC }} = $this->container->get('serializer')->serialize(${{ entityCC }}, 'json');
-                $response = new Response('{"notice": "{{ entity | title }} restored.", "data": '.${{ entityCC }}.'}');
+                $response = new Response('{"notice": "{{ entityTitle }} restored.", "data": '.${{ entityCC }}.'}');
                 $response->headers->set('Content-Type', 'application/json');
 
                 return $response; 
             } else {
-                $this->container->get('session')->setFlash('notice', '{{ entity | title }} restored.');
+                $this->container->get('session')->setFlash('notice', '{{ entityTitle }} restored.');
             }     
         }
 

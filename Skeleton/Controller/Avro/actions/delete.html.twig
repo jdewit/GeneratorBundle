@@ -10,9 +10,9 @@
         
         if (${{ entityCC }}Manager->delete(${{ entityCC }})) {
 
-            $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} deleted.');
+            $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} deleted.');
         } else {
-            $this->container->get('session')->getFlashBag()->set('error', 'Unable to delete {{ entity | title }}.');
+            $this->container->get('session')->getFlashBag()->set('error', 'Unable to delete {{ entityTitle }}.');
         }     
 
         return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'), 301);     

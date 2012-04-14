@@ -12,7 +12,7 @@
 
         $process = $formHandler->process(${{ entityCC }});
         if ($process) {
-            $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} updated.');
+            $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} updated.');
 
             return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
         }
