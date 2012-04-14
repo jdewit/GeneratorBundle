@@ -16,7 +16,7 @@ Features:
 Documentation
 =============
 
-Read the <a href="http://jdewit.github.com/generatorBundle">documentation</a>.
+Read the <a href="http://jdewit.github.com/GeneratorBundle">documentation</a>.
 
 
 
