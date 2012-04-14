@@ -197,7 +197,7 @@ title: Avro Generator Bundle
             </tr>
             <tr>
                 <td>fields</td>
-                <td><a href="#fields-modal" data-toggle="modal" data-show="false">array</a></td>
+                <td><a href="#fields-modal" data-toggle="modal">array</a></td>
                 <td>The entities fields</td>
             </tr>
             <tr>
@@ -252,13 +252,13 @@ title: Avro Generator Bundle
             </tr>
         </tbody>
     </table>
-    <div id="fields-modal" class="modal" data-show="false" style="width: 50%; margin-left: -25%;">
+    <div id="fields-modal" class="modal hide fade" style="width: 50%; margin-left: -25%;">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             <h3>Field Variables</h3>
         </div>
         <div class="modal-body">
-            <table class="table-condensed table-bordered table-striped span12">
+            <table class="table-condensed table-bordered table-striped span11">
                 <thead>
                     <tr>
                         <th>Name</th>
