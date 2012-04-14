@@ -15,7 +15,7 @@ title: Avro Generator Bundle
 <pre class="prettify lang-php">
 // AcmeDemoBundle/Skeleton/Controller/Controller.php
 
-namespace {% raw %}{{ bundleNamespace }}{% endraw %}\Controller;
+namespace {{ bundleNamespace }}\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -120,4 +120,3 @@ class TestController extends ContainerAware
     <img src="assets/images/happy_programmer.jpg" width="400px">
     <p>Party on!</p>
 </div>
-{% endraw %}

@@ -2,7 +2,6 @@
 layout: default
 title: Avro Generator Bundle - Configuration
 ---
-{% raw %}
 <div class="page-header">
     <h3>Configuration</h3>
 </div>
@@ -81,4 +80,3 @@ title: Avro Generator Bundle - Configuration
                             format: 'yml' # variable passed to the setter
     </pre>
 </div>
-{% endraw %}
