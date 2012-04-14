@@ -15,7 +15,7 @@ title: Avro Generator Bundle
 <pre class="prettify lang-php">
 // AcmeDemoBundle/Skeleton/Controller/Controller.php
 
-namespace {{ bundleNamespace }}\Controller;
+namespace {% raw %}{{ bundleNamespace }}{% endraw %}\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
