@@ -1,9 +1,9 @@
 {
-    "name": "{{ bundle_vendor | lower }}/{{ bundle_corename | lower }}-bundle",
+    "name": "{{ bundleVendor | lower }}/{{ bundleCoreName | lower }}-bundle",
     "type": "symfony-bundle",
-    "description": "Symfony2 {{ bundle_corename }} Bundle",
-    "keywords": ["{{ bundle_corename | lower }}"],
-    "homepage": "http://github.com/{{ bundle_vendor | lower }}/{{ bundle_basename }}",
+    "description": "Symfony2 {{ bundleCoreName }} Bundle",
+    "keywords": ["{{ bundleCoreName | lower }}"],
+    "homepage": "http://github.com/{{ bundleVendor | lower }}/{{ bundleBaseName }}",
     "license": "MIT",
     "authors": [
         {
@@ -15,7 +15,7 @@
         "php": ">=5.3.2"
     },
     "autoload": {
-        "psr-0": { "{{ bundle_vendor }}\\{{ bundle_basename }}": "" }
+        "psr-0": { "{{ bundleVendor }}\\{{ bundleBaseName }}": "" }
     },
-    "target-dir": "{{ bundle_vendor }}/{{ bundle_basename }}"
+    "target-dir": "{{ bundleVendor }}/{{ bundleBaseName }}"
 }

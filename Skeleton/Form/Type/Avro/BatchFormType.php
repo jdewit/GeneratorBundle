@@ -1,5 +1,5 @@
 <?php
-namespace {{ bundle_namespace }}\Form\Type;
+namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
@@ -22,6 +22,6 @@ class BatchFormType extends AbstractType
     
     public function getName()
     {
-        return '{{ bundle_alias }}_batch';
+        return '{{ bundleAlias }}_batch';
     }
 }

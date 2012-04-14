@@ -1,9 +1,9 @@
-{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
     <div class="page-header">
-        <h1>Import {{ entity_title }}s</h1>
+        <h1>Import {{ entityTitle }}s</h1>
     </div>
-    <form class="form-horizontal" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_import') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
+    <form class="form-horizontal" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_import') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
         <div id="error-container"></div>
         <div class="form-content">
             {{ "{{ form_widget(form) }}" }}   

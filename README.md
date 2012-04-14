@@ -72,7 +72,7 @@ avro_generator:
 
     bundle_files:
         bundle:
-            filename: '{{ bundle_name }}.php'
+            filename: '{{ bundleName }}.php'
             template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
 ```
 
@@ -141,31 +141,55 @@ Since you are basing your templates off of an entity, there
 are a number of variables available to you in your twig templates:
 
 - {{ entity }} // The entity name 
-- {{ entity_cc }} // The entity name in camel-case format
-- {{ entity_us }} // The entity name in underscore format
+- {{ entityCC }} // The entity name in camel-case format
+- {{ entityUS }} // The entity name in underscore format
+- {{ entityTitle }} // The entity name in title format
+- {{ entityTitleLC }} // The entity name in lowercase title format
 - {{ fields }} // array of the entities fields
- - {{ field.type }} // field type (string, integter, manyToOne, etc)
+ - {{ field.type }} // field type (string, integer, manyToOne, etc)
  - {{ field.fieldName }} // field name
+ - {{ field.columnName }} // field column name 
  - {{ field.fieldTitle }} // field name in title format
- - {{ field.targetEntity }} // field target entity
  - {{ field.length }} // field length
- - {{ field.cascade }} // array
- - {{ field.targetVendor }} *
- - {{ field.targetBundle }} *
- - {{ field.targetBundleAlias }} *
- - {{ targetEntityName }} *
-- {{ uniqueRelations }} // array of unique manyToOne relations
-- {{ bundle_vendor }} // bundles vendor name (ex. Avro)
-- {{ bundle_basename }} // bundles base name (ex. GeneratorBundle)
-- {{ bundle_name }} // bundles name (ex. AvroGeneratorBundle)
-- {{ bundle_corename }} // bundle core name (ex. Generator)
-- {{ bundle_path }} // bundle path
-- {{ bundle_namespace }} // bundle namespace 
-- {{ bundle_alias }} // bundle alias (ex. Avro_generator)
-- {{ db_driver }} // bundle db 
+ - {{ field.unique }} // boolean
+ - {{ field.nullable }} // boolean
+ - {{ field.precision }} // number precision 
+ - {{ field.scale }} // number scale
+ - {{ field.targetVendor }} // *
+ - {{ field.targetBundle }} // *
+ - {{ field.targetBundleAlias }} // *
+ - {{ field.targetEntityName }} // *
+ - {{ field.orphanRemoval }} // * boolean
+ - {{ field.joinColumns }} // * array
+  - {{ joinColumn.name }}
+  - {{ joinColumn.referencedColumnName }}
+ - {{ field.cascade }} // * array
+ - {{ field.inversedBy }} *
+ - {{ field.targetEntity }} // * field target entity
+ - {{ field.fetch }} // *
+ - {{ field.mappedBy }} // *
+ - {{ field.isOwningSide }} // * boolean
+ - {{ field.sourceEntity }} // *
+ - {{ field.isCascadeRemove }} // * boolean
+ - {{ field.isCascadePersist }} // * boolean
+ - {{ field.isCascadeRefresh }} // * boolean
+ - {{ field.isCascadeMerge }} // * boolean
+ - {{ field.isCascadeDetach }} // * boolean
+ - {{ field.sourceToTargetKeyColumns }} // * array
+ - {{ field.joinColumnFieldNames }} // * array 
+ - {{ field.targetToSourceKeyColumns }} // * array
+- {{ uniqueManyToOneRelations }} // array of unique manyToOne relations, has same methods as manyToOne field
+- {{ bundleVendor }} // bundles vendor name (ex. Avro)
+- {{ bundleBaseName }} // bundles base name (ex. GeneratorBundle)
+- {{ bundleName }} // bundles name (ex. AvroGeneratorBundle)
+- {{ bundleCorename }} // bundle core name (ex. generator)
+- {{ bundlePath }} // bundle path relative to system path
+- {{ bundleNamespace }} // bundle namespace (ex. Avro\GeneratorBundle)
+- {{ bundleAlias }} // bundle alias (ex. avro_generator)
+- {{ dbDriver }} // bundle db 
 - {{ style }} // style specified in your config
 
-(* only if field is of manyToOne type)
+(* only available if field is of manyToOne, oneToMany, or manyToMany type)
 
 Built-in Styles
 ---------------

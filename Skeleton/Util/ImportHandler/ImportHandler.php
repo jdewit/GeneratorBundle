@@ -1,11 +1,11 @@
 <?php
-namespace {{ bundle_namespace }}\Util\ImportHandler;
+namespace {{ bundleNamespace }}\Util\ImportHandler;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Avro\CsvBundle\Util\Reader;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use {{ bundle_namespace }}\Entity\{{ entity | ucFirst }}Manager;
+use {{ bundleNamespace }}\Entity\{{ entity | ucFirst }}Manager;
 {% for field in uniqueManyToOneRelations %}
 use {{ field.targetEntity }}Manager;
 {% endfor %}
@@ -24,18 +24,18 @@ class {{ entity }}ImportHandler
     protected $imported = array();
     protected $skipped = array();
     protected $user;
-    protected ${{ entity_cc }}Manager;
+    protected ${{ entityCC }}Manager;
 {% for field in uniqueManyToOneRelations %}
     protected ${{ field.targetEntityName }}Manager;
 {% endfor %}
 
-    public function __construct(Form $form, Request $request, Reader $reader, SecurityContextInterface $context, {{ entity }}Manager ${{ entity_cc }}Manager{% for field in uniqueManyToOneRelations %}, {{ field.targetEntityName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endfor %})
+    public function __construct(Form $form, Request $request, Reader $reader, SecurityContextInterface $context, {{ entity }}Manager ${{ entityCC }}Manager{% for field in uniqueManyToOneRelations %}, {{ field.targetEntityName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endfor %})
     {
         $this->form = $form;
         $this->request = $request;
         $this->reader = $reader;
         $this->user = $context->getToken()->getUser();
-        $this->{{ entity_cc }}Manager = ${{ entity_cc }}Manager;
+        $this->{{ entityCC }}Manager = ${{ entityCC }}Manager;
 {% for field in uniqueManyToOneRelations %}
         $this->{{ field.targetEntityName }}Manager = ${{ field.targetEntityName }}Manager;
 {% endfor %}
@@ -70,7 +70,7 @@ class {{ entity }}ImportHandler
                     ++$i;
                 }
 
-                $this->{{ entity_cc }}Manager->flush(true);
+                $this->{{ entityCC }}Manager->flush(true);
 
                 return true;
             } else { 
@@ -100,26 +100,26 @@ class {{ entity }}ImportHandler
      */
     public function import($row, $andFlush, $andClear) 
     {
-        ${{ entity_cc }}Id = $row[array_search('id', $this->headers)];
-        if (${{ entity_cc }}Id) {
-            ${{ entity_cc }} = $this->{{ entity_cc }}Manager->create();
-            ${{ entity_cc }}->setLegacyId(${{ entity_cc }}Id); 
+        ${{ entityCC }}Id = $row[array_search('id', $this->headers)];
+        if (${{ entityCC }}Id) {
+            ${{ entityCC }} = $this->{{ entityCC }}Manager->create();
+            ${{ entityCC }}->setLegacyId(${{ entityCC }}Id); 
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}
             ${{ field.fieldName }}Id = $row[array_search('{{ field.fieldName }}_id', $this->headers)];
             if (${{ field.fieldName }}Id) {
                 ${{ field.fieldName }} = $this->{{ field.fieldName }}Manager->findOneBy(array('legacyId' => ${{ field.fieldName }}Id));
                 if (${{ field.fieldName }}) {
-                    ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(${{ field.fieldName }});
+                    ${{ entityCC }}->set{{ field.fieldName | ucFirst }}(${{ field.fieldName }});
                 }
             }
 {% elseif field.type != 'oneToMany' and field.type != 'manyToMany' %}
-            ${{ entity_cc }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
+            ${{ entityCC }}->set{{ field.fieldName | ucFirst }}(array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers) ? $row[array_search('{{ field.fieldName | camelCaseToUnderscore }}', $this->headers)] : null);
 {% endif %}
 {% endfor %}
 
-            $this->{{ entity_cc }}Manager->update(${{ entity_cc }}, $andFlush, $andClear);
-            $this->addImported(${{ entity_cc }}Id);
+            $this->{{ entityCC }}Manager->update(${{ entityCC }}, $andFlush, $andClear);
+            $this->addImported(${{ entityCC }}Id);
         }
 
 
@@ -131,9 +131,9 @@ class {{ entity }}ImportHandler
      *
      * @param string {{ entity }} id
      */
-    public function addImported(${{ entity_cc }}Id)
+    public function addImported(${{ entityCC }}Id)
     {
-        $this->imported[] = ${{ entity_cc }}Id;
+        $this->imported[] = ${{ entityCC }}Id;
     }
 
     /*
@@ -141,9 +141,9 @@ class {{ entity }}ImportHandler
      *
      * @param string {{ entity }} id
      */
-    public function addSkipped(${{ entity_cc }}Id)
+    public function addSkipped(${{ entityCC }}Id)
     {
-        $this->skipped[] = ${{ entity_cc }}Id;
+        $this->skipped[] = ${{ entityCC }}Id;
     }
 
     /*

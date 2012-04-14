@@ -1,10 +1,10 @@
 <?php
-namespace {{ bundle_namespace }}\Form\Handler;
+namespace {{ bundleNamespace }}\Form\Handler;
 
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use {{ bundle_namespace }}\Entity\{{ entity }};
-use {{ bundle_namespace }}\Entity\{{ entity }}Manager;
+use {{ bundleNamespace }}\Entity\{{ entity }};
+use {{ bundleNamespace }}\Entity\{{ entity }}Manager;
 
 /*
  * {{ entity | camelCaseToTitle }} Form Handler
@@ -15,13 +15,13 @@ class {{ entity }}FormHandler
 {
     protected $form;
     protected $request;
-    protected ${{ entity_cc }}Manager;
+    protected ${{ entityCC }}Manager;
 
-    public function __construct(Form $form, Request $request, {{ entity }}Manager ${{ entity_cc }}Manager)
+    public function __construct(Form $form, Request $request, {{ entity }}Manager ${{ entityCC }}Manager)
     {
         $this->form = $form;
         $this->request = $request;  
-        $this->{{ entity_cc }}Manager = ${{ entity_cc }}Manager;
+        $this->{{ entityCC }}Manager = ${{ entityCC }}Manager;
     }
 
     /*
@@ -32,19 +32,19 @@ class {{ entity }}FormHandler
      * @return boolean true if successful
      * @return array $errors if unsuccessful
      */
-    public function process({{ entity }} ${{ entity_cc }} = null)
+    public function process({{ entity }} ${{ entityCC }} = null)
     {
-        if (null === ${{ entity_cc }}) {
-            ${{ entity_cc }} = $this->{{ entity_cc }}Manager->create();
+        if (null === ${{ entityCC }}) {
+            ${{ entityCC }} = $this->{{ entityCC }}Manager->create();
         }
 
-        $this->form->setData(${{ entity_cc }});
+        $this->form->setData(${{ entityCC }});
 
         if ('POST' == $this->request->getMethod()) {
             $this->form->bindRequest($this->request);
 
             if ($this->form->isValid()) {
-                $this->onSuccess(${{ entity_cc }});
+                $this->onSuccess(${{ entityCC }});
 
                 return true;
             }
@@ -58,8 +58,8 @@ class {{ entity }}FormHandler
      *
      * @param {{ entity }}
      */
-    protected function onSuccess({{ entity }} ${{ entity_cc }})
+    protected function onSuccess({{ entity }} ${{ entityCC }})
     {
-        $this->{{ entity_cc }}Manager->update(${{ entity_cc }});
+        $this->{{ entityCC }}Manager->update(${{ entityCC }});
     }
 }

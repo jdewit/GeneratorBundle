@@ -1,5 +1,5 @@
 <?php
-namespace {{ bundle_namespace }}\Form\Type;
+namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
@@ -125,6 +125,6 @@ class {{ entity }}SearchFormType extends AbstractType
     
     public function getName()
     {
-        return '{{ bundle_alias }}_{{ entity_cc }}_search';
+        return '{{ bundleAlias }}_{{ entityCC }}_search';
     }
 }

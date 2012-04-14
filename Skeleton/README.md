@@ -1,17 +1,17 @@
-{{ bundle_name }}
+{{ bundleName }}
 -----------------
 
 Installation
 ------------
 
-Add the `{{ bundle_vendor }}` namespace to your autoloader:
+Add the `{{ bundleVendor }}` namespace to your autoloader:
 
 ``` php
 // app/autoload.php
 
 $loader->registerNamespaces(array(
     // ...
-    '{{ bundle_vendor }}' => __DIR__.'/../vendor/bundles',
+    '{{ bundleVendor }}' => __DIR__.'/../vendor/bundles',
 ));
 ```
 
@@ -20,13 +20,13 @@ Enable the bundle in the kernel:
 ``` php
 // app/AppKernel.php
 
-    new {{ bundle_namespace }}\{{ bundle_name }}
+    new {{ bundleNamespace }}\{{ bundleName }}
 ```
 
 ```
-[{{ bundle_name }}]
-    git=git://github.com/{{ bundle_vendor }}/{{ bundle_basename }}.git
-    target=bundles/{{ bundle_vendor }}/{{ bundle_basename }}
+[{{ bundleName }}]
+    git=git://github.com/{{ bundleVendor }}/{{ bundleBaseName }}.git
+    target=bundles/{{ bundleVendor }}/{{ bundleBaseName }}
 ```
 
 Now, run the vendors script to download the bundle:

@@ -82,7 +82,7 @@ parameters:
             tags: ['form', 'crud']
 
         service_config: 
-            filename: 'Resources/config/services/{{ entity_cc }}.yml'
+            filename: 'Resources/config/services/{{ entityCC }}.yml'
             template: 'AvroGeneratorBundle:Skeleton/Resources/config/services/Avro/service.yml'
             tags: ['service', 'crud']
             manipulator:
@@ -132,14 +132,14 @@ parameters:
 
     avro_generator.bundle_files:
         bundle:
-            filename: '{{ bundle_name }}.php'
+            filename: '{{ bundleName }}.php'
             template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
         configuration:
             filename: 'DependencyInjection/Configuration'
             template: 'AvroGeneratorBundle:Skeleton/DependencyInjection/Configuration.php'
         extension:
             filename: 'DependencyInjection/Extension'
-            template: 'AvroGeneratorBundle:Skeleton/DependencyInjection/{{ bundle_vendor }}/{{ bundle_corename | ucFirst }}Extension.php'
+            template: 'AvroGeneratorBundle:Skeleton/DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName | ucFirst }}Extension.php'
         readme:
             filename: 'README.md'
             template: 'AvroGeneratorBundle:Skeleton/README.md'

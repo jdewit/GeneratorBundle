@@ -1,5 +1,5 @@
 <?php
-namespace {{ bundle_namespace }}\Form\Type;
+namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
@@ -32,7 +32,7 @@ class {{ entity }}FormType extends AbstractType
     {
         $owner = $this->owner;
 
-{% for field in uniqueRelations %}
+{% for field in uniqueManyToOneRelations %}
         ${{ field.targetEntityName }}s = $this->{{ field.targetEntityName }}Manager->findAllActive();
         $this->request->attributes->set('{{ field.targetEntityName }}s', ${{ field.targetEntityName }}s);
 {% endfor %}
@@ -44,11 +44,11 @@ class {{ entity }}FormType extends AbstractType
 
     public function getDefaultOptions(array $options)
     {
-        return array('data_class' => '{{ bundle_vendor }}\{{ bundle_basename }}\Entity\{{ entity }}');
+        return array('data_class' => '{{ bundleVendor }}\{{ bundleBaseName }}\Entity\{{ entity }}');
     }    
     
     public function getName()
     {
-        return '{{ bundle_alias }}_{{ entity_cc }}';
+        return '{{ bundleAlias }}_{{ entityCC }}';
     }
 }

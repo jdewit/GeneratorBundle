@@ -1,7 +1,7 @@
-function {{ entity_cc }}ListModel(options) {
+function {{ entityCC }}ListModel(options) {
     var self = this;
 
-    self.{{ entity_cc }}s = ko.observableArray(options ? options.{{ entity_cc }}s : []);
+    self.{{ entityCC }}s = ko.observableArray(options ? options.{{ entityCC }}s : []);
     self.checkAll = ko.observable(false);
     self.filter = ko.observable('Active');
     self.orderBy = ko.observable();
@@ -27,27 +27,27 @@ function {{ entity_cc }}ListModel(options) {
     }
 
     self.new{{ entity }} = function(data, event) { 
-        avro.{{ entity_cc }}Model.set{{ entity_cc | ucFirst }}(null); 
+        avro.{{ entityCC }}Model.set{{ entityCC | ucFirst }}(null); 
     };
     self.edit{{ entity }} = function(data, event) { 
-        avro.{{ entity_cc }}Model.set{{ entity_cc | ucFirst }}(data); 
+        avro.{{ entityCC }}Model.set{{ entityCC | ucFirst }}(data); 
     };
 
     self.batchEdit = function(data, event) {
         var checked = $('input.selector:checked');
         if (checked.length) {
-            if (confirm('Are you sure you want to edit ' + checked.length  + ' {{ entity_cc }}' + (checked.length > 1 ? 's' : '') + '?')) {
+            if (confirm('Are you sure you want to edit ' + checked.length  + ' {{ entityCC }}' + (checked.length > 1 ? 's' : '') + '?')) {
                 $.each(checked, function() {
                     var id = $(this).val();
                     self.dialogQueue.queue('dialogs', function(next) {
-                        {{ entity_cc }} = ko.utils.arrayFirst(self.{{ entity_cc }}s(), function({{ entity_cc }}) {
-                            if ({{ entity_cc }}.id == id) {
+                        {{ entityCC }} = ko.utils.arrayFirst(self.{{ entityCC }}s(), function({{ entityCC }}) {
+                            if ({{ entityCC }}.id == id) {
                                 return true;
                             }
                         });
-                        if ({{ entity_cc }}) {
-                            avro.{{ entity_cc }}Model.set{{ entity_cc | ucFirst }}({{ entity_cc }});
-                            $('#{{ entity_cc }}FormModal').on('hide', function() {
+                        if ({{ entityCC }}) {
+                            avro.{{ entityCC }}Model.set{{ entityCC | ucFirst }}({{ entityCC }});
+                            $('#{{ entityCC }}FormModal').on('hide', function() {
                                 $('input#selector-' + client.id).attr('checked', false);
                                 next();       
                             });
@@ -59,7 +59,7 @@ function {{ entity_cc }}ListModel(options) {
                 self.dialogQueue.dequeue('dialogs');
             }
         } else {
-            avro.createNotice('No {{ entity_cc }}s were selected');
+            avro.createNotice('No {{ entityCC }}s were selected');
         }
     };
     self.delete{{ entity }} = function(data, event) { 
@@ -76,7 +76,7 @@ function {{ entity_cc }}ListModel(options) {
                     if (response['status'] === 'OK') {
                         self.refreshList();
                         avro.createSuccess(response['notice']);
-                        $('#{{ entity_cc }}FormModal').modal('hide');
+                        $('#{{ entityCC }}FormModal').modal('hide');
                     } else {
                         avro.createError(response['notice']);
                     }
@@ -87,7 +87,7 @@ function {{ entity_cc }}ListModel(options) {
     self.batchDelete = function(data, event) {
         var checked = $('input.selector:checked');
         if (checked.length) {
-            if (confirm("Are you sure you want to delete these {{ entity_cc | camelCaseToTitle | lower }}s?")) {
+            if (confirm("Are you sure you want to delete these {{ entityCC | camelCaseToTitle | lower }}s?")) {
                 avro.ajax({
                     url: event.currentTarget.href,
                     data: checked,
@@ -102,7 +102,7 @@ function {{ entity_cc }}ListModel(options) {
                 });
             }
         } else {
-            avro.createNotice('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
+            avro.createNotice('No {{ entityCC | camelCaseToTitle | lower }}s selected');
         }
     };
     self.restore{{ entity }} = function(data, event) { 
@@ -115,7 +115,7 @@ function {{ entity_cc }}ListModel(options) {
                 if (response['status'] === 'OK') {
                     self.refreshList();
                     avro.createSuccess(response['notice']);
-                    $('#{{ entity_cc }}FormModal').modal('hide');
+                    $('#{{ entityCC }}FormModal').modal('hide');
                 } else {
                     avro.createError(response['notice']);
                 }
@@ -125,7 +125,7 @@ function {{ entity_cc }}ListModel(options) {
     self.batchRestore = function(data, event) {
         var checked = $('input.selector:checked');
         if (checked.length) {
-            if (confirm("Are you sure you want to restore these {{ entity_cc | camelCaseToTitle | lower }}s?")) {
+            if (confirm("Are you sure you want to restore these {{ entityCC | camelCaseToTitle | lower }}s?")) {
                 href = event.currentTarget.href; 
                 avro.ajax({
                     url: href,
@@ -141,7 +141,7 @@ function {{ entity_cc }}ListModel(options) {
                 });
             }
         } else {
-            avro.createNotice('No {{ entity_cc | camelCaseToTitle | lower }}s selected');
+            avro.createNotice('No {{ entityCC | camelCaseToTitle | lower }}s selected');
         }
     };
 

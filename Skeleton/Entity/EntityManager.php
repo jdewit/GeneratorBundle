@@ -1,5 +1,5 @@
 <?php
-namespace {{ bundle_namespace }}\Entity;
+namespace {{ bundleNamespace }}\Entity;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -63,29 +63,29 @@ class {{ entity }}Manager
     {
         $class = $this->getClass();
         
-        ${{ entity_cc }} = new $class();
-        ${{ entity_cc }}->setOwner($this->owner);
+        ${{ entityCC }} = new $class();
+        ${{ entityCC }}->setOwner($this->owner);
 
-        return ${{ entity_cc }};
+        return ${{ entityCC }};
     }
            
     /**
      * Updates a {{ entity }}
      *
-     * @param {{ entity }} ${{ entity_cc }}
+     * @param {{ entity }} ${{ entityCC }}
      * @param boolean $andFlush Flush em if true
      * @param boolean $andClear Clear em if true
      */
-    public function update({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
+    public function update({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
 {% for field in fields %}
 {% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
-        foreach (${{ entity_cc }}->get{{ field.fieldName | ucFirst }}() as ${{ field.fieldName|slice(0, -1) }}) {
+        foreach (${{ entityCC }}->get{{ field.fieldName | ucFirst }}() as ${{ field.fieldName|slice(0, -1) }}) {
             ${{ field.fieldName|slice(0, -1) }}->setOwner($this->owner);
         }
 {% endif %}
 {% endfor %}
-        $this->em->persist(${{ entity_cc }});
+        $this->em->persist(${{ entityCC }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -95,16 +95,16 @@ class {{ entity }}Manager
     /**
      * Soft delete one {{ entity }}
      *
-     * @param {{ entity }} ${{ entity_cc }}
+     * @param {{ entity }} ${{ entityCC }}
      * @param boolean $andFlush Flush em if true
      * @param boolean $andClear Clear em if true
      */  
-    public function softDelete({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
+    public function softDelete({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
-        ${{ entity_cc }}->setIsDeleted(true);
-        ${{ entity_cc }}->setDeletedAt(new \Datetime('now'));
+        ${{ entityCC }}->setIsDeleted(true);
+        ${{ entityCC }}->setDeletedAt(new \Datetime('now'));
        
-        $this->em->persist(${{ entity_cc }});
+        $this->em->persist(${{ entityCC }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -116,16 +116,16 @@ class {{ entity }}Manager
     /**
      * Restore one {{ entity }}
      *
-     * @param {{ entity }} ${{ entity_cc }}
+     * @param {{ entity }} ${{ entityCC }}
      * @param boolean $andFlush Flush em if true
      * @param boolean $andClear Clear em if true
      */  
-    public function restore({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
+    public function restore({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
-        ${{ entity_cc }}->setIsDeleted(false);
-        ${{ entity_cc }}->setDeletedAt(null);
+        ${{ entityCC }}->setIsDeleted(false);
+        ${{ entityCC }}->setDeletedAt(null);
        
-        $this->em->persist(${{ entity_cc }});
+        $this->em->persist(${{ entityCC }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -137,13 +137,13 @@ class {{ entity }}Manager
     /**
      * Permanently delete one {{ entity }}
      *
-     * @param {{ entity }} ${{ entity_cc }}
+     * @param {{ entity }} ${{ entityCC }}
      * @param boolean $andFlush Flush em if true
      * @param boolean $andClear Clear em if true
      */  
-    public function delete({{ entity }} ${{ entity_cc }}, $andFlush = true, $andClear = false)
+    public function delete({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
-        $this->em->remove(${{ entity_cc }});
+        $this->em->remove(${{ entityCC }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -153,7 +153,7 @@ class {{ entity }}Manager
     }
 
     /**
-     * Find one {{ entity_cc }} by id
+     * Find one {{ entityCC }} by id
      *
      * @param string $id 
      * @return {{ entity }}
@@ -166,21 +166,21 @@ class {{ entity }}Manager
         $criteria['id'] = $id;
         $criteria['owner'] = $this->owner->getId();
 
-        ${{ entity_cc }} = $this->repository->findOneBy($criteria);
+        ${{ entityCC }} = $this->repository->findOneBy($criteria);
 
-        return ${{ entity_cc }};
+        return ${{ entityCC }};
     }
 
     /*
-     * Fine one {{ entity_cc }} by id as array
+     * Fine one {{ entityCC }} by id as array
      *
      * @param string $id
      */
     public function findAsArray($id)
     {
-        $qb = $this->em->createQueryBuilder()->select('{{ entity_cc }}')->from($this->class, '{{ entity_cc }}');
-        $qb->where('{{ entity_cc }}.owner = ?1')->setParameter('1', $this->owner);
-        $qb->andWhere('{{ entity_cc }}.id = ?2')->setParameter('2', $id);
+        $qb = $this->em->createQueryBuilder()->select('{{ entityCC }}')->from($this->class, '{{ entityCC }}');
+        $qb->where('{{ entityCC }}.owner = ?1')->setParameter('1', $this->owner);
+        $qb->andWhere('{{ entityCC }}.id = ?2')->setParameter('2', $id);
 
         $result = $qb->getQuery()->getArrayResult();
 
@@ -188,7 +188,7 @@ class {{ entity }}Manager
     }
 
     /**
-     * Find one {{ entity_cc }} by criteria
+     * Find one {{ entityCC }} by criteria
      *
      * @parameter array $criteria
      * @return {{ entity }}
@@ -201,7 +201,7 @@ class {{ entity }}Manager
     }
 
     /**
-     * Find {{ entity_cc }}s by criteria
+     * Find {{ entityCC }}s by criteria
      *
      * @param array $criteria
      * @param array $sortBy
@@ -216,7 +216,7 @@ class {{ entity }}Manager
     }
 
     /**
-     * Search {{ entity_cc }}s
+     * Search {{ entityCC }}s
      * 
      * @param array $query Search criteria
      * @param string $offset 
@@ -240,18 +240,18 @@ class {{ entity }}Manager
             $query['filter'] = 'Active';
         }
 
-        $qb = $this->em->createQueryBuilder()->select('{{ entity_cc }}')->from($this->class, '{{ entity_cc }}');
+        $qb = $this->em->createQueryBuilder()->select('{{ entityCC }}')->from($this->class, '{{ entityCC }}');
         $qb->setFirstResult($query['offset']);
-        $qb->orderBy('{{ entity_cc }}.'.$query['orderBy'], $query['direction']);
+        $qb->orderBy('{{ entityCC }}.'.$query['orderBy'], $query['direction']);
         $qb->setMaxResults($query['limit']);
-        $qb->where('{{ entity_cc }}.owner = ?1')->setParameter('1', $this->owner);
+        $qb->where('{{ entityCC }}.owner = ?1')->setParameter('1', $this->owner);
 
         switch($query['filter']) {
             case 'Active':
-                $qb->andWhere('{{ entity_cc }}.isDeleted = ?2')->setParameter(2, false);
+                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
             break;
             case 'Deleted':
-                $qb->andWhere('{{ entity_cc }}.isDeleted = ?2')->setParameter(2, true);
+                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, true);
             break;
         }
 
@@ -268,13 +268,13 @@ class {{ entity }}Manager
         foreach ($query as $key => $value) {
             if ((!empty($value)) && ($key != '_token')) {
                 if (is_object($value)) { 
-                    $qb->andWhere('{{ entity_cc }}.'.$key.' = ?'.$index)->setParameter($index, $value->getId());
+                    $qb->andWhere('{{ entityCC }}.'.$key.' = ?'.$index)->setParameter($index, $value->getId());
                 } elseif ($key == 'startDate') {
-                    $qb->andWhere('{{ entity_cc }}.date >= ?'.$index)->setParameter($index, $value);
+                    $qb->andWhere('{{ entityCC }}.date >= ?'.$index)->setParameter($index, $value);
                 } elseif ($key == 'endDate') {
-                    $qb->andWhere('{{ entity_cc }}.date <= ?'.$index)->setParameter($index, $value);
+                    $qb->andWhere('{{ entityCC }}.date <= ?'.$index)->setParameter($index, $value);
                 } else  {
-                    $qb->andWhere('{{ entity_cc }}.'.$key.' LIKE ?'.$index)->setParameter($index, '%'.$value.'%');
+                    $qb->andWhere('{{ entityCC }}.'.$key.' LIKE ?'.$index)->setParameter($index, '%'.$value.'%');
                 }
                 $index = $index +1;
             }

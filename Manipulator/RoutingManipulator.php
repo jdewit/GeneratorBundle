@@ -83,7 +83,7 @@ class RoutingManipulator extends Manipulator
      */
     public function updateBundleRouting()
     {
-        $filename = $this->parameters['bundle_path'].'/'.$this->filename;
+        $filename = $this->parameters['bundlePath'].'/'.$this->filename;
 
         switch ($this->format) {
             case 'yml':
@@ -97,10 +97,10 @@ class RoutingManipulator extends Manipulator
                     $current = '';
                 }
                 
-                if (empty($array[$this->parameters['bundle_alias'].'_'.$this->parameters['entity_us']])) {
-                    $code = $this->parameters['bundle_alias'].'_'.$this->parameters['entity_us'].':';
+                if (empty($array[$this->parameters['bundleAlias'].'_'.$this->parameters['entityUS']])) {
+                    $code = $this->parameters['bundleAlias'].'_'.$this->parameters['entityUS'].':';
                     $code .= "\n";
-                    $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $this->parameters['bundle_name'], $this->parameters['entity']);
+                    $code .= sprintf("    resource: \"@%s/Controller/%sController.php\"", $this->parameters['bundleName'], $this->parameters['entity']);
                     $code .= "\n";
                     $code .= sprintf("    type:     annotation ");
                     $code .= "\n \n";

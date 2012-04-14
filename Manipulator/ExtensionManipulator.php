@@ -23,7 +23,7 @@ class ExtensionManipulator extends Manipulator
     public function __construct($filename, $parameters)
     {
         $this->filename = $filename;
-        $this->reflected = new \ReflectionClass($parameters['bundle_namespace'].'\DependencyInjection\\'.$parameters['bundle_alias_cc'].'Extension'); 
+        $this->reflected = new \ReflectionClass($parameters['bundleNamespace'].'\DependencyInjection\\'.$parameters['bundleAlias_cc'].'Extension'); 
         $this->parameters = $parameters;
     }
 
@@ -43,7 +43,7 @@ class ExtensionManipulator extends Manipulator
         
         $newMethod = file_get_contents($partial);
         
-        $methodCall = 'if (!empty($config[\''.$this->parameters['entity_cc'].'\'])) {';
+        $methodCall = 'if (!empty($config[\''.$this->parameters['entityCC'].'\'])) {';
         
         $extensionCode = array_slice($src, $method->getStartLine() - 1, $method->getEndLine() - $method->getStartLine() + 1);
 

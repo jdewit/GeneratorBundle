@@ -1,5 +1,5 @@
 <?php
-namespace {{ bundle_namespace }}\Entity;
+namespace {{ bundleNamespace }}\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 {% for field in fields %}
@@ -16,12 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 {% endif %}
 
 /**
- * {{ bundle_namespace }}\Entity\{{ entity }}
+ * {{ bundleNamespace }}\Entity\{{ entity }}
  * 
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  * 
  * @ORM\Entity
- * @ORM\Table(name="{{ bundle_corename }}_{{ entity_cc }}")
+ * @ORM\Table(name="{{ bundleCoreName }}_{{ entityCC }}")
  * @ORM\HasLifecycleCallbacks
  */
 class {{ entity }} 
@@ -64,7 +64,7 @@ class {{ entity }}
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="{{ field.targetEntity }}"{% if field.mappedBy %}, mappedBy="{{ field.mappedBy }}"{% endif %}{% if field.inversedBy %}, inversedBy="{{ field.inversedBy }}"{% endif %}{% if field.cascade is not empty %}, cascade={ {% for item in field.cascade %}{% if loop.last %}"{{ item }}"{% else %}"{{ item }}",{% endif %}{% endfor %} }{% endif %}{% if field.orphanRemoval is defined %}{% if field.orphanRemoval %}, orphanRemoval=true {% endif %}{% endif %})
-     * @ORM\JoinTable(name="{{ bundle_corename }}_{{ entity_cc }}_{{ field.fieldName }}")
+     * @ORM\JoinTable(name="{{ bundleCoreName }}_{{ entityCC }}_{{ field.fieldName }}")
      */
     protected ${{ field.fieldName }};
 
@@ -188,7 +188,7 @@ class {{ entity }}
     }
 
     /**
-     * Get {{ entity_cc }} id
+     * Get {{ entityCC }} id
      *
      * @return integer
      */   

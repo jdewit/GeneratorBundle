@@ -1,20 +1,20 @@
     /**
-     * Create a new {{ entity_cc }}.
+     * Create a new {{ entityCC }}.
      *
-     * @Route("/new", name="{{ bundle_alias }}_{{ entity_cc }}_new")
+     * @Route("/new", name="{{ bundleAlias }}_{{ entityCC }}_new")
      * @Template()     
      */
     public function newAction()
     {
-        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form');
-        $formHandler = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}.form.handler');
+        $form = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form');
+        $formHandler = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form.handler');
 
         $process = $formHandler->process();
         if ($process) {
-            ${{ entity_cc }} = $form->getData();
+            ${{ entityCC }} = $form->getData();
             $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} created.');
 
-            return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_edit', array('id' => ${{ entity_cc }}->getId())), 301);
+            return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_edit', array('id' => ${{ entityCC }}->getId())), 301);
         }
 
         return array(

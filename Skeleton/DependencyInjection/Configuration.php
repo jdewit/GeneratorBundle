@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ bundle_namespace }}\DependencyInjection;
+namespace {{ bundleNamespace }}\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -19,7 +19,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('{{ bundle_alias }}');
+        $rootNode = $treeBuilder->root('{{ bundleAlias }}');
        
         $rootNode
             ->children()

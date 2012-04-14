@@ -1,4 +1,4 @@
-{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
     <h1>{{ entity }}</h1>
     <hr />
@@ -7,7 +7,7 @@
 {% for field in fields %}
         <tr>
             <td>{{ field.fieldName|camelCaseToTitle }}:</td>
-            <td>{{ "{{ "~ entity_cc ~"."~ field.fieldName ~" }}" }}</td>
+            <td>{{ "{{ "~ entityCC ~"."~ field.fieldName ~" }}" }}</td>
         </tr>
 {% endfor %}
     </table>            

@@ -1,24 +1,24 @@
 Feature: {{ entity }} Feature
     @javascript
-    Scenario: Navigate to {{ entity_cc }} list
+    Scenario: Navigate to {{ entityCC }} list
         Given I am logged in as a user
-        And I am on "/{{ entity_cc }}/list"
-        Then I should see "{{ entity_cc | camelCaseToTitle }} List"
+        And I am on "/{{ entityCC }}/list"
+        Then I should see "{{ entityCC | camelCaseToTitle }} List"
 
 {% for field in fields %}{% if (field.type == 'manyToOne') %}
     @javascript
-    Scenario: Create new {{ field.fieldName }} through {{ entity_cc }} 
-        Given I follow "New {{ entity_cc | camelCaseToTitle }}"
-        And I select "new" from "{{ bundle_alias }}_{{ entity_cc }}[{{ field.fieldName }}]"
+    Scenario: Create new {{ field.fieldName }} through {{ entityCC }} 
+        Given I follow "New {{ entityCC | camelCaseToTitle }}"
+        And I select "new" from "{{ bundleAlias }}_{{ entityCC }}[{{ field.fieldName }}]"
         And I fill in "Name" with "Test {{ field.fieldName | camelCaseToTitle }}"
         And I press "Create {{ field.fieldName | camelCaseToTitle }}"
-        Then "Test {{ field.fieldName | camelCaseToTitle }}" in "{{ bundle_vendor }}_{{ entity_cc }}[{{ field.fieldName }}]" should be selected
+        Then "Test {{ field.fieldName | camelCaseToTitle }}" in "{{ bundleVendor }}_{{ entityCC }}[{{ field.fieldName }}]" should be selected
 
 {% endif %}{% endfor %}
 
     @javascript
-    Scenario: Create a new {{ entity_cc }}
-        Given I follow "New {{ entity_cc | camelCaseToTitle }}"
+    Scenario: Create a new {{ entityCC }}
+        Given I follow "New {{ entityCC | camelCaseToTitle }}"
 {% for field in fields %}{% if (field.type == 'manyToOne') or (field.type == 'manyToMany') %}
         And I select "Test {{ field.fieldName | camelCaseToTitle }}" from "{{ field.fieldName | camelCaseToTitle }}"
 {% elseif field.type == 'decimal' %} 
@@ -38,7 +38,7 @@ Feature: {{ entity }} Feature
         Then I should see the alert "{{ entity | camelCaseToTitle }} created"
 
     @javascript
-    Scenario: Edit a {{ entity_cc }}
+    Scenario: Edit a {{ entityCC }}
         Given I edit the first table item
 {% for field in fields %}{% if field.type == 'decimal' %} 
         And I fill in "{{ field.fieldName | camelCaseToTitle }}" with "321.32"
@@ -53,13 +53,13 @@ Feature: {{ entity }} Feature
         Then I should see the alert "{{ entity | camelCaseToTitle }} updated"
 
     @javascript
-    Scenario: Delete a {{ entity_cc }} from form
+    Scenario: Delete a {{ entityCC }} from form
         Given I edit the first table item
         And I follow "Delete {{ entity | camelCaseToTitle | lower }}"
         Then I should see the alert "{{ entity | camelCaseToTitle }} deleted"
 
     @javascript
-    Scenario: Restore a {{ entity_cc }} from form
+    Scenario: Restore a {{ entityCC }} from form
         Given I follow "Deleted" 
         And I edit the first table item
         And I follow "Restore {{ entity | camelCaseToTitle | lower }}"
@@ -104,21 +104,21 @@ Feature: {{ entity }} Feature
     @javascript
     Scenario: Test empty Search
         Given I follow "Search"
-        And press "Search {{ entity_cc | camelCaseToTitle }}s"
+        And press "Search {{ entityCC | camelCaseToTitle }}s"
         Then I should not see "0 {{ entity | camelCaseToTitle | lower }}s found"
 
     @javascript
     Scenario: Test wrong Search
         Given I follow "Search"
 {% for field in fields %}{% if field.type == 'decimal' %} 
-        And I fill in "{{ bundle_alias }}_{{ field.fieldName | camelCaseToTitle }}[{{ field.fieldName }}]" with "789"
+        And I fill in "{{ bundleAlias }}_{{ field.fieldName | camelCaseToTitle }}[{{ field.fieldName }}]" with "789"
 {% elseif field.type == 'integer' %} 
-        And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "789"
+        And I fill in "{{ bundleAlias }}_{{ entityCC }}_search[{{ field.fieldName }}]" with "789"
 {% elseif field.type == 'string' %}
-        And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "2012-01-01"
+        And I fill in "{{ bundleAlias }}_{{ entityCC }}_search[{{ field.fieldName }}]" with "2012-01-01"
 {% elseif field.type == 'text' %}
-        And I fill in "{{ bundle_alias }}_{{ entity_cc }}_search[{{ field.fieldName }}]" with "wrong text"
+        And I fill in "{{ bundleAlias }}_{{ entityCC }}_search[{{ field.fieldName }}]" with "wrong text"
 {% endif %}{% endfor %}
-        And press "Search {{ entity_cc | camelCaseToTitle }}s"
+        And press "Search {{ entityCC | camelCaseToTitle }}s"
         Then I should see the alert "0 {{ entity | camelCaseToTitle | lower }}s found"
 

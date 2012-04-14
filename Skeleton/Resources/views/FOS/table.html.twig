@@ -1,4 +1,4 @@
-<form method="post" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_batch') }}" }}">  
+<form method="post" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batch') }}" }}">  
     <table id="tableSorter" class="table-condensed table-bordered table-striped">
         <thead>
             <tr>
@@ -9,28 +9,28 @@
             </tr>
         </thead>
         <tbody>
-            {{ "{% for "~ entity_cc ~" in "~ entity_cc ~"s %}" }}
+            {{ "{% for "~ entityCC ~" in "~ entityCC ~"s %}" }}
                 <tr>
-                    <td class="center_align"><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entity_cc ~".id }}" }}"/></td>
-                    <td class="showSpriteOnHover"><a title="Edit this {{ entity_cc }}" href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_edit', {'id': "~ entity_cc ~".id }) }}" }}"><i class="sprite-pencil"></i>{{ "{{ "~ entity_cc ~".id }}" }}</a></td>
+                    <td class="center_align"><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entityCC ~".id }}" }}"/></td>
+                    <td class="showSpriteOnHover"><a title="Edit this {{ entityCC }}" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit', {'id': "~ entityCC ~".id }) }}" }}"><i class="sprite-pencil"></i>{{ "{{ "~ entityCC ~".id }}" }}</a></td>
 {% for field in fields %}
 {% endfor %}
                 </tr>
             {{ "{% else %}" }}
                 <tr>
-                    <td colspan="0">0 {{ entity_cc }}s Found</td>
+                    <td colspan="0">0 {{ entityCC }}s Found</td>
                 </tr>
             {{" {% endfor %}" }}
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="100%">
-                    {{ "{% if "~ entity_cc ~"s %}" }}
+                    {{ "{% if "~ entityCC ~"s %}" }}
                         <i class="sprite-arrow_left_up"></i>
                        {{ "{% if filter != 'Deleted' %}" }}
-                            <button type="submit" name="form_action" value="Delete" class="btn btn-danger confirm" title="Are you sure you want to delete these {{ entity_cc }}s?">Delete</button>
+                            <button type="submit" name="form_action" value="Delete" class="btn btn-danger confirm" title="Are you sure you want to delete these {{ entityCC }}s?">Delete</button>
                         {{ "{% else %}" }}
-                            <button type="submit" name="form_action" value="Restore" class="btn btn-info confirm" title="Are you sure you want to restore these {{ entity_cc }}s?">Restore</button>
+                            <button type="submit" name="form_action" value="Restore" class="btn btn-info confirm" title="Are you sure you want to restore these {{ entityCC }}s?">Restore</button>
                         {{ "{% endif %}" }}
                     {{ "{% else %}" }}
                         &nbsp;

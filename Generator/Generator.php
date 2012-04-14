@@ -60,23 +60,23 @@ class Generator
         $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x',$bundleName);
 
         $bundleVendor = array_shift($arr);
-        $bundleBasename = implode("", $arr);
+        $bundleBaseName = implode("", $arr);
 
-        $bundlePath = $this->container->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($bundleVendor).'/'.strtolower(str_replace('Bundle', '', $bundleBasename).'-bundle').'/'.$bundleVendor.'/'.$bundleBasename.'/';       
-        $bundleNamespace = $bundleVendor.'\\'.$bundleBasename;
-        $bundleAlias = strtolower($bundleVendor.'_'.str_replace('Bundle', '', $bundleBasename));   
-        $bundleAliasCC = $bundleVendor.str_replace('Bundle', '', $bundleBasename); 
-        $bundleCorename = str_replace(strtolower($bundleVendor).'_','',$bundleAlias);
+        $bundlePath = $this->container->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($bundleVendor).'/'.strtolower(str_replace('Bundle', '', $bundleBaseName).'-bundle').'/'.$bundleVendor.'/'.$bundleBaseName.'/';       
+        $bundleNamespace = $bundleVendor.'\\'.$bundleBaseName;
+        $bundleAlias = strtolower($bundleVendor.'_'.str_replace('Bundle', '', $bundleBaseName));   
+        $bundleAliasCC = $bundleVendor.str_replace('Bundle', '', $bundleBaseName); 
+        $bundleCoreName = str_replace(strtolower($bundleVendor).'_','',$bundleAlias);
 
         $parameters = array(
-            'bundle_vendor' => $bundleVendor,
-            'bundle_basename' => $bundleBasename,
-            'bundle_name' => $bundleName,
-            'bundle_corename' => $bundleCorename,
-            'bundle_path' => $bundlePath,
-            'bundle_namespace' => $bundleNamespace,  
-            'bundle_alias' => $bundleAlias,          
-            'db_driver' => $this->container->hasParameter($bundleAlias.'.db_driver') ? $container->getParameter($bundleAlias.'.db_driver') : 'orm',
+            'bundleVendor' => $bundleVendor,
+            'bundleBaseName' => $bundleBaseName,
+            'bundleName' => $bundleName,
+            'bundleCoreName' => $bundleCoreName,
+            'bundlePath' => $bundlePath,
+            'bundleNamespace' => $bundleNamespace,  
+            'bundleAlias' => $bundleAlias,          
+            'dbDriver' => $this->container->hasParameter($bundleAlias.'.db_driver') ? $container->getParameter($bundleAlias.'.db_driver') : 'orm',
             'style' => $this->container->getParameter('avro_generator.style'),
         );
 
@@ -93,10 +93,10 @@ class Generator
     {
         $parameters = array(
             'entity' => $entity,
-            'entity_cc' => $this->toCamelCase($entity),
-            'entity_us' => $this->toUnderscore($entity),
-            'entity_title' => $this->toTitle($entity),
-            'entity_title_lc' => strtolower($this->toTitle($entity)),
+            'entityCC' => $this->toCamelCase($entity),
+            'entityUS' => $this->toUnderscore($entity),
+            'entityTitle' => $this->toTitle($entity),
+            'entityTitleLC' => strtolower($this->toTitle($entity)),
             'fields' => $this->customizeFields($fields),
             'uniqueManyToOneRelations' => $this->uniqueManyToOneRelations($this->customizeFields($fields)),
         );
@@ -129,10 +129,10 @@ class Generator
             $this->renderFile($template, $filename);
         } else {
             $newPath1= $this->bundlePath.'/Temp/split/'.$this->parameters['entity'];
-            $filename1 = str_replace($this->parameters['bundle_path'], $newPath1, $filename);
+            $filename1 = str_replace($this->parameters['bundlePath'], $newPath1, $filename);
 
-            $newPath2= $this->parameters['bundle_path'].'/Temp/src';
-            $filename2= str_replace($this->parameters['bundle_path'], $newPath2, $filename);
+            $newPath2= $this->parameters['bundlePath'].'/Temp/src';
+            $filename2= str_replace($this->parameters['bundlePath'], $newPath2, $filename);
 
             if (!is_dir(dirname($filename1))) {
                 mkdir(dirname($filename1), 0777, true);
@@ -160,7 +160,7 @@ class Generator
             $manipulatorService->setParameters($this->parameters);
             $manipulatorService->setFilename($manipulator['filename']);
             $manipulatorService->setRootDir($this->container->get('kernel')->getRootDir().'/..');
-            $manipulatorService->setBundleDir($this->parameters['bundle_path']);
+            $manipulatorService->setBundleDir($this->parameters['bundlePath']);
             foreach($manipulator['setters'] as $k => $v) {
                 $manipulatorService->{'set'.ucFirst($k)}($v);
             }
@@ -182,20 +182,20 @@ class Generator
             $template = $this->container->get('kernel')->getBundle($arr[0])->getPath().'/'.$arr[1];
         } 
 
-        $filename = $this->parameters['bundle_path'].'/'.$filename;
+        $filename = $this->parameters['bundlePath'].'/'.$filename;
 
         // replace any placeholders in the filename
         $filename = str_replace(
             array(
                 '{{ entity }}', 
-                '{{ entity_cc }}',
-                '{{ bundle_vendor }}',
-                '{{ bundle_name }}'
+                '{{ entityCC }}',
+                '{{ bundleVendor }}',
+                '{{ bundleName }}'
             ), array(
                 array_key_exists('entity', $this->parameters) ? $this->parameters['entity'] : '', 
-                array_key_exists('entity_cc', $this->parameters) ? $this->parameters['entity_cc'] : '',
-                array_key_exists('bundle_vendor', $this->parameters) ? $this->parameters['bundle_vendor'] : '',
-                array_key_exists('bundle_name', $this->parameters) ? $this->parameters['bundle_name'] : ''
+                array_key_exists('entityCC', $this->parameters) ? $this->parameters['entityCC'] : '',
+                array_key_exists('bundleVendor', $this->parameters) ? $this->parameters['bundleVendor'] : '',
+                array_key_exists('bundleName', $this->parameters) ? $this->parameters['bundleName'] : ''
             ), 
             $filename
         );

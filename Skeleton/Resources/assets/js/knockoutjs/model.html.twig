@@ -1,8 +1,8 @@
-function {{ entity_cc }}Model(options) {
+function {{ entityCC }}Model(options) {
     var self = this;
-    self.{{ entity_cc }} = options ? options.{{ entity_cc }} : null,
+    self.{{ entityCC }} = options ? options.{{ entityCC }} : null,
 
-    self.{{ entity_cc }}Id = ko.observable();
+    self.{{ entityCC }}Id = ko.observable();
 {% for field in fields %}
 {% if field.type == 'oneToMany' %}
     self.{{ field.fieldName }} = ko.observableArray();
@@ -16,30 +16,30 @@ function {{ entity_cc }}Model(options) {
     self.isDeleted = ko.observable();
     self.modalHeading = ko.observable();
     self.closeFormModal = function() {
-        $('#{{ entity_cc }}FormModal').modal('hide');
+        $('#{{ entityCC }}FormModal').modal('hide');
     }
 
-    self.set{{ entity }} = function({{ entity_cc }}) {
-        if ({{ entity_cc }}) {
-            self.modalHeading('Edit {{ entity_cc | camelCaseToTitle }}');
-            $('#{{ entity_cc }}FormModal').modal('show');
-            self.{{ entity_cc }}Id({{ entity_cc }}.id);
+    self.set{{ entity }} = function({{ entityCC }}) {
+        if ({{ entityCC }}) {
+            self.modalHeading('Edit {{ entityCC | camelCaseToTitle }}');
+            $('#{{ entityCC }}FormModal').modal('show');
+            self.{{ entityCC }}Id({{ entityCC }}.id);
 {% for field in fields %}
 {% if field.fieldName == 'date' %}
-            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
+            self.{{ field.fieldName }}({{ entityCC }}.{{ field.fieldName }});
 {% elseif field.type == 'manyToOne' %}
-            self.selected{{ field.fieldName|ucFirst }}({{ entity_cc }}.{{ field.fieldName }} ? {{ entity_cc }}.{{ field.fieldName }}.id : null);
+            self.selected{{ field.fieldName|ucFirst }}({{ entityCC }}.{{ field.fieldName }} ? {{ entityCC }}.{{ field.fieldName }}.id : null);
 {% elseif field.type == 'datetime' %}
-            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
+            self.{{ field.fieldName }}({{ entityCC }}.{{ field.fieldName }});
 {% else %}
-            self.{{ field.fieldName }}({{ entity_cc }}.{{ field.fieldName }});
+            self.{{ field.fieldName }}({{ entityCC }}.{{ field.fieldName }});
 {% endif %}
 {% endfor %}
-            self.isDeleted({{ entity_cc }}.isDeleted);
+            self.isDeleted({{ entityCC }}.isDeleted);
         } else {
-            self.modalHeading('New {{ entity_cc | camelCaseToTitle }}');
-            $('#{{ entity_cc }}FormModal').modal('show');
-            self.{{ entity_cc }}Id(null);
+            self.modalHeading('New {{ entityCC | camelCaseToTitle }}');
+            $('#{{ entityCC }}FormModal').modal('show');
+            self.{{ entityCC }}Id(null);
 {% for field in fields %}
 {% if field.fieldName == 'date' %}
             self.{{ field.fieldName }}(avro.getTodaysDate());
@@ -66,7 +66,7 @@ function {{ entity_cc }}Model(options) {
                 } else {
                     $.each( response['errors'], function(field, message) {
                         $form.find('#error-container').append('<i class="sprite-error"></i> '+ message +'.').show();
-                        $form.find('#{{ bundle_alias }}_{{ entity_cc }}_'+ field).closest('.control-group').addClass('error');
+                        $form.find('#{{ bundleAlias }}_{{ entityCC }}_'+ field).closest('.control-group').addClass('error');
                     });
                 }
             }

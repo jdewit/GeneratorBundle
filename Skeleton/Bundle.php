@@ -1,6 +1,6 @@
 <?php
 
-namespace {{ bundle_namespace }};
+namespace {{ bundleNamespace }};
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -9,6 +9,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
-class {{ bundle_name }} extends Bundle
+class {{ bundleName }} extends Bundle
 {
 }

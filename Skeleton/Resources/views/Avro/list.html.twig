@@ -1,11 +1,11 @@
-{{ "{% extends '"~ bundle_name ~"::layout.html.twig' %}" }}
+{{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
     <div class="page-header">
-        <h1>{{ entity_title }} List</h1>
-        <a href="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_new') }}" }}" class="btn btn-primary throw-right">+ New {{ entity_title }}</a>
+        <h1>{{ entityTitle }} List</h1>
+        <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}" class="btn btn-primary throw-right">+ New {{ entityTitle }}</a>
     </div>
     <div>
-        {{ "{% include '"~ bundle_name~":"~ entity ~":table.html.twig' %}" }}
+        {{ "{% include '"~ bundleName~":"~ entity ~":table.html.twig' %}" }}
     </div>
 {{ "{% endblock %}" }}
 

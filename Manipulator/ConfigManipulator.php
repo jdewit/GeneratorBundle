@@ -61,7 +61,7 @@ class ConfigManipulator extends Manipulator
         
         $updatedConfig = $dumper->dump($config, 2);
         
-        //file_put_contents($parameters['bundle_path'].'/Resources/config/config_temp.yml', );
+        //file_put_contents($parameters['bundlePath'].'/Resources/config/config_temp.yml', );
         file_put_contents($this->file, $updatedConfig);
           
     }
@@ -72,7 +72,7 @@ class ConfigManipulator extends Manipulator
     public function addResource()
     {
         $filename = $this->bundleDir.'/Resources/config/config.yml';
-        $resource = '@'.$this->parameters['bundle_name'].'/Resources/config/services/'.$this->parameters['entity_cc'].'.yml';
+        $resource = '@'.$this->parameters['bundleName'].'/Resources/config/services/'.$this->parameters['entityCC'].'.yml';
         $parser = new Parser();
         $dumper = new Dumper();
 
@@ -92,7 +92,7 @@ class ConfigManipulator extends Manipulator
             
             $updatedConfig = $dumper->dump($config, 2);
             
-            //file_put_contents($parameters['bundle_path'].'/Resources/config/config_temp.yml', );
+            //file_put_contents($parameters['bundlePath'].'/Resources/config/config_temp.yml', );
             file_put_contents($filename, $updatedConfig);
         }
     }

@@ -1,39 +1,39 @@
-#{{ entity_cc }}     
+#{{ entityCC }}     
 services:
-    {{ bundle_alias }}.{{ entity_cc }}_manager:
-        class: {{ bundle_namespace }}\Entity\{{ entity }}Manager
-        arguments: ["@doctrine.orm.entity_manager", {{ bundle_namespace }}\Entity\{{ entity }}, "@security.context"]
+    {{ bundleAlias }}.{{ entityCC }}_manager:
+        class: {{ bundleNamespace }}\Entity\{{ entity }}Manager
+        arguments: ["@doctrine.orm.entity_manager", {{ bundleNamespace }}\Entity\{{ entity }}, "@security.context"]
         
-    {{ bundle_alias }}.{{ entity_cc }}.form.type:
-        class: {{ bundle_namespace }}\Form\Type\{{ entity }}FormType
+    {{ bundleAlias }}.{{ entityCC }}.form.type:
+        class: {{ bundleNamespace }}\Form\Type\{{ entity }}FormType
         tags: 
-            - { name: form.type, alias: {{ bundle_alias }}_{{ entity_cc }} }
+            - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }} }
         arguments: ["@security.context", "@router"]
        
-    {{ bundle_alias }}.{{ entity_cc }}.form:
+    {{ bundleAlias }}.{{ entityCC }}.form:
         factory_method: createNamed 
         factory_service: form.factory
         class: Symfony\Component\Form\Form
-        arguments: ["@{{ bundle_alias }}.{{ entity_cc }}.form.type", {{ bundle_alias }}_{{ entity_cc }}]
+        arguments: ["@{{ bundleAlias }}.{{ entityCC }}.form.type", {{ bundleAlias }}_{{ entityCC }}]
         
-    {{ bundle_alias }}.{{ entity_cc }}.form.handler:
-        class: {{ bundle_namespace }}\Form\Handler\{{ entity }}FormHandler
+    {{ bundleAlias }}.{{ entityCC }}.form.handler:
+        class: {{ bundleNamespace }}\Form\Handler\{{ entity }}FormHandler
         scope: request
-        arguments: ["@{{ bundle_alias }}.{{ entity_cc }}.form", "@request", "@{{ bundle_alias }}.{{ entity_cc }}_manager"]
+        arguments: ["@{{ bundleAlias }}.{{ entityCC }}.form", "@request", "@{{ bundleAlias }}.{{ entityCC }}_manager"]
 
-    {{ bundle_alias }}.{{ entity_cc }}Search.form.type:
-        class: {{ bundle_namespace }}\Form\Type\{{ entity }}SearchFormType
+    {{ bundleAlias }}.{{ entityCC }}Search.form.type:
+        class: {{ bundleNamespace }}\Form\Type\{{ entity }}SearchFormType
         tags: 
-            - { name: form.type, alias: {{ bundle_alias }}_{{ entity_cc }}_search }
+            - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }}_search }
         arguments: ["@security.context", "@router"]
        
-    {{ bundle_alias }}.{{ entity_cc }}Search.form:
+    {{ bundleAlias }}.{{ entityCC }}Search.form:
         factory_method: createNamed 
         factory_service: form.factory
         class: Symfony\Component\Form\Form
-        arguments: ["@{{ bundle_alias }}.{{ entity_cc }}Search.form.type", {{ bundle_alias }}_{{ entity_cc }}_search]
+        arguments: ["@{{ bundleAlias }}.{{ entityCC }}Search.form.type", {{ bundleAlias }}_{{ entityCC }}_search]
 
-    {{ bundle_alias }}.{{ entity_cc }}_import.handler:
-        class: {{ bundle_namespace }}\Import\Handler\{{ entity }}ImportHandler
+    {{ bundleAlias }}.{{ entityCC }}_import.handler:
+        class: {{ bundleNamespace }}\Import\Handler\{{ entity }}ImportHandler
         scope: request
-        arguments: ["@avro_csv.csv.form", "@request", "@avro_csv.reader", "@security.context", "@{{ bundle_alias }}.{{ entity_cc }}_manager"{% for field in uniqueManyToOneRelations %}, "@{{ field.targetBundleAlias }}.{{ field.targetEntityName }}_manager"{% endfor %}]
+        arguments: ["@avro_csv.csv.form", "@request", "@avro_csv.reader", "@security.context", "@{{ bundleAlias }}.{{ entityCC }}_manager"{% for field in uniqueManyToOneRelations %}, "@{{ field.targetBundleAlias }}.{{ field.targetEntityName }}_manager"{% endfor %}]

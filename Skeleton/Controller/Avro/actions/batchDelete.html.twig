@@ -1,28 +1,28 @@
     /**
-     * Batch delete {{ entity_cc | camelCaseToTitle | lower }}.
+     * Batch delete {{ entityCC | camelCaseToTitle | lower }}.
      *  
-     * @Route("/batchDelete", name="{{ bundle_alias }}_{{ entity_cc }}_batchDelete")
+     * @Route("/batchDelete", name="{{ bundleAlias }}_{{ entityCC }}_batchDelete")
      * @method("post")
      */
     public function batchDeleteAction()
     {
         $selected = $this->container->get('request')->get('selected');
-        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+        ${{ entityCC }}Manager = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager');
 
         $i = 0;
         foreach ($selected as $id) {
-            ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
+            ${{ entityCC }} = ${{ entityCC }}Manager->find($id);
 
             if (!next($selected) || ($i % 10 == 0)) {
-                ${{ entity_cc }}Manager->softDelete(${{ entity_cc }}, true, true);
+                ${{ entityCC }}Manager->softDelete(${{ entityCC }}, true, true);
             } else {
-                ${{ entity_cc }}Manager->softDelete(${{ entity_cc }}, false);
+                ${{ entityCC }}Manager->softDelete(${{ entityCC }}, false);
             }
             ++$i;
         }
 
-        $this->container->get('session')->getFlashBag()->set('success', $i.' {{ entity_title_lc }}s deleted.');
+        $this->container->get('session')->getFlashBag()->set('success', $i.' {{ entityTitleLC }}s deleted.');
 
-        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
+        return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
     }
 

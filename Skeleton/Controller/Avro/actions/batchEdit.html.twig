@@ -1,28 +1,28 @@
     /**
-     * Batch edit {{ entity_cc | camelCaseToTitle | lower }}.
+     * Batch edit {{ entityCC | camelCaseToTitle | lower }}.
      *  
-     * @Route("/batchEdit", name="{{ bundle_alias }}_{{ entity_cc }}_batchEdit")
+     * @Route("/batchEdit", name="{{ bundleAlias }}_{{ entityCC }}_batchEdit")
      * @method("post")
      */
     public function batchEditAction()
     {
         $selected = $this->container->get('request')->get('selected');
-        ${{ entity_cc }}Manager = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}_manager');
+        ${{ entityCC }}Manager = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager');
 
         $i = 0;
         foreach ($selected as $id) {
-            ${{ entity_cc }} = ${{ entity_cc }}Manager->find($id);
+            ${{ entityCC }} = ${{ entityCC }}Manager->find($id);
 
             if (!next($selected) || ($i % 10 == 0)) {
-                ${{ entity_cc }}Manager->softEdit(${{ entity_cc }}, true, true);
+                ${{ entityCC }}Manager->softEdit(${{ entityCC }}, true, true);
             } else {
-                ${{ entity_cc }}Manager->softEdit(${{ entity_cc }}, false);
+                ${{ entityCC }}Manager->softEdit(${{ entityCC }}, false);
             }
             ++$i;
         }
 
-        $this->container->get('session')->getFlashBag()->set('success', $i.' {{ entity_title_lc }}s edited.');
+        $this->container->get('session')->getFlashBag()->set('success', $i.' {{ entityTitleLC }}s edited.');
 
-        return new RedirectResponse($this->container->get('router')->generate('{{ bundle_alias }}_{{ entity_cc }}_list'));
+        return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
     }
 

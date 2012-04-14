@@ -4,28 +4,28 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="{{ bundle_alias }}.{{ entity_cc }}_manager'.class">{{ bundle_vendor }}\{{ bundle_basename }}\Entity\{{ entity }}Manager</parameter>
+        <parameter key="{{ bundleAlias }}.{{ entityCC }}_manager'.class">{{ bundleVendor }}\{{ bundleBaseName }}\Entity\{{ entity }}Manager</parameter>
     </parameters>
 
     <services>
-        <service id="{{ bundle_alias }}.{{ entity_cc }}_manager'.default" class="%{{ bundle_alias }}.{{ entity_cc }}_manager'.class%" public="false">
-            <argument type="service" id="{{ bundle_alias }}.entity_manager" />
-            <argument>%{{ bundle_alias }}.model.{{ entity_cc }}.class%</argument>
+        <service id="{{ bundleAlias }}.{{ entityCC }}_manager'.default" class="%{{ bundleAlias }}.{{ entityCC }}_manager'.class%" public="false">
+            <argument type="service" id="{{ bundleAlias }}.entity_manager" />
+            <argument>%{{ bundleAlias }}.model.{{ entityCC }}.class%</argument>
         </service>
 
-        <service id="{{ bundle_alias }}.{{ entity_cc }}.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
-            <argument>%{{ bundle_alias }}.{{ entity_cc }}.form.type%</argument>
-            <argument>%{{ bundle_alias }}.{{ entity_cc }}.form.name%</argument>
+        <service id="{{ bundleAlias }}.{{ entityCC }}.form" factory-method="createNamed" factory-service="form.factory" class="Symfony\Component\Form\Form">
+            <argument>%{{ bundleAlias }}.{{ entityCC }}.form.type%</argument>
+            <argument>%{{ bundleAlias }}.{{ entityCC }}.form.name%</argument>
         </service>
 
-        <service id="{{ bundle_alias }}.{{ entity_cc }}.form.type" class="{{ bundle_namespace }}\Form\Type\{{ entity }}FormType">
-            <tag name="form.type" alias="{{ bundle_alias }}_{{ entity_cc }}" />
+        <service id="{{ bundleAlias }}.{{ entityCC }}.form.type" class="{{ bundleNamespace }}\Form\Type\{{ entity }}FormType">
+            <tag name="form.type" alias="{{ bundleAlias }}_{{ entityCC }}" />
         </service>
 
-        <service id="{{ bundle_alias }}.{{ entity_cc }}.form.handler.default" class="{{ bundle_namespace }}\Form\Handler\{{ entity }}FormHandler" scope="request" public="false">
-            <argument type="service" id="{{ bundle_alias }}.{{ entity_cc }}.form" />
+        <service id="{{ bundleAlias }}.{{ entityCC }}.form.handler.default" class="{{ bundleNamespace }}\Form\Handler\{{ entity }}FormHandler" scope="request" public="false">
+            <argument type="service" id="{{ bundleAlias }}.{{ entityCC }}.form" />
             <argument type="service" id="request" />
-            <argument type="service" id="{{ bundle_alias }}.{{ entity_cc }}_manager'" />
+            <argument type="service" id="{{ bundleAlias }}.{{ entityCC }}_manager'" />
         </service>
     </services>
     

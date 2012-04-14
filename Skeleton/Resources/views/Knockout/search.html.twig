@@ -1,8 +1,8 @@
 <div id="searchFormModal" class="modal hide">
-    <form id="{{ entity_cc }}-search-form" class="form-horizontal" action="{{ "{{ path('"~ bundle_alias ~"_"~ entity_cc ~"_list') }}" }}" method="post" {{ "{{ form_enctype(searchForm) }}" }} data-bind="searchForm: {{ entity_cc }}s">
+    <form id="{{ entityCC }}-search-form" class="form-horizontal" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_list') }}" }}" method="post" {{ "{{ form_enctype(searchForm) }}" }} data-bind="searchForm: {{ entityCC }}s">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
-            <h3>Search {{ entity_cc | camelCaseToTitle }}</h3>
+            <h3>Search {{ entityCC | camelCaseToTitle }}</h3>
         </div>
         <div class="modal-body">
             <div class="error-container"></div>
