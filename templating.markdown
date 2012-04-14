@@ -257,4 +257,6 @@ title: Avro Generator Bundle
     </div>
     <br />
 </div>
-
+<br />
+<a class="btn pull-left" href="configuration.html">Configuration<i class="icon-arrow-left"></i></a>
+<a class="btn pull-right" href="includedTemplates.html">Included Templates<i class="icon-arrow-right"></i></a>

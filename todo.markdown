@@ -17,4 +17,5 @@ title: Avro Generator Bundle
         <li>CouchDB support</li>
     </ul>
 </div>
-
+<br />
+<a class="btn pull-left" href="generating.html">Generating<i class="icon-arrow-left"></i></a>

@@ -80,3 +80,6 @@ title: Avro Generator Bundle - Configuration
                             format: 'yml' # variable passed to the setter
     </pre>
 </div>
+<br />
+<a class="btn pull-left" href="installation.html">Installation<i class="icon-arrow-left"></i></a>
+<a class="btn pull-right" href="templating.html">Templating<i class="icon-arrow-right"></i></a>

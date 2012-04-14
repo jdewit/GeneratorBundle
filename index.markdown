@@ -120,3 +120,5 @@ class TestController extends ContainerAware
     <img src="assets/images/happy_programmer.jpg" width="400px">
     <p>Party on!</p>
 </div>
+<br />
+<a class="btn pull-right" href="installation.html">Installation<i class="icon-arrow-right"></i></a>

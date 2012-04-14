@@ -20,5 +20,7 @@ title: Avro Generator Bundle - Generating
     <h3>Prompt 2: <small>Provide a tag</small></h3>
     <p>Enter a tag. This allows you to only generate files you have marked with a specific tag in your configuration.</p>
     <p>Press "enter" to bypass the tag filter and generate all of the files in your config.</p>
-</div>
-
+</div> 
+<br />
+<a class="btn pull-left" href="includedTemplates.html">Included Templates<i class="icon-arrow-left"></i></a>
+<a class="btn pull-right" href="todo.html">Todo<i class="icon-arrow-right"></i></a>

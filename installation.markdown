@@ -34,4 +34,12 @@ title: Avro Generator Bundle
         $ php composer.phar update
     </pre>
 </div>
+<div class="page-header">
+    <h3>Requirements</h3>
+</div>
 
+<p>This bundle requires <a href="http://github.com/symfony/symfony">Symfony2.1</a></p>
+
+<br />
+<a class="btn pull-left" href="index.html">Overview<i class="icon-arrow-left"></i></a>
+<a class="btn pull-right" href="configuration.html">Configuration<i class="icon-arrow-right"></i></a>
