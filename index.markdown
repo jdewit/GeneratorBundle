@@ -252,13 +252,13 @@ title: Avro Generator Bundle
             </tr>
         </tbody>
     </table>
-    <div id="fields-modal" class="modal" data-show="false" style="width: 70%; margin-left: -35%;">
+    <div id="fields-modal" class="modal fade" data-show="false" style="width: 50%; margin-left: -25%;">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             <h3>Field Variables</h3>
         </div>
         <div class="modal-body">
-            <table class="table-condensded table-bordered table-striped">
+            <table class="table-condensed table-bordered table-striped" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Name</th>
