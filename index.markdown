@@ -2,12 +2,12 @@
 layout: default
 title: Avro Generator Bundle
 ---
-<img class="pull-right" src="assets/images/happy_programmer.jpg" width="200px">
-<div class="well">
-    <h1>Generate Symfony2 related code from the command line!</h1>
+<div class="hero-unit">
+    <h1>Generate Symfony2 code from the command line!</h1>
+    <p>Because Symfony2 is awesome.</p>
 </div>
 <div class="page-header">
-    <h3>Step 1. <small>Create your template</small></h3>
+    <h3>Step 1. <small>Create a template</small></h3>
 </div>
 <pre class="prettify lang-php">
 // AcmeDemoBundle/Skeleton/Controller/Controller.php
@@ -66,7 +66,7 @@ avro_generator:
     <h3>Step 3. <small>Run Generator</small></h3> 
 </div>
 <pre class="prettyprint lang-bsh">
-    $ php app/console avro:generate
+    $ app/console avro:generate
     $ AcmeDemoBundle:Test
     $ <enter>
 </pre>
@@ -74,8 +74,6 @@ avro_generator:
     <h3>Result</h3>
 </div>
 <pre class="prettify lang-php">
-// AcmeDemoBundle/Skeleton/Controller/Controller.php
-
 namespace Acme\DemoBundle\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
