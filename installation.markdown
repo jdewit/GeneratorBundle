@@ -1,3 +1,8 @@
+---
+layout: default
+title: Avro Generator Bundle
+---
+
 <div class="page-header">
     <h3>Installation</h3>
 </div>
