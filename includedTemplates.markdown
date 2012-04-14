@@ -3,9 +3,9 @@ layout: default
 title: Avro Generator Bundle - Templates
 ---
 <div class="page-header">
-    <h3>Include Templates</h3>
+    <h3>Included Templates</h3>
 </div>
-<div>
+<div class="row">
     <p>Here are some templates you can extend from.</p>
     <table class="table-bordered table-condensed table-striped">
         <thead>

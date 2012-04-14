@@ -6,7 +6,7 @@ title: Avro Generator Bundle
 <div class="page-header">
     <h3>Templating</h3>
 </div>
-<div>
+<div class="row">
     <p>Check out the <a href="https://github.com/jdewit/GeneratorBundle/tree/master/Skeleton">Skeleton</a> directory to see the included templates.</p>
     <p>Templates are parsed with twig so all the normal twig filters are available to you.</p>
     <p>Since you are basing your templates off of an entity, there are a number of variables available to you in your twig templates:</p>
