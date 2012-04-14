@@ -4,6 +4,7 @@ AvroGeneratorBundle
 Symfony2 Code Generator.
 
 Features:
+
 - Use twig to create configurable templates
 - Add templates to generator via configuration file
 - Generate code from mapped entities
