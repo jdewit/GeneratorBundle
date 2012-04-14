@@ -433,7 +433,6 @@ title: Avro Generator Bundle
     </p>
 
     <pre class="prettyprint lang-php">
-        <?php
         // app/autoload.php
 
         $loader->registerNamespaces(array(
@@ -444,7 +443,6 @@ title: Avro Generator Bundle
     <p>Enable the bundle in the kernel:</p>
 
     <pre class="prettyprint lang-php">
-        <?php
         // app/AppKernel.php
 
             if (in_array($this->getEnvironment(), array('dev', 'test'))) {
