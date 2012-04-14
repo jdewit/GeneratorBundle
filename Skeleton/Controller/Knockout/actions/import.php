@@ -11,7 +11,7 @@
 
         $process = $importHandler->process();
         if ($process === true) {
-            $this->container->get('session')->getFlashBag()->set('success', count($importHandler->getImported()).' {{ entityTitleLC }}s imported.');
+            $this->container->get('session')->setFlash('success', count($importHandler->getImported()).' {{ entityTitleLC }}s imported.');
 
             return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
         } 

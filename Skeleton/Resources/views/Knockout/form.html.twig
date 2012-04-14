@@ -23,8 +23,8 @@
             <span data-bind="visible: {{ entityCC }}Id()">
                 <button type="submit" class="btn btn-primary"><i class="sprite-tick"></i>Update {{ entity | camelCaseToTitle }}</button>
                 {{ "{% if is_granted('ROLE_ADMIN') %}" }}
-                    <a class="btn pull-left" title="Delete {{ entityCC | camelCaseToTitle | lower }}" data-bind="click: avro.{{ entityCC }}ListModel.delete{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete') }}" }}/'+ {{ entityCC }}Id() }, visible: !isDeleted()"><i class="sprite-delete"></i>Delete</a>
-                    <a class="btn pull-left" title="Restore {{ entityCC | camelCaseToTitle | lower }}" data-bind="click: avro.{{ entityCC }}ListModel.restore{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore') }}" }}/'+ {{ entityCC }}Id() }, visible: isDeleted()"><i class="sprite-arrow_refresh"></i>Restore</a>
+                    <a class="btn pull-left" title="Delete {{ entityTitleLC }}" data-bind="click: avro.{{ entityCC }}ListModel.delete{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete') }}" }}/'+ {{ entityCC }}Id() }, visible: !isDeleted()"><i class="sprite-delete"></i>Delete</a>
+                    <a class="btn pull-left" title="Restore {{ entityTitleLC }}" data-bind="click: avro.{{ entityCC }}ListModel.restore{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore') }}" }}/'+ {{ entityCC }}Id() }, visible: isDeleted()"><i class="sprite-arrow_refresh"></i>Restore</a>
                 {{ "{% endif %}" }}
             </span>
         </div>

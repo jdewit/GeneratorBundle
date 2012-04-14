@@ -36,6 +36,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->booleanNode('overwrite')->defaultFalse()->end()
                 ->booleanNode('add_fields')->defaultTrue()->end()
+                ->booleanNode('use_owner')->defaultFalse()->end()
                 ->arrayNode('files')
                     ->useAttributeAsKey('file')->prototype('array')
                         ->children()

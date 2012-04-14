@@ -21,8 +21,13 @@
             ++$i;
         }
 
-        $this->container->get('session')->getFlashBag()->set('success', $i.' {{ entityTitleLC }}s deleted.');
+        $response = new Response('{
+            "status": "OK",
+            "notice": '.$i.' {{ entityTitleLC }}s deleted."
+        }');
 
-        return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response; 
     }
 

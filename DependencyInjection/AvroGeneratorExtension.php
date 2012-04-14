@@ -22,6 +22,7 @@ class AvroGeneratorExtension extends Extension
         $container->setParameter('avro_generator.style', $config['style']);
         $container->setParameter('avro_generator.overwrite', $config['overwrite']);
         $container->setParameter('avro_generator.add_fields', $config['add_fields']);
+        $container->setParameter('avro_generator.use_owner', $config['use_owner']);
 
         $supportedStyles = array('avro');
 

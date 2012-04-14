@@ -21,8 +21,13 @@
             ++$i;
         }
 
-        $this->container->get('session')->setFlash('success', $i.' {{ entityTitleLC }}s restored.');
+        $response = new Response('{
+            "status": "OK",
+            "notice": '.$i.' {{ entityTitleLC }}s restored."
+        }');
 
-        return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response; 
     }
 
