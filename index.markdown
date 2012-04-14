@@ -4,7 +4,8 @@ title: Avro Generator Bundle
 ---
 
 <div class="page-header">
-    <h3>AvroGeneratorBundle</h3>
+    <h3>Avro Generator Bundle</h3>
+    <img style="float: right" src="/assets/images/happy_programmer.jpg" width="400px">
 </div>
 <div>
     <p>
