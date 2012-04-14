@@ -252,7 +252,7 @@ title: Avro Generator Bundle
             </tr>
         </tbody>
     </table>
-    <div id="fields-modal" class="modal">
+    <div id="fields-modal" class="modal" data-show="false">
         <div class="modal-header">
             <a class="close" data-dismiss="modal">×</a>
             <h3>Field Variables</h3>
