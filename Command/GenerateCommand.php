@@ -176,7 +176,8 @@ Or just press <enter> to generate all files.'
     protected function parseShortcutNotation($shortcut)
     {
         if (false === $pos = strpos($shortcut, ':')) {
-            $bundleName = $shortcut;
+
+            $bundleName = Validators::validateBundleName($shortcut);
             $this->em = $this->getContainer()->get('doctrine.orm.entity_manager');
             $cmf = $this->em->getMetadataFactory();
             $metadatas = $cmf->getAllMetadata();
@@ -191,8 +192,7 @@ Or just press <enter> to generate all files.'
             }
         } else {
             $entity = str_replace('/', '\\', $shortcut);
-
-            $bundleName = substr($entity, 0, $pos);
+            $bundleName = Validators::validateBundleName(substr($entity, 0, $pos));
             $entities = array(substr($entity, $pos + 1));
         }
 

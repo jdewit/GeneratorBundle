@@ -46,11 +46,6 @@ parameters:
             template: 'AvroGeneratorBundle:Skeleton/Resources/views/Avro/import.html.twig'
             tags: ['view', 'crud', 'import']
 
-        import.handler:
-            filename: 'Util/ImportHandler/{{ entity }}ImportHandler.php'
-            template: 'AvroGeneratorBundle:Skeleton/Util/ImportHandler/ImportHandler.php'
-            tags: ['crud', 'import']
-  
         features: 
             filename: 'Features/{{ entity }}.feature'
             template: 'AvroGeneratorBundle:Skeleton/Features/Avro/feature.feature'

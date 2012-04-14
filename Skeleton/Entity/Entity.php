@@ -125,6 +125,7 @@ class {{ entity }}
     protected ${{ field.fieldName }};
 
 {% endif %}{% endfor %}    
+{% if avro_generator.use_owner %}
     /**
      * @var \Avro\UserBundle\Entity\Owner
      *
@@ -132,6 +133,7 @@ class {{ entity }}
      * @exclude
      */
     protected $owner;
+{% endif %}
 
     /**
      * @var \DateTime
@@ -307,6 +309,7 @@ class {{ entity }}
     }    
 
 {% endif %}{% endfor %}
+{% if avro_generator.use_owner %}
     /**
      * Get owner
      * 
@@ -326,6 +329,7 @@ class {{ entity }}
     {
         $this->owner = $owner;
     }  
+{% endif %}
 
     /**
     * Set createdAt
@@ -408,13 +412,16 @@ class {{ entity }}
     }
 
     /**
-     * string output
+     * String output
      */
     public function __toString()
     {
 {% for field in fields %}{% if loop.first %}
         return $this->{{ field.fieldName }};
-{% endif %}{% endfor %}
+{% else %}
+        //return $this->{{ field.fieldName }};
+{% endif %}
+{% endfor %}
     } 
 }
 

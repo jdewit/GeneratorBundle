@@ -27,7 +27,7 @@ class AvroGeneratorExtension extends Extension
         $supportedStyles = array('avro');
 
         if (in_array($config['style'], $supportedStyles)) {
-            $loader->load(sprintf('%s.yml', $config['style']));
+            $loader->load(sprintf('templates/%s.yml', $config['style']));
         }
 
         if ($container->hasParameter('avro_generator.files')) {

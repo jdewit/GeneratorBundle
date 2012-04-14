@@ -15,21 +15,25 @@ class {{ entity }}Manager
     protected $em;
     protected $class;
     protected $repository;
+{% if avro_generator.use_owner %}
     protected $context;
     protected $owner;
+{% endif %}
 
-    public function __construct(EntityManager $em, $class, SecurityContextInterface $context)
+    public function __construct(EntityManager $em, $class{% if avro_generator.use_owner %}, SecurityContextInterface $context{% endif %})
     {
         $this->em = $em;
         $metadata = $em->getClassMetadata($class);
         $this->class = $metadata->name;
         $this->repository = $em->getRepository($class);
+{% if avro_generator.use_owner %}
         $this->context = $context;
         if ($context->getToken()) {
             if (is_object($context->getToken()->getUser())) {
                 $this->owner = $context->getToken()->getUser()->getOwner();
             }
         }
+{% endif %}
     }
 
     /**
@@ -64,7 +68,9 @@ class {{ entity }}Manager
         $class = $this->getClass();
         
         ${{ entityCC }} = new $class();
+{% if avro_generator.use_owner %}
         ${{ entityCC }}->setOwner($this->owner);
+{% endif %}
 
         return ${{ entityCC }};
     }
@@ -81,7 +87,10 @@ class {{ entity }}Manager
 {% for field in fields %}
 {% if (field.type == "oneToMany") or (field.type == "manyToMany") %}
         foreach (${{ entityCC }}->get{{ field.fieldName | ucFirst }}() as ${{ field.fieldName|slice(0, -1) }}) {
+            // want to change this entity at all?
+{% if avro_generator.use_owner %}
             ${{ field.fieldName|slice(0, -1) }}->setOwner($this->owner);
+{% endif %}
         }
 {% endif %}
 {% endfor %}
@@ -179,8 +188,10 @@ class {{ entity }}Manager
     public function findAsArray($id)
     {
         $qb = $this->em->createQueryBuilder()->select('{{ entityCC }}')->from($this->class, '{{ entityCC }}');
-        $qb->where('{{ entityCC }}.owner = ?1')->setParameter('1', $this->owner);
-        $qb->andWhere('{{ entityCC }}.id = ?2')->setParameter('2', $id);
+        $qb->where('{{ entityCC }}.id = ?1')->setParameter('1', $id);
+{% if avro_generator.use_owner %}
+        $qb->andWhere('{{ entityCC }}.owner = ?2')->setParameter('2', $this->owner);
+{% endif %}
 
         $result = $qb->getQuery()->getArrayResult();
 
@@ -195,7 +206,9 @@ class {{ entity }}Manager
      */
     public function findOneBy($criteria = array())
     {
+{% if avro_generator.use_owner %}
         $criteria['owner'] = $this->owner->getId();
+{% endif %}
         
         return $this->repository->findOneBy($criteria);
     }
@@ -210,8 +223,9 @@ class {{ entity }}Manager
      */
     public function findBy(array $criteria = null, array $sortBy = null, $limit = null)
     {
+{% if avro_generator.use_owner %}
         $criteria['owner'] = $this->owner->getId();
-
+{% endif %}
         return $this->repository->findBy($criteria, $sortBy, $limit);
     }
 
@@ -244,7 +258,9 @@ class {{ entity }}Manager
         $qb->setFirstResult($query['offset']);
         $qb->orderBy('{{ entityCC }}.'.$query['orderBy'], $query['direction']);
         $qb->setMaxResults($query['limit']);
+{% if avro_generator.use_owner %}
         $qb->where('{{ entityCC }}.owner = ?1')->setParameter('1', $this->owner);
+{% endif %}
 
         switch($query['filter']) {
             case 'Active':
