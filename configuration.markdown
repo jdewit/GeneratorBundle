@@ -12,6 +12,7 @@ title: Avro Generator Bundle - Configuration
         avro_generator:
             extend: 'avro' # extend on several built in templates or roll your own
             overwrite: false # overwrite current code if true, write to Temp folder if false
+            add_fields: true # allows you to add fields to your entity
             files:
                 list_view: 
                     filename: 'Resources/views/{{ entity }}/list.html.twig' # the target location for the generated file relative to the bundle path
