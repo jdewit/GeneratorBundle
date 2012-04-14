@@ -404,83 +404,84 @@ title: Avro Generator Bundle
             <a href="#" class="btn" data-dismiss="modal">Close</a>
         </div>
     </div>
-    <div class="page-header">
-        <h3>Built-in Styles</h3>
-    </div>
-    <div>
-        <h5>Avro</h5>
-        <p>
-            A work in progress. It provides basic crud
-            functionality using some similar techniques as the FOSUserBundle.
+</div>
+<div class="page-header">
+    <h3>Built-in Styles</h3>
+</div>
+<div>
+    <h5>Avro</h5>
+    <p>
+        A work in progress. It provides basic crud
+        functionality using some similar techniques as the FOSUserBundle.
 
-            It is designed to be used along with: 
-            <ul>
-                <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
-                <li><a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a></li>
-                <li><a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a></li>
-            </ul>
-            Sharing is caring. 
-            Submit some of your own templates!
-        </p>
-    </div>
-    <div class="page-header">
-        <h3>Installation</h3>
-    </div>
-    <div>
-        <p>
-            Add the `Avro` namespace to your autoloader:
-        </p>
-
-        <pre class="prettyprint lang-php">
-            <?php
-            // app/autoload.php
-
-            $loader->registerNamespaces(array(
-                // ...
-                'Avro' => __DIR__.'/../vendor/bundles',
-            ));
-        </pre>
-        <p>Enable the bundle in the kernel:</p>
-
-        <pre class="prettyprint lang-php">
-            <?php
-            // app/AppKernel.php
-
-                if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-                    ...
-                    $bundles[] = new Avro\GeneratorBundle\AvroGeneratorBundle();
-                }
-        </pre>
-        
-        <p>Add to deps file</p>
-
-        <pre class="prettyprint lang-php">
-            [AvroGeneratorBundle]
-                git=git://github.com/jdewit/AvroGeneratorBundle.git
-                target=bundles/Avro/GeneratorBundle
-        </pre>
-
-        <p>Now, run the vendors script to download the bundle:</p>
-
-        <pre class="prettyprint lang-bsh">
-            $ bin/vendors update
-        </pre>
-    </div>
-    <div class="page-header">
-        <h3>TODO</h3>
-    </div>
-    <div>
+        It is designed to be used along with: 
         <ul>
-            <li>TESTS!</li>
-            <li>travis</li> 
-            <li>xml support</li>
-            <li>MongoDB support</li>
-            <li>CouchDB support</li>
+            <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
+            <li><a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a></li>
+            <li><a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a></li>
         </ul>
-    </div>
-    <hr>
+        Sharing is caring. 
+        Submit some of your own templates!
+    </p>
+</div>
+<div class="page-header">
+    <h3>Installation</h3>
+</div>
+<div>
+    <p>
+        Add the 'Avro' namespace to your autoloader:
+    </p>
 
-    <footer>
-    <p>© Company 2012</p>
-    </footer>
+    <pre class="prettyprint lang-php">
+        <?php
+        // app/autoload.php
+
+        $loader->registerNamespaces(array(
+            // ...
+            'Avro' => __DIR__.'/../vendor/bundles',
+        ));
+    </pre>
+    <p>Enable the bundle in the kernel:</p>
+
+    <pre class="prettyprint lang-php">
+        <?php
+        // app/AppKernel.php
+
+            if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+                ...
+                $bundles[] = new Avro\GeneratorBundle\AvroGeneratorBundle();
+            }
+    </pre>
+    
+    <p>Add to deps file</p>
+
+    <pre class="prettyprint lang-php">
+        [AvroGeneratorBundle]
+            git=git://github.com/jdewit/AvroGeneratorBundle.git
+            target=bundles/Avro/GeneratorBundle
+    </pre>
+
+    <p>Now, run the vendors script to download the bundle:</p>
+
+    <pre class="prettyprint lang-bsh">
+        $ bin/vendors update
+    </pre>
+</div>
+<div class="page-header">
+    <h3>TODO</h3>
+</div>
+<div>
+    <ul>
+        <li>TESTS!</li>
+        <li>travis</li> 
+        <li>xml support</li>
+        <li>MongoDB support</li>
+        <li>CouchDB support</li>
+    </ul>
+</div>
+<hr>
+
+<footer>
+<p>© Company 2012</p>
+</footer>
 
