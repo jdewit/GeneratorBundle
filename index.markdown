@@ -2,9 +2,13 @@
 layout: default
 title: Avro Generator Bundle
 ---
+{% raw %}
 <div class="hero-unit">
     <h1>Generate Symfony2 code from the command line!</h1>
-    <p>Because Symfony2 is awesome.</p>
+    <p> 
+        Because Symfony2 is awesome.
+        <a href="http://github.com/jdewit/generatorBundle" class="btn btn-primary btn-large pull-right">Download</a>
+    </p>
 </div>
 <div class="page-header">
     <h3>Step 1. <small>Create a template</small></h3>
@@ -117,3 +121,4 @@ class TestController extends ContainerAware
     <img src="assets/images/happy_programmer.jpg" width="400px">
     <p>Party on!</p>
 </div>
+{% endraw %}

@@ -46,7 +46,7 @@ title: Avro Generator Bundle
                 <td>The entity name in lowercase title format</td>
             </tr>
             <tr>
-                <td>fields</td>
+                <td><a href="#fields-modal" data-toggle="modal">fields</a></td>
                 <td><a href="#fields-modal" data-toggle="modal">array</a></td>
                 <td>The entities fields</td>
             </tr>
@@ -256,38 +256,5 @@ title: Avro Generator Bundle
         </div>
     </div>
     <br />
-</div>
-<div class="page-header">
-    <h3>Included Templates</h3>
-</div>
-<div>
-    <table class="table-bordered table-condensed table-striped">
-        <thead>
-            <th>Name</th>
-            </th>Status</th>
-            <th>Dependencies</th>
-            <th>Description</th>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Avro</td>
-                <td>WIP</td>
-                <td>
-                    <ul>
-                        <li><a href="http://twitter.github.com/bootstrap">Twitter Bootstrap</a></li>
-                        <li><a href="http://github.com/jdewit/AvroQueueBundle">AvroQueueBundle</a></li>
-                        <li><a href="http://github.com/jdewit/AvroCsvBundle">AvroCsvBundle</a></li>
-                    </ul>
-                </td>
-                <td>
-                <td>Provides basic crud functionality using some similar techniques as the FOSUserBundle.</td>
-            </tr>
-            <tr>
-                <td>Your template here!</td>
-                <td></td>
-                <td></td>
-                <td>Be smart, fork and make a pull request.</td>
-        </tbody>
-    </table>
 </div>
 
