@@ -63,12 +63,12 @@ avro_generator:
             template: 'AcmeDemoBundle:Skeleton/Controller/Controller.php' 
 </pre>
 <div class="page-header">
-    <h3>Step 3. <small>Run Generator</small></h3> 
+    <h3>Step 3. <small>Run Generator From Console</small></h3> 
 </div>
 <pre class="prettyprint lang-bsh">
-    $ app/console avro:generate
-    $ AcmeDemoBundle:Test
-    $ <enter>
+    $ php app/console avro:generate
+    $ <span style="color: green">Bundle name with or without entity name:</span> AcmeDemoBundle:Test
+    $ (enter)
 </pre>
 <div class="page-header">
     <h3>Result</h3>
@@ -113,4 +113,4 @@ class TestController extends ContainerAware
     }
 }
 </pre>
-
+<span style="width: 100%; text-align: center;"><img style="float: right" src="assets/images/happy_programmer.jpg" width="400px"></span>
