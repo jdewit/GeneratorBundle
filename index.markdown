@@ -259,7 +259,7 @@ title: Avro Generator Bundle
             <h3>Field Variables</h3>
         </div>
         <div class="modal-body">
-            <table class="table-condensed table-bordered table-striped" style="width: 100%;>
+            <table class="table-condensed table-bordered table-striped" style="width: 100%;">
                 <thead>
                     <tr>
                         <th>Name</th>
