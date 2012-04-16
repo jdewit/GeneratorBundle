@@ -3,8 +3,10 @@ namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+{% if avro_generator.use_owner %}
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Routing\RouterInterface;
+{% endif %}
 
 /*
  * Search Form for a {{ entity }}
@@ -13,14 +15,18 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class {{ entity }}SearchFormType extends AbstractType
 { 
+{% if avro_generator.use_owner %}
+    protected $router;
     protected $owner;
     protected $context;
-    protected $router;
+{% endif %}
 
-    public function __construct(SecurityContextInterface $context, RouterInterface $router) {
+    public function __construct({% if avro_generator.use_owner %}Router $router, SecurityContextInterface $context{% endif %}) {
+{% if avro_generator.use_owner %}
+        $this->router = $router;
         $this->owner = $context->getToken()->getUser()->getOwner();
         $this->context = $context;
-        $this->router = $router;
+{% endif %}
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -60,7 +66,7 @@ class {{ entity }}SearchFormType extends AbstractType
                 'label' => 'Sort By',
                 'choices' => array(
 {% for field in fields %}{% if field.type != 'oneToMany' or field.type != 'manyToOne' %}
-                    '{{ field.fieldName }}' => '{{ field.fieldName | camelCaseToTitle }}',
+                    '{{ field.fieldName }}' => '{{ field.fieldTitle }}',
 {% endif %}{% endfor %}
                 ),
                 'attr' => array(

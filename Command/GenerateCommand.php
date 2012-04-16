@@ -130,7 +130,7 @@ Or just press <enter> to generate all files.'
             }
 
             // confirm
-            $this->dialog->writeSection($this->output, 'Generating code for '. $bundle->getName());
+            $this->dialog->writeSection($this->output, sprintf('Generating code for %s.', $entity));
 
             //Generate Bundle/Entity files
             $avroGenerator = new Generator($this->container, $this->output);    

@@ -8,7 +8,7 @@ services:
         class: {{ bundleNamespace }}\Form\Type\{{ entity }}FormType
         tags:
             - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }} }
-        arguments: ["@router"{% if avro_generator.use_owner %}, "@security.context"{% endif %}]
+        arguments: [{% if avro_generator.use_owner %}"@router", "@security.context"{% endif %}]
        
     {{ bundleAlias }}.{{ entityCC }}.form:
         factory_method: createNamed
@@ -25,7 +25,7 @@ services:
         class: {{ bundleNamespace }}\Form\Type\{{ entity }}SearchFormType
         tags:
             - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }}_search }
-        arguments: ["@security.context", "@router"]
+        arguments: [{% if avro_generator.use_owner %}"@router", "@security.context"{% endif %}]
        
     {{ bundleAlias }}.{{ entityCC }}Search.form:
         factory_method: createNamed

@@ -11,13 +11,4 @@
         </div>
     </form>
 {{ "{% endblock %}" }}
-{% block customJS %}
-    ;(function(avro, $, undefined) {
-        avro.{{ entityCC }}Model = new {{ entityCC }}Model();
-{% for field in uniqueManyToOneRelations %}
-        avro.available{{ entity }}s = {{ "{{ app.request.attributes.get('"~ entityCC ~"s') | serialize | raw }}" }};
-{% endfor %}
-    }(window.avro = window.avro || {}, jQuery)); 
 
-    ko.applyBindings(avro.{{ entityCC }}Model);
-{% endblock %}

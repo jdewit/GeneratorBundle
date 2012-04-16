@@ -6,10 +6,10 @@
      */
     public function importAction()
     {
-        $form = $this->container->get('avro_csv.csv.form');
+        $form = $this->container->get('avro_csv.form');
         $formHandler = $this->container->get('avro_csv.form.handler');
 
-        $process = $formHandler->process('{{ bundleNamespace }}\Entity\{{ entityCC }}');
+        $process = $formHandler->process('{{ bundleNamespace }}\Entity\{{ entity }}');
         if ($process === true) {
             $this->container->get('session')->getFlashBag()->set('success', $formHandler->getImportCount().' {{ entityTitleLC }}s imported.');
 

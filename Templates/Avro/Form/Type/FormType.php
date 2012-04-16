@@ -4,8 +4,8 @@ namespace {{ bundleNamespace }}\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Routing\RouterInterface;
 {% if avro_generator.use_owner %}
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 {% endif %}
 
@@ -16,18 +16,18 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class {{ entity }}FormType extends AbstractType
 { 
-    protected $router;
 {% if avro_generator.use_owner %}
+    protected $router;
     protected $context;
     protected $owner;
 {% endif %}
 
-    public function __construct(RouterInterface $router{% if avro_generator.use_owner %}, SecurityContextInterface $context{% endif %}) {
+    public function __construct({% if avro_generator.use_owner %}Router $router, SecurityContextInterface $context{% endif %}) {
 {% if avro_generator.use_owner %}
+        $this->router = $router;
         $this->owner = $context->getToken()->getUser()->getOwner();
         $this->context = $context;
 {% endif %}
-        $this->router = $router;
     }
 
     public function buildForm(FormBuilder $builder, array $options)

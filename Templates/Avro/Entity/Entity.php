@@ -41,6 +41,7 @@ class {{ entity }}
      * @ORM\ManyToOne(targetEntity="{{ field.targetEntity }}")
      */
     protected ${{ field.fieldName }};
+
 {%- elseif field.type == "oneToMany" %}
     /**
      * @var ArrayCollection
@@ -48,6 +49,7 @@ class {{ entity }}
      * @ORM\OneToMany(targetEntity="{{ field.targetEntity }}"{% if field.mappedBy %}, mappedBy="{{ field.mappedBy }}"{% endif %}{% if field.inversedBy %}, inversedBy="{{ field.inversedBy }}"{% endif %}{% if field.cascade is not empty %}, cascade={ {% for item in field.cascade %}{% if loop.last %}"{{ item }}"{% else %}"{{ item }}",{% endif %}{% endfor %} }{% endif %}{% if field.orphanRemoval is defined %}{% if field.orphanRemoval %}, orphanRemoval=true {% endif %}{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% elseif field.type == "manyToMany" %}
     /** 
      * @var ArrayCollection
@@ -56,6 +58,7 @@ class {{ entity }}
      * @ORM\JoinTable(name="{{ bundleCoreName }}_{{ entityCC }}_{{ field.fieldName }}")
      */
     protected ${{ field.fieldName }};
+
 {% elseif field.type == "string" %}
     /**
      * @var string
@@ -63,6 +66,7 @@ class {{ entity }}
      * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% elseif field.type == "text" %}
     /**
      * @var text
@@ -70,6 +74,7 @@ class {{ entity }}
      * @ORM\Column(type="text"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+    
 {% elseif field.type == "integer" %}
     /**
      * @var integer
@@ -77,6 +82,7 @@ class {{ entity }}
      * @ORM\Column(type="integer"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% elseif field.type == "decimal" %}
     /**
      * @var decimal
@@ -84,6 +90,7 @@ class {{ entity }}
      * @ORM\Column(type="decimal"{% if field.precision is defined %}, precision={{ field.precision }}{% endif %}{% if field.scale is defined %}, scale={{ field.scale }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% elseif field.type == "float" %}
     /**
      * @var float
@@ -91,6 +98,7 @@ class {{ entity }}
      * @ORM\Column(type="float"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% elseif field.type == "datetime" %}
     /**
      * @var \DateTime
@@ -98,6 +106,7 @@ class {{ entity }}
      * @ORM\Column(type="datetime"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% else %}
     /**
      * @var {{ field.type }}
@@ -105,6 +114,7 @@ class {{ entity }}
      * @ORM\Column(type="{{ field.type }}"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
+
 {% endif %}{% endfor %}    
 {% if avro_generator.use_owner %}
     /**
@@ -114,6 +124,7 @@ class {{ entity }}
      * @exclude
      */
     protected $owner;
+
 {% endif %}
     /**
      * @var \DateTime
@@ -221,6 +232,7 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     } 
+
 {% if false %}
     /**
      * Add {{ adjustedFieldName }} to the collection
@@ -244,6 +256,7 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }}->removeElement(${{ adjustedFieldName }});
     }
+
 {% endif %}
 
 {% elseif field.type == "manyToMany" %}
@@ -266,6 +279,7 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     } 
+
 {% if false %}
     /**
      * Add {{ adjustedFieldName }} to the collection
@@ -289,8 +303,8 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }}->removeElement(${{ adjustedFieldName }});
     }
-{% endif %}
 
+{% endif %}
 {% else %}
     /**
      * Get {{ field.fieldName }}
@@ -313,7 +327,28 @@ class {{ entity }}
     }    
 
 {% endif %}{% endfor %}
+{% if avro_generator.use_owner %}
+    /**
+    * Set owner
+    *
+    * @param \Avro\UserBundle\Entity\Owner $owner
+    */
+    public function setOwner(\Avro\UserBundle\Entity\Owner $owner)
+    {
+        $this->owner = $owner;
+    }
 
+    /**
+     * Get owner
+     *
+     * @return \Avro\UserBundle\Entity\Owner $owner
+     */
+    public function getOwner()
+    {
+       return $this->owner;
+    }
+
+{% endif %}
     /**
     * Set createdAt
     *
