@@ -15,7 +15,7 @@ title: Avro Generator Bundle - Configuration
             add_fields: true # allows you to add fields to your entity
             files:
                 list_view: 
-                    filename: 'Resources/views/{{ entity }}/list.html.twig' # the target location for the generated file relative to the bundle path
+                    filename: 'Resources/views/{{ "{{ entity " }}}}/list.html.twig' # the target location for the generated file relative to the bundle path
                     template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/list.html.twig' # the path to the template file, 
                         # use shortcut notation to have it relative to a bundle (ex. AvroDemoBundle:Templates/myfile.html.twig) 
                         # otherwise, it can be relative to your system path "/"
@@ -49,7 +49,7 @@ title: Avro Generator Bundle - Configuration
 
             bundle_files:
                 bundle:
-                    filename: '{{ bundleName }}.php'
+                    filename: '{{ "{{ bundleName " }}}}.php'
                     template: 'AvroGeneratorBundle:Skeleton/Bundle.php'
     {% endhighlight %}
     <p>Notice that the parameters are available in the filename as well.</p> 
@@ -68,7 +68,7 @@ title: Avro Generator Bundle - Configuration
             #...
             files:
                 controller: 
-                    filename: 'Controller/{{ entity }}Controller.php'
+                    filename: 'Controller/{{ "{{ entity " }}}}Controller.php'
                     template: 'AvroGeneratorBundle:Templates/Acro/Controller/Controller.php'
                     parameters: 
                         actions: ['list', 'new', 'edit', 'delete', 'restore', 'import']

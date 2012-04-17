@@ -16,7 +16,7 @@ title: Avro Generator Bundle
     <?php
     // AcmeDemoBundle/Skeleton/Controller/Controller.php
 
-    namespace {{ bundleNamespace }}\Controller;
+    namespace {{ "{{ bundleNamespace " }}}}\Controller;
 
     use Symfony\Component\DependencyInjection\ContainerAware;
     use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,29 +24,29 @@ title: Avro Generator Bundle
     use Symfony\Component\HttpFoundation\Response;
 
     /**
-     * {{ entityTitle }} controller.
+     * {{ "{{ entityTitle " }}}} controller.
      *
-     * @Route("/{{ entityCC }}")
+     * @Route("/{{ "{{ entityCC " }}}}")
      */
-    class {{ entity }}Controller extends ContainerAware
+    class {{ "{{ entity " }}}}Controller extends ContainerAware
     {
         /**
-         * Create a new {{ entityTitle }}.
+         * Create a new {{ "{{ entityTitle " }}}}.
          *
-         * @Route("/new", name="{{ bundleAlias }}_{{ entityCC }}_new")
+         * @Route("/new", name="{{ "{{ bundleAlias " }}}}_{{ "{{ entityCC " }}}}_new")
          * @Template()     
          */
         public function newAction()
         {
-            $form = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form');
-            $formHandler = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form.handler');
+            $form = $this->container->get('{{ "{{ bundleAlias " }}}}.{{ "{{ entityCC " }}}}.form');
+            $formHandler = $this->container->get('{{ "{{ bundleAlias " }}}}.{{ "{{ entityCC " }}}}.form.handler');
 
             $process = $formHandler->process();
             if ($process) {
-                ${{ entityCC }} = $form->getData();
-                $this->container->get('session')->getFlashBag()->set('success', '{{ entity | title }} created.');
+                ${{ "{{ entityCC " }}}} = $form->getData();
+                $this->container->get('session')->getFlashBag()->set('success', '{{ "{{ entity | title " }}}} created.');
 
-                return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_edit', array('id' => ${{ entityCC }}->getId())), 301);
+                return new RedirectResponse($this->container->get('router')->generate('{{ "{{ bundleAlias " }}}}_{{ "{{ entityCC " }}}}_edit', array('id' => ${{ "{{ entityCC " }}}}->getId())), 301);
             }
 
             return array(
@@ -63,7 +63,7 @@ title: Avro Generator Bundle
 avro_generator:
     files:
         controller: 
-            filename: 'Controller/{{ entity }}Controller.php'
+            filename: 'Controller/{{ "{{ entity " }}}}Controller.php'
             template: 'AcmeDemoBundle:Templates/Avro/Controller/Controller.php' 
 {% endhighlight %}
 <div class="page-header">
