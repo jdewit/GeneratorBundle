@@ -6,12 +6,12 @@
      */
     public function importAction()
     {
-        $form = $this->container->get('avro_csv.csv.form');
+        $form = $this->container->get('avro_csv.form');
         $formHandler = $this->container->get('avro_csv.form.handler');
 
         $process = $formHandler->process('{{ bundleNamespace }}\Entity\{{ entityCC }}');
         if ($process === true) {
-            $this->container->get('session')->getFlashBag()->set('success', $formHandler->getImportCount()).' {{ entityTitleLC }}s imported.');
+            $this->container->get('session')->getFlashBag()->set('success', $formHandler->getImportCount().' {{ entityTitleLC }}s imported.');
 
             return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'));
         } 

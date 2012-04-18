@@ -4,7 +4,7 @@
             <th class="check-all" title="Select All"><input name="check-all" type="checkbox" data-bind="checked: checkAll"/></th>
 {% for field in fields %}
 {% if field.type != 'oneToMany' and field.type != 'manyToMany' %}
-            <th data-bind="orderBy: '{{ field.fieldName }}'">{{ field.fieldName | camelCaseToTitle }}</th>
+            <th><a href="#" data-bind="orderBy: '{{ field.fieldName }}'">{{ field.fieldName | camelCaseToTitle }}</a></th>
 {% endif %}
 {% endfor %}
             <th min-width="75px">&nbsp;</th>
@@ -34,13 +34,13 @@
         <tr>
             <td colspan="100%">
                 <a title="Select all" data-bind="click: function(data, event) { checkAll() ? checkAll(false) : checkAll(true) }"><i class="sprite-arrow_left_up"></i></a> 
-                <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_getForm') }}" }}" class="btn-edit" title="Batch edit" data-bind="click: batchEdit"><i class="sprite-pencil"></i>edit</a>
+                <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_getForm') }}" }}" class="btn-edit" title="Batch edit" data-bind="click: batchEdit"><i class="sprite-pencil"></i>Edit</a>
                 {{ "{% if is_granted('ROLE_ADMIN') %}" }}
                     |
                     <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'"><i class="sprite-delete"></i>Delete</a>
                     <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow_refresh"></i>Restore</a>
                     <span class="pull-right">
-                        <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_import') }}" }}"><i class="sprite-table_add"></i>import</a>
+                        <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_import') }}" }}"><i class="sprite-table_add"></i>Import</a>
                     </span>
                 {{ "{% endif %}" }}
             </td>

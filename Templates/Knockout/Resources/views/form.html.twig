@@ -1,4 +1,4 @@
-<div id="{{ entityCC }}FormModal" class="modal hide">
+<div id="{{ entityCC }}FormModal" class="modal hide fade">
     <form class="form-horizontal" data-bind="submit: bindForm, attr: {'action': {{ entityCC }}Id() ? '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit') }}" }}/'+ {{ entityCC }}Id() : '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}' }" method="post" {{ "{{ form_enctype("~ entityCC ~"Form) }}" }}>
         <div class="modal-header">
             <a class="close" data-bind="click: closeFormModal">×</a>
@@ -8,7 +8,7 @@
             <div id="error-container"></div>
             <div class="form-content">
     {% for field in fields %}{% if field.type == 'oneToMany' or field.type == 'manyToMany' %}
-                {{ "{{ form_row("~ entityCC ~"Form."~ field.fieldName ~") }}" }}    
+    {#                {{ "{{ form_row("~ entityCC ~"Form."~ field.fieldName ~") }}" }}    #}
     {% else %}
                 {{ "{{ form_row("~ entityCC ~"Form."~ field.fieldName ~") }}" }}    
     {% endif %}{% endfor %} 

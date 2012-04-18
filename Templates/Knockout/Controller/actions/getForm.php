@@ -6,13 +6,22 @@
      */
     public function getFormAction($id)
     {
-        $form = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form');
-
-        ${{ entityCC }} = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->find($id);
-
+{% for field in uniqueManyToOneRelations %}
+        ${{ field.targetEntityName }}s = $this->container->get('{{ field.targetBundleAlias }}.{{ field.targetEntityName | lower }}_manager')->findAllActive();
+{% endfor %}
+        $form = $this->container->get('form.factory')->create(new \{{ bundleNamespace }}\Form\Type\{{ entity }}FormType({% if uniqueManyToOneRelations %}array(
+{% for field in uniqueManyToOneRelations %}
+             '{{ field.targetEntityName }}s' => ${{ field.targetEntityName }}s,
+{% endfor %}
+        )
+{% endif %}
+        ));
         return array(
-            '{{ entityCC }}' => ${{ entityCC }},
-            '{{ entityCC }}Form' => $form->createView()
-        ); 
+            '{{ entityCC }}Form' => $form->createView(),
+{% for field in uniqueManyToOneRelations %}
+            '{{ field.targetEntityName }}s' => ${{ field.targetEntityName }}s,
+{% endfor %}
+        );
+
     }
 

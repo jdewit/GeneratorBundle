@@ -13,6 +13,7 @@
         if ($process === true) {
             $response = new Response('{
                 "status": "OK",
+                "action": "new",
                 "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} created.",
                 "data": '.$this->container->get('serializer')->serialize($form->getData(), 'json').'
             }');

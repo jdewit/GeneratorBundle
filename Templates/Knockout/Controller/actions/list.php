@@ -6,14 +6,14 @@
      */
     public function listAction()
     {
-        $form = $this->container->get('{{ bundleAlias }}.{{ entityCC }}Search.form');
-        $form->bindRequest($this->container->get('request'));
+        $searchForm = $this->container->get('{{ bundleAlias }}.{{ entityCC }}Search.form');
+        $searchForm->bindRequest($this->container->get('request'));
 
         if ('POST' == $this->container->get('request')->getMethod()) {
-            if ($form->isValid()) {
+            if ($searchForm->isValid()) {
                 $response = new Response('{
-                    "status" => "OK",
-                    "data" => '.$this->container->get('serializer')->serialize($this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->search($form->getData()), 'json').'
+                    "status": "OK",
+                    "data": '.$this->container->get('serializer')->serialize($this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->search($searchForm->getData()), 'json').'
                 }');
             } else {
                 $response = new Response('{
@@ -25,9 +25,9 @@
 
         } else {
             $response = array(
-                '{{ entityCC }}s' => $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->search(),
+                'searchForm' => $searchForm->createView(),
                 '{{ entityCC }}Form' => $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form')->createView(),
-                'searchForm' => $form->createView()
+                '{{ entityCC }}s' => $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->search(),
             );
         }
 

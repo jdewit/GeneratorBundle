@@ -1,0 +1,151 @@
+parameters:
+    avro_generator.use_owner: true
+    avro_generator.files:
+        controller: 
+            filename: 'Controller/{{ entity }}Controller.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Controller/Controller.php'
+            parameters:
+                actions: ['list', 'new', 'edit', 'delete', 'restore', 'getForm', 'import', 'batchDelete', 'batchRestore']
+            tags: ['controller', 'crud']
+            manipulator:
+                service: 'avro_generator.routing.manipulator'
+                method: 'updateBundleRouting'
+                filename: 'Resources/config/routing.yml'
+                setters: 
+                    format: 'yml'
+        list_view:
+            filename: 'Resources/views/{{ entity }}/list.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/views/list.html.twig'
+            tags: ['view', 'crud']
+
+        table_view:
+            filename: 'Resources/views/{{ entity }}/table.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/views/table.html.twig'
+            tags: ['view', 'crud']
+
+        searchForm_view:
+            filename: 'Resources/views/{{ entity }}/searchForm.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/views/searchForm.html.twig'
+            tags: ['view', 'crud']
+
+        form_view:
+            filename: 'Resources/views/{{ entity }}/form.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/views/form.html.twig'
+            tags: ['view', 'crud']
+
+        import_view:
+            filename: 'Resources/views/{{ entity }}/import.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/views/import.html.twig'
+            tags: ['view', 'crud', 'import']
+
+        features: 
+            filename: 'Features/{{ entity }}.feature'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Features/feature.feature'
+            tags: ['test', 'feature']
+
+        entity: 
+            filename: 'Entity/{{ entity }}.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Entity/Entity.php'
+            tags: ['entity', 'crud']
+
+        entity_manager: 
+            filename: 'Entity/{{ entity }}Manager.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Entity/EntityManager.php'
+            tags: ['entity', 'crud']
+
+        form_type: 
+            filename: 'Form/Type/{{ entity }}FormType.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Form/Type/FormType.php'
+            tags: ['form', 'crud']
+
+        searchForm_type: 
+            filename: 'Form/Type/{{ entity }}SearchFormType.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Form/Type/SearchFormType.php'
+            tags: ['form', 'crud']
+
+        form_handler: 
+            filename: 'Form/Handler/{{ entity }}FormHandler.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Form/Handler/FormHandler.php'
+            tags: ['form', 'crud']
+
+        service_config: 
+            filename: 'Resources/config/services/{{ entityCC }}.yml'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/config/services/service.yml'
+            tags: ['service', 'crud']
+            manipulator:
+                service: 'avro_generator.config.manipulator'
+                method: 'addResource'
+                filename: 'Resources/config/config.yml'
+                setters: 
+                    format: 'yml'
+
+    avro_generator.bundle_folders:
+        controller:
+            path: 'Controller'
+        entity:
+            path: 'Entity'
+        form:
+            path: 'Form'
+        form_type:
+            path: 'Form/Type'
+        form_handler:
+            path: 'Form/Handler'
+        features:
+            path: 'Features'
+        listener: 
+            path: 'Listener'
+        resources: 
+            path: 'Resources'
+        views:
+            path: 'Resources/views'
+        doc:
+            path: 'Resources/doc'
+        meta:
+            path: 'Resources/meta'
+        css:
+            path: 'Resources/public/css'
+        images:
+            path: 'Resources/public/images'
+        js:
+            path: 'Resources/public/js'
+        uploads:
+            path: 'Resources/public/uploads'
+        translations:
+            path: 'Resources/translations'
+        config: 
+            path: 'Resources/config'
+        services:
+            path: 'Resources/config/services'
+
+    avro_generator.bundle_files:
+        bundle:
+            filename: '{{ bundleName }}.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Bundle.php'
+        configuration:
+            filename: 'DependencyInjection/Configuration'
+            template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/Configuration.php'
+        extension:
+            filename: 'DependencyInjection/Extension'
+            template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName | ucFirst }}Extension.php'
+        readme:
+            filename: 'README.md'
+            template: 'AvroGeneratorBundle:Templates/Knockout/README.md'
+        layout:
+            filename: 'Resources/views/layout.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/views/layout.html.twig'
+        routing:
+            filename: 'Resources/config/routing.yml'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/config/routing.yml'
+        config:
+            filename: 'Resources/config/config.yml'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/config/config.yml'
+        license:
+            filename: 'Resources/meta/LICENSE'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/meta/LICENSE'
+        git_ignore:
+            filename: '.gitignore'
+            template: 'AvroGeneratorBundle:Templates/Knockout/gitignore.html.twig'
+        composer:
+            filename: 'composer.json'
+            template: 'AvroGeneratorBundle:Templates/Knockout/composer.json'
+

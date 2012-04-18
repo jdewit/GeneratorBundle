@@ -7,6 +7,7 @@
     public function editAction($id)
     {
         ${{ entityCC }} = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->find($id);
+
         $form = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form');
         $formHandler = $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form.handler');
 
@@ -14,6 +15,7 @@
         if ($process === true) {
             $response = new Response('{
                 "status": "OK",
+                "action": "edit",
                 "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} updated.",
                 "data": '.$this->container->get('serializer')->serialize($form->getData(), 'json').'
             }');

@@ -2,12 +2,12 @@
 {% if field.type == 'string' %}
 {% if field.fieldName == 'email' %}
             ->add('{{ field.fieldName }}', 'email', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle}}',  
                     'class' => 'email',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "
@@ -16,14 +16,14 @@
             ))          
 {% elseif field.fieldName == 'date' %}
             ->add('{{ field.fieldName }}', 'date', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'widget' => 'single_text',
                 'input' => 'string',
                 'format' => 'yyyy-MM-dd', 
                 'attr' => array(
                     'title' => 'Pick a date',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }},
                         datepicker: true
@@ -33,12 +33,12 @@
             ))
 {% elseif field.fieldName == 'country' %}
             ->add('{{ field.fieldName }}', 'country', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle}}',  
                     'class' => '',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "
@@ -47,12 +47,12 @@
             ))   
 {% elseif field.fieldName == 'zipCode' %}
             ->add('{{ field.fieldName }}', 'text', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle}}',  
                     'class' => 'zipCode',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "
@@ -61,12 +61,12 @@
             ))   
 {% else %}
             ->add('{{ field.fieldName }}', 'text', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle}}',  
                     'class' => 'capitalize',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "
@@ -76,13 +76,13 @@
 {% endif %}
 {% elseif field.type == 'decimal' %}
             ->add('{{ field.fieldName }}', 'number', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'precision' => {{ field.precision }},
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle}}',  
                     'class' => 'number',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "
@@ -92,12 +92,12 @@
             ))      
 {% elseif field.type == 'text' %}
             ->add('{{ field.fieldName }}', 'textarea', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle}}',  
                     'class' => '',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "
@@ -107,14 +107,14 @@
             ))          
 {% elseif field.type == 'datetime' %}
             ->add('{{ field.fieldName }}', 'date', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'widget' => 'single_text',
                 'input' => 'datetime',
                 'format' => 'yyyy-MM-dd', 
                 'attr' => array(
                     'title' => 'Pick a date',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }},
                         datepicker: true
@@ -128,71 +128,77 @@
                 'required' => false,
                 'label' => 'false'
             ))
-{% else %}
+{% elseif searchForm is not defined %}
             ->add('{{ field.fieldName }}', 'entity', array(
-                'empty_value' => 'Select a {{ field.fieldName | camelCaseToTitle | lower }}...',
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'empty_value' => 'Select a {{ field.fieldTitle}}...',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'class' =>'{{ field.targetEntity }}',
-{% if searchForm is not defined %}
                 'choices' => ${{ field.targetEntityName }}s,
-{% else %}
-                'choices' => array(),                
-{% endif %}
                 'attr' => array(
                     'title' => 'Choose a {{ field.fieldName }}',  
                     'class' => '',
-{% if searchForm is defined %}
+                    'data-href' => $this->router->generate('{{ field.targetBundleAlias }}_{{ field.targetEntityName }}_getForm'),
+                    'data-bind' => "
+                        value: selected{{ field.fieldName | ucFirst }},
+                        options: avro.available{{ field.targetEntityName | ucFirst }}s,
+                        optionsValue: 'id',
+                        optionsText: 'name',
+                        newSelect: selected{{ field.fieldName | ucFirst }}
+                    "
+                )
+            ))  
+{% else %}
+            ->add('{{ field.fieldName }}', 'choice', array(
+                'empty_value' => 'Select a {{ field.fieldTitle}}...',
+                'label' => '{{ field. fieldTitle }}',
+                'required' => false,
+                'choices' => array(),
+                'attr' => array(
+                    'title' => 'Choose a {{ field.fieldName }}',  
+                    'class' => '',
                     'data-bind' => "
                         options: avro.available{{ field.targetEntityName | ucFirst }}s,
                         optionsValue: 'id',
                         optionsText: 'name',
                         chosen: true
                     "
-{% endif %}
-{% if style == 'knockout' and searchForm is not defined %}
-                    'data-href' => $this->router->generate('{{ field.targetBundleAlias }}_{{ field.targetEntityName }}_getForm'),
-                    'data-bind' => "
-                        value: selected{{ field.fieldName | ucFirst }},
-                        newSelect: selected{{ field.fieldName | ucFirst }}
-                    "
-{% endif %}
                 )
             ))  
 {% endif %}
 {% elseif field.type == 'oneToMany' %}
-{% if ignoreManyFields is not defined %}
-            ->add('{{ field.fieldName }}', 'collection', array(
-                'label' => 'false',
-                'required' => false,
-                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType($this->context, $this->router),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
-                'by_reference' => false,
-                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'), 
-            ))
+{% if searchForm is not defined %}
+//            ->add('{{ field.fieldName }}', 'collection', array(
+//                'label' => 'false',
+//                'required' => false,
+//                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType($this->router{% if uniqueManyToOneRelations %}, $this->relations{% endif %}),
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'prototype' => true,
+//                'by_reference' => false,
+//                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'), 
+//            ))
 {% endif %}
 {% elseif field.type == 'manyToMany' %}
-{% if ignoreManyFields is not defined %}
-            ->add('{{ field.fieldName }}', 'collection', array(
-                'label' => 'false',
-                'required' => false,
-                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType($this->context, $this->router),
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype' => true,
-                'by_reference' => false,
-                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'), 
-            ))
+{% if searchForm is not defined %}
+//            ->add('{{ field.fieldName }}', 'collection', array(
+//                'label' => 'false',
+//                'required' => false,
+//                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType($this->router{% if uniqueManyToOneRelations %}, $this->relations{% endif %}),
+//                'allow_add' => true,
+//                'allow_delete' => true,
+//                'prototype' => true,
+//                'by_reference' => false,
+//                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'), 
+//            ))
 {% endif %}
 {% elseif field.type == 'boolean' %}  
             ->add('{{ field.fieldName }}', 'checkbox', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => '{{ field.fieldName | camelCaseToTitle }}?',  
-{% if style == 'knockout' and searchForm is not defined %}
+                    'title' => '{{ field. fieldTitle }}?',  
+{% if searchForm is not defined %}
                     'data-bind' => "
                         checked: {{ field.fieldName }}
                     "
@@ -201,12 +207,12 @@
             ))   
 {% else %}
             ->add('{{ field.fieldName }}', '{{ field.type }}', array(
-                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                  'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldTitle }}',  
                     'class' => '',
-{% if style == 'knockout' and searchForm is not defined %}
+{% if searchForm is not defined %}
                     'data-bind' => "
                         value: {{ field.fieldName }}
                     "

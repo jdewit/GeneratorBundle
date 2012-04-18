@@ -47,7 +47,6 @@ class {{ entity }}FormHandler
                 $this->onSuccess(${{ entityCC }});
 
                 return true;
-{% if style == 'knockout' %}
             } else { 
                 $response = array();
                 foreach ($this->form->getChildren() as $field) {
@@ -59,7 +58,6 @@ class {{ entity }}FormHandler
 
                 return $response;
             }
-{% endif %}
         }
 
         return false;

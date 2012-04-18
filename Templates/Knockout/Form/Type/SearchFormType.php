@@ -3,10 +3,6 @@ namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-{% if style == 'knockout' %}
-use Symfony\Component\Routing\RouterInterface;
-{% endif %}
 
 /*
  * Search Form for a {{ entity }}
@@ -15,28 +11,24 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class {{ entity }}SearchFormType extends AbstractType
 { 
-    protected $owner;
-{% if style =='knockout' %}
-    protected $context;
-    protected $router;
-{% endif %}
+{% for field in uniqueManyToOneRelations %}
+    protected ${{ field.targetEntityName }}Manager;
+{% endfor %}
 
-    public function __construct(SecurityContextInterface $context{% if style == 'knockout' %}, RouterInterface $router{% endif %}) {
-        $this->owner = $context->getToken()->getUser()->getOwner();
-{% if style == 'knockout' %} 
-        $this->context = $context;
-        $this->router = $router;
-{% endif %}
-
+    public function __construct({% for field in uniqueManyToOneRelations %}{% if not loop.first %}, {% endif %}${{ field.targetEntityName }}Manager{% endfor %}) {
+{% for field in uniqueManyToOneRelations %}
+        $this->{{ field.targetEntityName }}Manager = ${{ field.targetEntityName }}Manager;
+{% endfor %}
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $owner = $this->owner;
-
+{% for field in uniqueManyToOneRelations %}
+        ${{ field.targetEntityName }}s = $this->{{ field.targetEntityName }}Manager->findAllActive();
+{% endfor %}
         $builder
 {% set searchForm = true %}
-{% include 'Form/Type/Fields.html.twig' %}
+{% include 'Knockout/Form/Type/Fields.html.twig' %}
 {% for field in fields %}
 {% if field.fieldName == 'date' %}
             ->add('startDate', 'date', array(
@@ -72,7 +64,10 @@ class {{ entity }}SearchFormType extends AbstractType
                 ),
                 'attr' => array(
                     'title' => 'Sort by column',
-                    'chosen' => true
+                    'data-bind' => "
+                        orderBy: true,
+                        chosen: true
+                    "
                 )
             ))
             ->add('limit', 'choice', array(
@@ -81,7 +76,8 @@ class {{ entity }}SearchFormType extends AbstractType
                 'attr' => array(
                     'title' => 'Show results',
                     'data-bind' => "
-                        limit: true
+                        limit: true,
+                        chosen: true
                     "
                 )
             ))
@@ -96,7 +92,6 @@ class {{ entity }}SearchFormType extends AbstractType
                 )
             ))
             ->add('direction', 'hidden', array(
-                'required' => false,
                 'attr' => array(
                     'data-bind' => "
                         value: direction
@@ -104,7 +99,6 @@ class {{ entity }}SearchFormType extends AbstractType
                 )
             ))
             ->add('offset', 'hidden', array(
-                'required' => false,
                 'attr' => array(
                     'data-bind' => "
                         value: offset
@@ -112,7 +106,6 @@ class {{ entity }}SearchFormType extends AbstractType
                 )
             ))
             ->add('filter', 'hidden', array(
-                'required' => false,
                 'attr' => array(
                     'data-bind' => "
                         value: filter

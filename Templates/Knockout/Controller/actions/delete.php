@@ -12,12 +12,13 @@
         if ($process === true) {
             $response = new Response('{
                 "status": "OK",
-                "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} deleted."
+                "notice": "{{ entityTitle }} deleted.",
+                "data": $id
             }');
         } else {
             $response = new Response('{
                 "status": "OK",
-                "notice": "Unable to delete {{ entity | camelCaseToTitle | lower | ucFirst }}."
+                "notice": "Unable to delete {{ entityTitle }}."
             }');
         }
         $response->headers->set('Content-Type', 'application/json');

@@ -12,13 +12,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 /**
  * {{ entity }} controller.
  *
- * @Route("/{{ entityTitle }}")
+ * @Route("/{{ entityCC }}")
  *
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class {{ entity }}Controller extends ContainerAware
 {
 {% for action in actions %}
-    {%- include 'Controller/Knockout/actions/'~ action ~'.html.twig' %}
+    {%- include 'Knockout/Controller/actions/'~ action ~'.php' %}
 {% endfor %}
 }

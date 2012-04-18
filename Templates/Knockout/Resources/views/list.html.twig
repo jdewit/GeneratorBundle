@@ -13,6 +13,7 @@
             <a href="#" class="btn btn-primary throw-right" data-bind="click: new{{ entity }}"><i class="sprite-add"></i>New {{ entity | camelCaseToTitle }}</a>
         </div>
         {{ "{% include '"~ bundleName~":"~ entity ~":table.html.twig' %}" }}
+        {{ "{% include '"~ bundleName~":"~ entity ~":searchForm.html.twig' %}" }}
     </div>
     <div id="{{ entityCC }}-container">
         {{ "{% include '"~ bundleName~":"~ entity ~":form.html.twig' %}" }}
@@ -21,13 +22,13 @@
 {{ "{% block customJS %}" }}
 
     ;(function(avro, $, undefined) {
+{% for field in uniqueManyToOneRelations %}
+        avro.available{{ field.targetEntityName | ucFirst }}s = {{ "{{ app.request.attributes.get('"~ field.targetEntityName ~"s') | serialize | raw }}" }};
+{% endfor %}
         avro.{{ entityCC }}ListModel = new {{ entityCC }}ListModel({
             {{ entityCC }}s: {{ "{{ "~ entityCC ~"s | serialize | raw }}" }}
         });
         avro.{{ entityCC }}Model = new {{ entityCC }}Model();
-{% for field in uniqueManyToOneRelations %}
-        avro.available{{ entity }}s = {{ "{{ app.request.attributes.get('"~ entityCC ~"s') | serialize | raw }}" }};
-{% endfor %}
     }(window.avro = window.avro || {}, jQuery)); 
 
     ko.applyBindings(avro.{{ entityCC }}ListModel, $("#{{ entityCC }}-list-container")[0]);

@@ -24,7 +24,7 @@ class AvroGeneratorExtension extends Extension
         $container->setParameter('avro_generator.add_fields', $config['add_fields']);
         $container->setParameter('avro_generator.use_owner', $config['use_owner']);
 
-        $supportedStyles = array('avro');
+        $supportedStyles = array('avro', 'knockout');
 
         if (in_array($config['style'], $supportedStyles)) {
             $loader->load(sprintf('templates/%s.yml', $config['style']));

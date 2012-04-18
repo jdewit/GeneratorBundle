@@ -11,12 +11,13 @@
         if ($process === true) {
             $response = new Response('{
                 "status": "OK",
-                "notice": "{{ entity | camelCaseToTitle | lower | ucFirst }} restored."
+                "notice": "{{ entityTitle }} restored.",
+                "data": $id
             }');
         } else {
             $response = new Response('{
                 "status": "OK",
-                "notice": "Unable to restore {{ entity | camelCaseToTitle | lower | ucFirst }}."
+                "notice": "Unable to restore {{ entityTitle }}."
             }');
         } 
         $response->headers->set('Content-Type', 'application/json');
