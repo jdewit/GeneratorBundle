@@ -1,4 +1,7 @@
 #{{ entityTitle }} services config
+parameters:
+    {{ bundleAlias }}.{{ entityCC }}.class: '{{ bundleVendor }}\{{ bundleBaseName }}\Entity\{{ entity }}'
+
 services:
     {{ bundleAlias }}.{{ entityCC }}_manager:
         class: {{ bundleNamespace }}\Entity\{{ entity }}Manager
@@ -9,7 +12,7 @@ services:
         scope: request
         tags:
             - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }} }
-        arguments: ["@router", "@request"{% for field in uniqueManyToOneRelations %}, "@{{ field.targetBundleAlias }}.{{ field.targetEntityName | lower }}_manager"{% endfor %}]
+        arguments: [%{{ bundleAlias }}.{{ entityCC }}.class%, "@router", "@request"{% for field in uniqueManyToOneRelations %}, "@{{ field.targetBundleAlias }}.{{ field.targetEntityName | lower }}_manager"{% endfor %}]
        
     {{ bundleAlias }}.{{ entityCC }}.form:
         factory_method: createNamed

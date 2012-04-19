@@ -16,13 +16,20 @@ use {{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEnti
  */
 class {{ entity }}FormType extends AbstractType
 { 
-    protected $router;
-    protected $request;
+    private $class;
+    private $router;
+    private $request;
 {% for field in uniqueManyToOneRelations %}
-    protected ${{ field.targetEntityName }}Manager;
+    private ${{ field.targetEntityName }}Manager;
 {% endfor %}
 
-    public function __construct(RouterInterface $router, Request $request{% for field in uniqueManyToOneRelations %}, {{ field.targetEntityName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endfor %}) {
+    /**
+     * @param string $class The {{ entity }} class name
+     * @param RouterInterface $router
+     * @param Request $request
+     */
+    public function __construct($class, RouterInterface $router, Request $request{% for field in uniqueManyToOneRelations %}, {{ field.targetEntityName | ucFirst }}Manager ${{ field.targetEntityName }}Manager{% endfor %}) {
+        $this->class = $class;
         $this->router = $router;
         $this->request = $request;
 {% for field in uniqueManyToOneRelations %}
@@ -42,11 +49,13 @@ class {{ entity }}FormType extends AbstractType
         ;
     }
 
-    public function getDefaultOptions(array $options)
+    public function getDefaultOptions()
     {
-        return array('data_class' => '{{ bundleVendor }}\{{ bundleBaseName }}\Entity\{{ entity }}');
-    }    
-    
+        return array(
+            'data_class' => $this->class
+        );
+    }
+
     public function getName()
     {
         return '{{ bundleAlias }}_{{ entityCC }}';

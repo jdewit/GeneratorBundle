@@ -56,7 +56,7 @@ class {{ entity }}FormType extends AbstractType
         ;
     }
 
-    public function getDefaultOptions(array $options)
+    public function getDefaultOptions()
     {
         return array('data_class' => '{{ bundleVendor }}\{{ bundleBaseName }}\Entity\{{ entity }}');
     }    
