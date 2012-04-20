@@ -131,11 +131,11 @@ parameters:
             filename: '{{ bundleName }}.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Bundle.php'
         configuration:
-            filename: 'DependencyInjection/Configuration'
+            filename: 'DependencyInjection/Configuration.php'
             template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/Configuration.php'
         extension:
-            filename: 'DependencyInjection/Extension'
-            template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName | ucFirst }}Extension.php'
+            filename: 'DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName }}Extension.php'
+            template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/Extension.php'
         readme:
             filename: 'README.md'
             template: 'AvroGeneratorBundle:Templates/Avro/README.md'

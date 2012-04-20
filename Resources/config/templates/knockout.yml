@@ -122,11 +122,11 @@ parameters:
             filename: '{{ bundleName }}.php'
             template: 'AvroGeneratorBundle:Templates/Knockout/Bundle.php'
         configuration:
-            filename: 'DependencyInjection/Configuration'
+            filename: 'DependencyInjection/Configuration.php'
             template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/Configuration.php'
         extension:
-            filename: 'DependencyInjection/Extension'
-            template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName | ucFirst }}Extension.php'
+            filename: 'DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName }}Extension.php'
+            template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/Extension.php'
         readme:
             filename: 'README.md'
             template: 'AvroGeneratorBundle:Templates/Knockout/README.md'

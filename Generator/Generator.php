@@ -182,11 +182,13 @@ class Generator
                 '{{ entityCC }}',
                 '{{ bundleVendor }}',
                 '{{ bundleName }}'
+                '{{ bundleCoreName }}'
             ), array(
                 array_key_exists('entity', $this->parameters) ? $this->parameters['entity'] : '', 
                 array_key_exists('entityCC', $this->parameters) ? $this->parameters['entityCC'] : '',
                 array_key_exists('bundleVendor', $this->parameters) ? $this->parameters['bundleVendor'] : '',
                 array_key_exists('bundleName', $this->parameters) ? $this->parameters['bundleName'] : ''
+                array_key_exists('bundleCoreName', $this->parameters) ? ucFirst($this->parameters['bundleCoreName']) : ''
             ), 
             $filename
         );
