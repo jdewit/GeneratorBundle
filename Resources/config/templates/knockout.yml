@@ -5,7 +5,7 @@ parameters:
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Templates/Knockout/Controller/Controller.php'
             parameters:
-                actions: ['list', 'new', 'edit', 'delete', 'restore', 'getForm', 'import', 'batchDelete', 'batchRestore']
+                actions: ['list', 'new', 'edit', 'delete', 'restore', 'getForm', 'import', 'batch', 'batchDelete', 'batchRestore']
             tags: ['controller', 'crud']
             manipulator:
                 service: 'avro_generator.routing.manipulator'
@@ -68,6 +68,16 @@ parameters:
             template: 'AvroGeneratorBundle:Templates/Knockout/Form/Handler/FormHandler.php'
             tags: ['form', 'crud']
 
+        entity_model: 
+            filename: 'Resources/assets/js/knockoutjs/{{ entityCC }}Model.js'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/assets/js/knockoutjs/model.js'
+            tags: ['knockout']
+
+        entity_listModel: 
+            filename: 'Resources/assets/js/knockoutjs/{{ entityCC }}ListModel.js'
+            template: 'AvroGeneratorBundle:Templates/Knockout/Resources/assets/js/knockoutjs/listModel.js'
+            tags: ['knockout']
+
         service_config: 
             filename: 'Resources/config/services/{{ entityCC }}.yml'
             template: 'AvroGeneratorBundle:Templates/Knockout/Resources/config/services/service.yml'
@@ -78,6 +88,7 @@ parameters:
                 filename: 'Resources/config/config.yml'
                 setters: 
                     format: 'yml'
+
 
     avro_generator.bundle_folders:
         controller:

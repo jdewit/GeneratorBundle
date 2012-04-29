@@ -76,7 +76,7 @@ class {{ entity }}SearchFormType extends AbstractType
             ))
             ->add('limit', 'choice', array(
                 'label' => 'Show',
-                'choices' => array(20 => '20', 50 => '50', 100 => '100'),
+                'choices' => array(15 => '15', 50 => '50', 100 => '100'),
                 'attr' => array(
                     'title' => 'Show results',
                     'data-bind' => "

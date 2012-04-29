@@ -40,7 +40,12 @@
                     'class' => '',
 {% if searchForm is not defined %}
                     'data-bind' => "
-                        value: {{ field.fieldName }}
+                        value: {{ field.fieldName }},
+                        chosen: true
+                    "
+{% else %}
+                    'data-bind' => "
+                        chosen: true
                     "
 {% endif %}
                 )
@@ -124,36 +129,15 @@
             ))
 {% elseif field.type == 'manyToOne' %}
 {% if field.fieldName == 'image' or field.fieldName == 'logo' %}
-            ->add('image', new \Avro\AssetBundle\Form\Type\ImageFormType(), array(
+            ->add('image', new \Avro\ExtraBundle\Form\Type\ImageFormType(), array(
                 'required' => false,
                 'label' => 'false'
             ))
-{% elseif searchForm is not defined %}
-            ->add('{{ field.fieldName }}', 'entity', array(
-                'empty_value' => 'Select a {{ field.fieldTitle}}...',
+{% elseif searchForm is defined %}
+            ->add('{{ field.fieldName }}', 'entity_id', array(
                 'label' => '{{ field. fieldTitle }}',
                 'required' => false,
                 'class' =>'{{ field.targetEntity }}',
-                'choices' => ${{ field.targetEntityName }}s,
-                'attr' => array(
-                    'title' => 'Choose a {{ field.fieldName }}',  
-                    'class' => '',
-                    'data-href' => $this->router->generate('{{ field.targetBundleAlias }}_{{ field.targetEntityName }}_getForm'),
-                    'data-bind' => "
-                        value: selected{{ field.fieldName | ucFirst }},
-                        options: avro.available{{ field.targetEntityName | ucFirst }}s,
-                        optionsValue: 'id',
-                        optionsText: 'name',
-                        newSelect: selected{{ field.fieldName | ucFirst }}
-                    "
-                )
-            ))  
-{% else %}
-            ->add('{{ field.fieldName }}', 'choice', array(
-                'empty_value' => 'Select a {{ field.fieldTitle}}...',
-                'label' => '{{ field. fieldTitle }}',
-                'required' => false,
-                'choices' => array(),
                 'attr' => array(
                     'title' => 'Choose a {{ field.fieldName }}',  
                     'class' => '',
@@ -161,6 +145,7 @@
                         options: avro.available{{ field.targetEntityName | ucFirst }}s,
                         optionsValue: 'id',
                         optionsText: 'name',
+                        optionsCaption: 'Select a {{ field.fieldTitle}}...',
                         chosen: true
                     "
                 )

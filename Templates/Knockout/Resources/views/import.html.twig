@@ -1,7 +1,7 @@
 {{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <div class="page-heading">
-        <h1>Import {{ entityCC | camelCaseToTitle }}s</h1>
+    <div class="page-header">
+        <h1>Import {{ entityTitle }}s</h1>
     </div>
     <form class="form-horizontal" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_import') }}" }}" method="post" {{ "{{ form_enctype(form) }}" }}>
         <div id="error-container"></div>

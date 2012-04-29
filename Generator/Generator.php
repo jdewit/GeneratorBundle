@@ -147,7 +147,7 @@ class Generator
     public function executeManipulators($file)
     {
         $manipulator = array_key_exists('manipulator', $file) ? $file['manipulator'] : false;
-        if ($manipulator) {
+        if ($manipulator && $this->parameters['avro_generator']['overwrite']) {
             $manipulatorService = $this->container->get($manipulator['service']);
             $manipulatorService->setParameters($this->parameters);
             $manipulatorService->setFilename($manipulator['filename']);
@@ -181,13 +181,13 @@ class Generator
                 '{{ entity }}', 
                 '{{ entityCC }}',
                 '{{ bundleVendor }}',
-                '{{ bundleName }}'
+                '{{ bundleName }}',
                 '{{ bundleCoreName }}'
             ), array(
                 array_key_exists('entity', $this->parameters) ? $this->parameters['entity'] : '', 
                 array_key_exists('entityCC', $this->parameters) ? $this->parameters['entityCC'] : '',
                 array_key_exists('bundleVendor', $this->parameters) ? $this->parameters['bundleVendor'] : '',
-                array_key_exists('bundleName', $this->parameters) ? $this->parameters['bundleName'] : ''
+                array_key_exists('bundleName', $this->parameters) ? $this->parameters['bundleName'] : '',
                 array_key_exists('bundleCoreName', $this->parameters) ? ucFirst($this->parameters['bundleCoreName']) : ''
             ), 
             $filename
@@ -335,7 +335,7 @@ class Generator
 
         foreach($fields as $field) {
             $type = $field['type'];
-            if ($type == 'manyToOne') {
+            if ($type == 'manyToOne' || $type == 'oneToMany' || $type == 'manyToMany') {
                 $target = $field['targetEntity'];
                 if (!in_array($target, $relations) && $target != 'Avro\AssetBundle\Entity\Image') {
                     $relations[] = $target;

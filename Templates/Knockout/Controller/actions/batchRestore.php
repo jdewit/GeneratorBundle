@@ -23,7 +23,7 @@
 
         $response = new Response('{
             "status": "OK",
-            "notice": '.$i.' {{ entityTitleLC }}s restored."
+            "notice": "'.sprintf('%s {{ entityTitleLC }}%s restored.', $i, count($i) > 1 ? 's' : '').'"
         }');
 
         $response->headers->set('Content-Type', 'application/json');

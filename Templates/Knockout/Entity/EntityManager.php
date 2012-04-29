@@ -230,10 +230,24 @@ class {{ entity }}Manager
     }
 
     /**
+     * Find active {{ entityCC }}s
+     *
+     * @return array {{ entity }}s
+     */
+    public function findAllActive()
+    {
+        $criteria['isDeleted'] = false;
+{% if avro_generator.use_owner %}
+        $criteria['owner'] = $this->owner->getId();
+{% endif %}
+
+        return $this->repository->findBy($criteria);
+    }
+
+    /**
      * Search {{ entityCC }}s
      * 
      * @param array $query Search criteria
-     * @param string $offset 
      * @return array {{ entity }}s
      */
     public function search(array $query = array())
@@ -263,11 +277,11 @@ class {{ entity }}Manager
 {% endif %}
 
         switch($query['filter']) {
-            case 'Active':
-                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
-            break;
             case 'Deleted':
                 $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, true);
+            break;
+            default:
+                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
             break;
         }
 

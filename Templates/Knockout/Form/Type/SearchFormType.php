@@ -11,21 +11,9 @@ use Symfony\Component\Form\FormBuilder;
  */
 class {{ entity }}SearchFormType extends AbstractType
 { 
-{% for field in uniqueManyToOneRelations %}
-    protected ${{ field.targetEntityName }}Manager;
-{% endfor %}
-
-    public function __construct({% for field in uniqueManyToOneRelations %}{% if not loop.first %}, {% endif %}${{ field.targetEntityName }}Manager{% endfor %}) {
-{% for field in uniqueManyToOneRelations %}
-        $this->{{ field.targetEntityName }}Manager = ${{ field.targetEntityName }}Manager;
-{% endfor %}
-    }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-{% for field in uniqueManyToOneRelations %}
-        ${{ field.targetEntityName }}s = $this->{{ field.targetEntityName }}Manager->findAllActive();
-{% endfor %}
         $builder
 {% set searchForm = true %}
 {% include 'Knockout/Form/Type/Fields.html.twig' %}
@@ -65,28 +53,28 @@ class {{ entity }}SearchFormType extends AbstractType
                 'attr' => array(
                     'title' => 'Sort by column',
                     'data-bind' => "
-                        orderBy: true,
+                        value: orderBy,
+                        chosen: true
+                    "
+                )
+            ))
+            ->add('filter', 'choice', array(
+                'label' => 'Filter',
+                'choices' => array('All' => 'All', 'Deleted' => 'Deleted'),
+                'attr' => array(
+                    'data-bind' => "
+                        value: filter,
                         chosen: true
                     "
                 )
             ))
             ->add('limit', 'choice', array(
                 'label' => 'Show',
-                'choices' => array(20 => '20', 50 => '50', 100 => '100'),
+                'choices' => array(15 => '15', 50 => '50', 100 => '100'),
                 'attr' => array(
                     'title' => 'Show results',
                     'data-bind' => "
-                        limit: true,
-                        chosen: true
-                    "
-                )
-            ))
-            ->add('isDeleted', 'choice', array(
-                'label' => 'Search Deleted',
-                'choices' => array(0 => 'No', 1 => 'Yes'),
-                'attr' => array(
-                    'title' => 'Search deleted?',
-                    'data-bind' => "
+                        value: limit,
                         chosen: true
                     "
                 )
@@ -102,13 +90,6 @@ class {{ entity }}SearchFormType extends AbstractType
                 'attr' => array(
                     'data-bind' => "
                         value: offset
-                    "
-                )
-            ))
-            ->add('filter', 'hidden', array(
-                'attr' => array(
-                    'data-bind' => "
-                        value: filter
                     "
                 )
             ))

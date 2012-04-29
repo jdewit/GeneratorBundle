@@ -1,10 +1,10 @@
 {{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <div id="{{ entityCC }}-list-container">
+    <div id="{{ entityCC }}ListContainer">
         <div class="page-header">
             <h1>
-                {{ entity | camelCaseToTitle }}s
-                <select data-bind="filter: filter">
+                {{ entityTitle }}s
+                <select data-bind="filter: filter, value: filter">
                     <option value="All">All</option>
                     <option value="Deleted">Deleted</option>
                     <option value="Search">Search</option>
@@ -15,7 +15,7 @@
         {{ "{% include '"~ bundleName~":"~ entity ~":table.html.twig' %}" }}
         {{ "{% include '"~ bundleName~":"~ entity ~":searchForm.html.twig' %}" }}
     </div>
-    <div id="{{ entityCC }}-container">
+    <div id="{{ entityCC }}Container">
         {{ "{% include '"~ bundleName~":"~ entity ~":form.html.twig' %}" }}
     </div>
 {{ "{% endblock %}" }}
@@ -23,7 +23,7 @@
 
     ;(function(avro, $, undefined) {
 {% for field in uniqueManyToOneRelations %}
-        avro.available{{ field.targetEntityName | ucFirst }}s = {{ "{{ app.request.attributes.get('"~ field.targetEntityName ~"s') | serialize | raw }}" }};
+        avro.available{{ field.targetEntityName | ucFirst }}s = {{ "{{ available"~ field.targetEntityName | ucFirst ~"s | serialize | raw }}" }};
 {% endfor %}
         avro.{{ entityCC }}ListModel = new {{ entityCC }}ListModel({
             {{ entityCC }}s: {{ "{{ "~ entityCC ~"s | serialize | raw }}" }}
@@ -31,8 +31,8 @@
         avro.{{ entityCC }}Model = new {{ entityCC }}Model();
     }(window.avro = window.avro || {}, jQuery)); 
 
-    ko.applyBindings(avro.{{ entityCC }}ListModel, $("#{{ entityCC }}-list-container")[0]);
-    ko.applyBindings(avro.{{ entityCC }}Model, $("#{{ entityCC }}-container")[0]);
+    ko.applyBindings(avro.{{ entityCC }}ListModel, $("#{{ entityCC }}ListContainer")[0]);
+    ko.applyBindings(avro.{{ entityCC }}Model, $("#{{ entityCC }}Container")[0]);
 {{ "{% endblock %}" }}
 
 

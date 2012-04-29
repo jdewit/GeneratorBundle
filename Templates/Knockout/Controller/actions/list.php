@@ -7,9 +7,10 @@
     public function listAction()
     {
         $searchForm = $this->container->get('{{ bundleAlias }}.{{ entityCC }}Search.form');
-        $searchForm->bindRequest($this->container->get('request'));
+        $request = $this->container->get('request');
+        $searchForm->bindRequest($request);
 
-        if ('POST' == $this->container->get('request')->getMethod()) {
+        if ('POST' == $request->getMethod()) {
             if ($searchForm->isValid()) {
                 $response = new Response('{
                     "status": "OK",
@@ -28,6 +29,9 @@
                 'searchForm' => $searchForm->createView(),
                 '{{ entityCC }}Form' => $this->container->get('{{ bundleAlias }}.{{ entityCC }}.form')->createView(),
                 '{{ entityCC }}s' => $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager')->search(),
+{% for field in uniqueManyToOneRelations %}
+                'available{{ field.targetEntityName | ucFirst }}s' => $this->container->get('{{ field.targetBundleAlias }}.{{ field.targetEntityName }}_manager')->findAllActive(),
+{% endfor %}
             );
         }
 

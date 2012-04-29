@@ -1,0 +1,151 @@
+function {{ entityCC }}ListModel(options) {
+    var self = this;
+
+    self.{{ entityCC }}s = ko.observableArray(options ? options.{{ entityCC }}s : []);
+    self.checkAll = ko.observable(false);
+    self.filter = ko.observable('Active');
+    self.orderBy = ko.observable();
+    self.direction = ko.observable();
+    self.offset = ko.observable();
+    self.limit = ko.observable();
+
+    self.resetSearchForm = function() {
+        self.orderBy('updatedAt');
+        self.direction('ASC');
+        self.offset(0);
+        self.limit(15);
+    }
+    self.resetSearchForm();
+
+    self.dialogQueue = $({}); 
+
+    self.refreshList = function() {
+        if (self.dialogQueue.queue('dialogs').length === 0) {
+            avro.ajaxManager.clearCache();
+            self.offset.valueHasMutated();
+        }
+    }
+
+    self.new{{ entity }} = function(data, event) { 
+        avro.{{ entityCC }}Model.set{{ entityCC | ucFirst }}(null); 
+    };
+    self.edit{{ entity }} = function(data, event) { 
+        avro.{{ entityCC }}Model.set{{ entityCC | ucFirst }}(data); 
+    };
+
+    self.batchEdit = function(data, event) {
+        var checked = $('input.selector:checked');
+        if (checked.length) {
+            if (confirm('Are you sure you want to edit ' + checked.length  + ' {{ entityCC }}' + (checked.length > 1 ? 's' : '') + '?')) {
+                $.each(checked, function() {
+                    var id = $(this).val();
+                    self.dialogQueue.queue('dialogs', function(next) {
+                        {{ entityCC }} = ko.utils.arrayFirst(self.{{ entityCC }}s(), function({{ entityCC }}) {
+                            if ({{ entityCC }}.id == id) {
+                                return true;
+                            }
+                        });
+                        if ({{ entityCC }}) {
+                            avro.{{ entityCC }}Model.set{{ entityCC | ucFirst }}({{ entityCC }});
+                            $('#{{ entityCC }}FormModal').on('hidden', function() {
+                            $('input#selector-' + {{ entityCC }}.id).attr('checked', false);
+                                next();       
+                            });
+                        } else {
+                            next();
+                        }
+                    });
+                });        
+                self.dialogQueue.dequeue('dialogs');
+            }
+        } else {
+            avro.createNotice('No {{ entityCC }}s were selected');
+        }
+    };
+    self.delete{{ entity }} = function(data, event) { 
+        var target = event.currentTarget; 
+        var href = target.href; 
+
+        if (confirm("Are you sure you want to delete this {{ entity | camelCaseToTitle }}?")) {
+            var target = event.currentTarget;
+            var href = target.href; 
+
+            avro.ajax({
+                url: href,
+                success: function(response){
+                    if (response['status'] === 'OK') {
+                        self.{{ entityCC }}s.remove(function({{ entityCC }}) { return {{ entityCC }}.id == response['data'] });
+                        avro.createSuccess(response['notice']);
+                        self.refreshList();
+                        $('#{{ entityCC }}FormModal').modal('hide');
+                    } else {
+                        avro.createError(response['notice']);
+                    }
+                },
+            });
+        }
+    };
+    self.batchDelete = function(data, event) {
+        var checked = $('input.selector:checked');
+        if (checked.length) {
+            if (confirm("Are you sure you want to delete these {{ entityTitleLC }}s?")) {
+                avro.ajax({
+                    url: event.currentTarget.href,
+                    data: checked,
+                    success: function(response){
+                        if (response['status'] === 'OK') {
+                            self.refreshList();
+                            avro.createSuccess(response['notice']);
+                        } else {
+                            avro.createError(response['notice']);
+                        }
+                    }
+                });
+            }
+        } else {
+            avro.createNotice('No {{ entityTitleLC }}s selected');
+        }
+    };
+    self.restore{{ entity }} = function(data, event) { 
+        var target = event.currentTarget; 
+        var href = target.href; 
+
+        avro.ajax({
+            url: href,
+            success: function(response){
+                if (response['status'] === 'OK') {
+                    self.{{ entityCC }}s.remove(function({{ entityCC }}) { return {{ entityCC }}.id == response['data'] });
+                    avro.createSuccess(response['notice']);
+                    self.refreshList();
+                    $('#{{ entityCC }}FormModal').modal('hide');
+                } else {
+                    avro.createError(response['notice']);
+                }
+            }
+        });
+    };
+    self.batchRestore = function(data, event) {
+        var checked = $('input.selector:checked');
+        if (checked.length) {
+            if (confirm("Are you sure you want to restore these {{ entityTitleLC }}s?")) {
+                href = event.currentTarget.href; 
+                avro.ajax({
+                    url: href,
+                    data: checked,
+                    success: function(response){
+                        if (response['status'] === 'OK') { 
+                            avro.createSuccess(response['notice']);
+                            self.refreshList();
+                        } else {
+                            avro.createError(response['notice']);
+                        }
+                    }
+                });
+            }
+        } else {
+            avro.createNotice('No {{ entityTitleLC }}s selected');
+        }
+    };
+
+}
+

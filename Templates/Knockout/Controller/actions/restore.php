@@ -12,7 +12,7 @@
             $response = new Response('{
                 "status": "OK",
                 "notice": "{{ entityTitle }} restored.",
-                "data": $id
+                "data": "'.$id.'"
             }');
         } else {
             $response = new Response('{
