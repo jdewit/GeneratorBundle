@@ -65,15 +65,21 @@ EOT
         
         $dialog->writeSection($output, 'Welcome to the Avro code generator!');
 
-        $output->writeln(array(
-            'Enter the name of the entity you wish to create code for.',
-            '(ex. AvroDemoBundle:Blog)',
-            '',
-            'If you wish to generate code for all entities in the bundle,', 
-            'enter just the bundle name. (ex. AvroDemoBundle)'
-        ));
+        $fromEntity = $this->dialog->askConfirmation($this->output, $this->dialog->getQuestion('Would you like to generate code based on an entity?', 'yes', '?'), true); 
 
-        $input = $dialog->ask($output, $dialog->getQuestion('Bundle name with or without entity name', '', ':'));
+        if ($fromEntity) {
+            $output->writeln(array(
+                'Enter the name of the entity you wish to create code for.',
+                '(ex. AvroDemoBundle:Blog)',
+                '',
+                'If you wish to generate code for all entities in the bundle,', 
+                'enter just the bundle name. (ex. AvroDemoBundle)'
+            ));
+
+            $input = $dialog->ask($output, $dialog->getQuestion('Bundle name with or without entity name', '', ':'));
+        } else {
+            $input = $dialog->ask($output, $dialog->getQuestion('Enter the bundle name', '', ':'));
+        }
 
         list($bundleName, $entities) = $this->parseShortcutNotation($input);
 
@@ -90,7 +96,11 @@ Or just press <enter> to generate all files.'
         , '', ':'));
 
         if ($bundleExists) {
-            $this->generateCodeFromEntities($bundle, $entities, $tag);
+            if ($fromEntity) {
+                $this->generateCodeFromEntities($bundle, $entities, $tag);
+            } else {
+                $this->generateStandaloneFiles($bundle, $tag);
+            }
         } else {
             $this->generateBundle($bundleName, $tag);
         }
@@ -134,8 +144,8 @@ Or just press <enter> to generate all files.'
 
             //Generate Bundle/Entity files
             $avroGenerator = new Generator($this->container, $this->output);    
-            $avroGenerator->generateBundleParameters($bundle->getName());
-            $avroGenerator->generateEntityParameters($entity, $fields);
+            $avroGenerator->initializeBundleParameters($bundle->getName());
+            $avroGenerator->initializeEntityParameters($entity, $fields);
 
             $files = $this->container->getParameter('avro_generator.files');
 
@@ -150,8 +160,19 @@ Or just press <enter> to generate all files.'
                     }
                 }
             }
-            
         }
+    }
+
+    /*
+     * Generate Standalone Files
+     *
+     * @param $bundle
+     * @param $tag
+     */
+    public function generateStandaloneFiles($bundle, $tag) 
+    {
+        $avroGenerator = new Generator($this->container, $this->output);    
+        $avroGenerator->initializeBundleParameters($bundle->getName());
 
         $standaloneFiles = $this->container->getParameter('avro_generator.standalone_files');
         if (is_array($standaloneFiles)) {
@@ -454,12 +475,12 @@ Or just press <enter> to generate all files.'
         $bundlePath = $this->getContainer()->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($vendor).'/'.strtolower(str_replace('Bundle', '', $basename).'-bundle').'/'.$vendor.'/'.$basename.'/';       
 
         $generator = new Generator($this->container, $this->output);    
-        $generator->generateBundleParameters($vendor.$basename);
+        $generator->initializeBundleParameters($vendor.$basename);
 
         $folders = $this->container->getParameter('avro_generator.bundle_folders');
         if (is_array($folders)) {
             foreach($folders as $folder) {
-                if ($tag) {
+                if ($tag && array_key_exists('tags', $folder)) {
                     if (in_array($tag, $folder['tags'])) {
                         $generator->renderFolder($bundlePath.$folder['path']);
                     } 
@@ -472,7 +493,7 @@ Or just press <enter> to generate all files.'
         $files = $this->container->getParameter('avro_generator.bundle_files');
         if (is_array($files)) {
             foreach($files as $file) {
-                if ($tag) {
+                if ($tag && array_key_exists('tags', $file)) {
                     if (in_array($tag, $file['tags'])) {
                         $generator->renderFile($file['template'], $file['filename']);  
                     }

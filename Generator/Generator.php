@@ -59,11 +59,11 @@ class Generator
     }
 
     /*
-     * Generate bundle parameters
+     * Initialize bundle parameters
      *
      * @param string $bundleName 
      */
-    public function generateBundleParameters($bundleName)
+    public function initializeBundleParameters($bundleName)
     {
         $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x',$bundleName);
 
@@ -90,12 +90,12 @@ class Generator
     }
 
     /*
-     * Generate parameters
+     * Initialize parameters
      *
      * @param string $entity The entity name
      * @param array $fields Array of the entities fields
      */
-    public function generateEntityParameters($entity, $fields)
+    public function initializeEntityParameters($entity, $fields)
     {
         $parameters = array(
             'entity' => $entity,

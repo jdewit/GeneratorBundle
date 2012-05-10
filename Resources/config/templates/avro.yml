@@ -109,6 +109,7 @@ parameters:
     avro_generator.bundle_folders:
         controller:
             path: 'Controller'
+            tags: ['basic']
         entity:
             path: 'Entity'
         form:
@@ -123,56 +124,87 @@ parameters:
             path: 'Listener'
         resources: 
             path: 'Resources'
+            tags: ['basic']
         views:
             path: 'Resources/views'
+            tags: ['basic']
         doc:
             path: 'Resources/doc'
         meta:
             path: 'Resources/meta'
         css:
             path: 'Resources/public/css'
+            tags: ['basic']
         images:
             path: 'Resources/public/images'
+            tags: ['basic']
         js:
             path: 'Resources/public/js'
+            tags: ['basic']
         uploads:
             path: 'Resources/public/uploads'
         translations:
             path: 'Resources/translations'
         config: 
             path: 'Resources/config'
+            tags: ['basic']
         services:
             path: 'Resources/config/services'
+            tags: ['basic']
 
     avro_generator.bundle_files:
         bundle:
             filename: '{{ bundleName }}.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Bundle.php'
+            tags: ['basic']
         configuration:
             filename: 'DependencyInjection/Configuration.php'
             template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/Configuration.php'
+            tags: ['basic']
         extension:
-            filename: 'DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName }}Extension.php'
+            filename: 'DependencyInjection/{{ bundleVendor }}{{ bundleCoreName }}Extension.php'
             template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/Extension.php'
+            tags: ['basic']
         readme:
             filename: 'README.md'
             template: 'AvroGeneratorBundle:Templates/Avro/README.md'
+            tags: ['basic']
         layout:
             filename: 'Resources/views/layout.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/layout.html.twig'
+            tags: ['basic']
         routing:
             filename: 'Resources/config/routing.yml'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/config/routing.yml'
+            tags: ['basic']
         config:
             filename: 'Resources/config/config.yml'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/config/config.yml'
+            tags: ['basic']
         license:
             filename: 'Resources/meta/LICENSE'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/meta/LICENSE'
+            tags: ['basic']
         git_ignore:
             filename: '.gitignore'
             template: 'AvroGeneratorBundle:Templates/Avro/gitignore.html.twig'
+            tags: ['basic']
         composer:
             filename: 'composer.json'
             template: 'AvroGeneratorBundle:Templates/Avro/composer.json'
+            tags: ['basic']
+
+    avro_generator.standalone_files:
+        controller: 
+            filename: 'Controller/IndexController.php'
+            template: 'AvroGeneratorBundle:Templates/Avro/Controller/Controller.php'
+            parameters:
+                actions: ['index', 'controller']
+            tags: ['basic']
+            manipulator:
+                service: 'avro_generator.routing.manipulator'
+                method: 'updateBundleRouting'
+                filename: 'Resources/config/routing.yml'
+                setters: 
+                    format: 'yml'
 
