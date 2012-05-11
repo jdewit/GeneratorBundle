@@ -197,14 +197,8 @@ parameters:
     avro_generator.standalone_files:
         controller: 
             filename: 'Controller/IndexController.php'
-            template: 'AvroGeneratorBundle:Templates/Avro/Controller/Controller.php'
+            template: 'AvroGeneratorBundle:Templates/Avro/Controller/IndexController.php'
             parameters:
-                actions: ['index', 'controller']
-            tags: ['basic']
-            manipulator:
-                service: 'avro_generator.routing.manipulator'
-                method: 'updateBundleRouting'
-                filename: 'Resources/config/routing.yml'
-                setters: 
-                    format: 'yml'
+                actions: ['index']
+            tags: ['basic', 'controller']
 
