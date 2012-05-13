@@ -21,11 +21,6 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('{{ bundleAlias }}');
        
-        $rootNode
-            ->children()
-                ->scalarNode('db_driver')->cannotBeOverwritten()->defaultValue('{{ db_driver }}')->cannotBeEmpty()->end()
-            ->end();
-
         return $treeBuilder;
     }
 }

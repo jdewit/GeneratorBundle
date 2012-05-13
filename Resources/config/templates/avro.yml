@@ -6,81 +6,99 @@ parameters:
             template: 'AvroGeneratorBundle:Templates/Avro/Controller/Controller.php'
             parameters:
                 actions: ['list', 'new', 'edit', 'delete', 'restore', 'import', 'export', 'batchEdit', 'batchDelete', 'batchRestore']
-            tags: ['controller', 'crud']
+            tags: ['admin']
             manipulator:
                 service: 'avro_generator.routing.manipulator'
                 method: 'updateBundleRouting'
                 filename: 'Resources/config/routing.yml'
                 setters: 
                     format: 'yml'
+        basic_controller: 
+            filename: 'Controller/{{ entity }}Controller.php'
+            template: 'AvroGeneratorBundle:Templates/Avro/Controller/Controller.php'
+            parameters:
+                actions: ['index']
+            tags: ['basic']
+            manipulator:
+                service: 'avro_generator.routing.manipulator'
+                method: 'updateBundleRouting'
+                filename: 'Resources/config/routing.yml'
+                setters: 
+                    format: 'yml'
+        index_view:
+            filename: 'Resources/views/{{ entity }}/index.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/index.html.twig'
+            tags: ['basic']
+
         list_view:
             filename: 'Resources/views/{{ entity }}/list.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/list.html.twig'
-            tags: ['view', 'crud']
+            tags: ['admin']
 
         new_view:
             filename: 'Resources/views/{{ entity }}/new.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/new.html.twig'
-            tags: ['view', 'crud']
+            tags: ['admin']
 
         edit_view:
             filename: 'Resources/views/{{ entity }}/edit.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/edit.html.twig'
-            tags: ['view', 'crud']
+            tags: ['admin']
 
         table_view:
             filename: 'Resources/views/{{ entity }}/table.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/table.html.twig'
-            tags: ['view', 'crud']
+            tags: ['admin']
+
         searchForm_view:
             filename: 'Resources/views/{{ entity }}/searchForm.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/searchForm.html.twig'
-            tags: ['view', 'crud']
+            tags: ['admin']
 
         form_view:
             filename: 'Resources/views/{{ entity }}/form.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/form.html.twig'
-            tags: ['view', 'crud']
+            tags: ['admin', 'form']
 
         import_view:
             filename: 'Resources/views/{{ entity }}/import.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/import.html.twig'
-            tags: ['view', 'crud', 'import']
+            tags: ['admin', 'import']
 
         features: 
             filename: 'Features/{{ entity }}.feature'
             template: 'AvroGeneratorBundle:Templates/Avro/Features/feature.feature'
-            tags: ['test', 'feature']
+            tags: ['test', 'feature', 'admin']
 
         entity: 
             filename: 'Entity/{{ entity }}.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Entity/Entity.php'
-            tags: ['entity', 'crud']
+            tags: ['entity', 'admin']
 
         entity_manager: 
             filename: 'Entity/{{ entity }}Manager.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Entity/EntityManager.php'
-            tags: ['entity', 'crud']
+            tags: ['entity', 'admin']
 
         form_type: 
             filename: 'Form/Type/{{ entity }}FormType.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Form/Type/FormType.php'
-            tags: ['form', 'crud']
+            tags: ['form', 'admin']
 
         searchForm_type: 
             filename: 'Form/Type/{{ entity }}SearchFormType.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Form/Type/SearchFormType.php'
-            tags: ['form', 'crud']
+            tags: ['form', 'admin']
 
         form_handler: 
             filename: 'Form/Handler/{{ entity }}FormHandler.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Form/Handler/FormHandler.php'
-            tags: ['form', 'crud']
+            tags: ['form', 'admin']
 
         service_config: 
             filename: 'Resources/config/services/{{ entityCC }}.yml'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/config/services/service.yml'
-            tags: ['service', 'crud']
+            tags: ['service', 'admin']
             manipulator:
                 service: 'avro_generator.config.manipulator'
                 method: 'addResource'
@@ -91,6 +109,7 @@ parameters:
     avro_generator.bundle_folders:
         controller:
             path: 'Controller'
+            tags: ['basic']
         entity:
             path: 'Entity'
         form:
@@ -105,56 +124,81 @@ parameters:
             path: 'Listener'
         resources: 
             path: 'Resources'
+            tags: ['basic']
         views:
             path: 'Resources/views'
+            tags: ['basic']
         doc:
             path: 'Resources/doc'
         meta:
             path: 'Resources/meta'
         css:
             path: 'Resources/public/css'
+            tags: ['basic']
         images:
             path: 'Resources/public/images'
+            tags: ['basic']
         js:
             path: 'Resources/public/js'
+            tags: ['basic']
         uploads:
             path: 'Resources/public/uploads'
         translations:
             path: 'Resources/translations'
         config: 
             path: 'Resources/config'
+            tags: ['basic']
         services:
             path: 'Resources/config/services'
+            tags: ['basic']
 
     avro_generator.bundle_files:
         bundle:
             filename: '{{ bundleName }}.php'
             template: 'AvroGeneratorBundle:Templates/Avro/Bundle.php'
+            tags: ['basic']
         configuration:
             filename: 'DependencyInjection/Configuration.php'
             template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/Configuration.php'
+            tags: ['basic']
         extension:
-            filename: 'DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName }}Extension.php'
+            filename: 'DependencyInjection/{{ bundleVendor }}{{ bundleCoreName }}Extension.php'
             template: 'AvroGeneratorBundle:Templates/Avro/DependencyInjection/Extension.php'
+            tags: ['basic']
         readme:
             filename: 'README.md'
             template: 'AvroGeneratorBundle:Templates/Avro/README.md'
+            tags: ['basic']
         layout:
             filename: 'Resources/views/layout.html.twig'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/views/layout.html.twig'
+            tags: ['basic']
         routing:
             filename: 'Resources/config/routing.yml'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/config/routing.yml'
+            tags: ['basic']
         config:
             filename: 'Resources/config/config.yml'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/config/config.yml'
+            tags: ['basic']
         license:
             filename: 'Resources/meta/LICENSE'
             template: 'AvroGeneratorBundle:Templates/Avro/Resources/meta/LICENSE'
+            tags: ['basic']
         git_ignore:
             filename: '.gitignore'
             template: 'AvroGeneratorBundle:Templates/Avro/gitignore.html.twig'
+            tags: ['basic']
         composer:
             filename: 'composer.json'
             template: 'AvroGeneratorBundle:Templates/Avro/composer.json'
+            tags: ['basic']
+
+    avro_generator.standalone_files:
+        controller: 
+            filename: 'Controller/IndexController.php'
+            template: 'AvroGeneratorBundle:Templates/Avro/Controller/IndexController.php'
+            parameters:
+                actions: ['index']
+            tags: ['basic', 'controller']
 
