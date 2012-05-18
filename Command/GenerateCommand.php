@@ -125,7 +125,10 @@ Or just press <enter> to generate all files.'
                 $metadata = $this->getEntityMetadata($entityClass);
                 $arr['name'] = $entity;
                 $arr['fields'] = $this->getFieldsFromMetadata($metadata[0]);
-            }    
+            } else {
+                $arr['name'] = $entity;
+                $arr['fields'] = array();
+            }
 
             $entitiesArray[] = $arr;
         }
