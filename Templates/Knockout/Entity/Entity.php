@@ -34,7 +34,7 @@ class {{ entity }}
     protected $id;
 
 {% for field in fields %}
-{%- if field.type == "manyToOne" %}
+{% if field.type == "manyToOne" %}
     /**
      * @var \{{ field.targetEntity }}
      *
@@ -42,7 +42,7 @@ class {{ entity }}
      */
     protected ${{ field.fieldName }};
 
-{%- elseif field.type == "oneToMany" %}
+{% elseif field.type == "oneToMany" %}
     /**
      * @var ArrayCollection
      * 

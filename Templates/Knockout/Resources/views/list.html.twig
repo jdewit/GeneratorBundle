@@ -2,15 +2,17 @@
 {{ "{% block content %}" }}
     <div id="{{ entityCC }}ListContainer">
         <div class="page-header">
-            <h1>
-                {{ entityTitle }}s
-                <select data-bind="filter: filter, value: filter">
-                    <option value="All">All</option>
-                    <option value="Deleted">Deleted</option>
-                    <option value="Search">Search</option>
-                </select>
-            </h1>
-            <a href="#" class="btn btn-primary throw-right" data-bind="click: new{{ entity }}"><i class="sprite-add"></i>New {{ entity | camelCaseToTitle }}</a>
+            <h1 class="pull-left">{{ entityTitle }}s</h1>
+            <span id="filter" class="dropdown" style="margin-left: 2em;">
+                 <a href="#filter" class="btn dropdown-toggle" data-toggle="dropdown"><span data-bind="text: filter"></span> <b class="caret"></b></a>
+                 <ul class="dropdown-menu" style="margin-top: 7px;">
+                    <li><a href="#" data-bind="filter: 'All'">All</a></li>
+                    <li><a href="#" data-bind="filter: 'Deleted'">Deleted</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#" data-bind="filter: 'Search'">Search</a></li>
+                </ul>
+            </span>
+            <a href="#" class="btn btn-primary throw-right" data-bind="click: new{{ entity }}"><i class="icon-plus icon-white"></i>New {{ entity | camelCaseToTitle }}</a>
         </div>
         {{ "{% include '"~ bundleName~":"~ entity ~":table.html.twig' %}" }}
         {{ "{% include '"~ bundleName~":"~ entity ~":searchForm.html.twig' %}" }}
@@ -25,6 +27,9 @@
 {% for field in uniqueManyToOneRelations %}
         avro.available{{ field.targetEntityName | ucFirst }}s = {{ "{{ available"~ field.targetEntityName | ucFirst ~"s | serialize | raw }}" }};
 {% endfor %}
+
+        avro.owner = {{ "{{ app.user.owner | serialize | raw }}" }};
+
         avro.{{ entityCC }}ListModel = new {{ entityCC }}ListModel({
             {{ entityCC }}s: {{ "{{ "~ entityCC ~"s | serialize | raw }}" }}
         });

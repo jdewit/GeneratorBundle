@@ -6,7 +6,7 @@
      */
     public function listAction($filter)
     {
-        $form = $this->container->get('{{ bundle_alias }}.{{ entity_cc }}Search.form');
+        $form = $this->container->get('{{ bundleAlias }}.{{ entityCC }}Search.form');
         $request = $this->container->get('request');
         $form->bindRequest($request);
 

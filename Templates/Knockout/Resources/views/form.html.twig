@@ -16,15 +16,15 @@
             </div>
         </div>
         <div class="modal-footer">
-            <a href="#" class="btn" data-bind="click: closeFormModal"><i class="ui-icon ui-icon-closethick"></i>Cancel</a>
+            <a href="#" class="btn" data-bind="click: closeFormModal">Cancel</a>
             <span data-bind="visible: !{{ entityCC }}Id()">
-                <button type="submit" class="btn btn-primary"><i class="sprite-tick"></i>Create {{ entity | camelCaseToTitle }}</button>
+                <button type="submit" class="btn btn-primary">Create {{ entity | camelCaseToTitle }}</button>
             </span>
             <span data-bind="visible: {{ entityCC }}Id()">
-                <button type="submit" class="btn btn-primary"><i class="sprite-tick"></i>Update {{ entity | camelCaseToTitle }}</button>
+                <button type="submit" class="btn btn-primary">Update {{ entity | camelCaseToTitle }}</button>
                 {{ "{% if is_granted('ROLE_ADMIN') %}" }}
-                    <a class="btn pull-left" title="Delete {{ entityTitleLC }}" data-bind="click: avro.{{ entityCC }}ListModel.delete{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete') }}" }}/'+ {{ entityCC }}Id() }, visible: !isDeleted()"><i class="sprite-delete"></i>Delete</a>
-                    <a class="btn pull-left" title="Restore {{ entityTitleLC }}" data-bind="click: avro.{{ entityCC }}ListModel.restore{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore') }}" }}/'+ {{ entityCC }}Id() }, visible: isDeleted()"><i class="sprite-arrow_refresh"></i>Restore</a>
+                    <a class="btn btn-danger pull-left" title="Delete {{ entityTitleLC }}" data-bind="click: avro.{{ entityCC }}ListModel.delete{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete') }}" }}/'+ {{ entityCC }}Id() }, visible: !isDeleted()">Delete</a>
+                    <a class="btn btn-success pull-left" title="Restore {{ entityTitleLC }}" data-bind="click: avro.{{ entityCC }}ListModel.restore{{ entity }}, attr: { 'href': '{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore') }}" }}/'+ {{ entityCC }}Id() }, visible: isDeleted()">Restore</a>
                 {{ "{% endif %}" }}
             </span>
         </div>
