@@ -250,7 +250,7 @@ class {{ entity }}Manager
      * @param array $query Search criteria
      * @return array {{ entity }}s
      */
-    public function search(array $query = array())
+    public function search(array $query = array(), $asArray = false)
     {
         if (!array_key_exists('orderBy', $query)) {
             $query['orderBy'] = 'updatedAt';
@@ -265,7 +265,7 @@ class {{ entity }}Manager
             $query['offset'] = '0';
         }
         if (!array_key_exists('filter', $query)) {
-            $query['filter'] = 'Active';
+            $query['filter'] = 'All';
         }
 
         $qb = $this->em->createQueryBuilder()->select('{{ entityCC }}')->from($this->class, '{{ entityCC }}');
@@ -309,7 +309,12 @@ class {{ entity }}Manager
                 $index = $index +1;
             }
         }
-        $results = $qb->getQuery()->getResult();
+
+        if (true === $asArray) {
+            $results = $qb->getQuery()->getArrayResult();
+        } else {
+            $results = $qb->getQuery()->getResult();
+        }
 
         return $results; 
     }
