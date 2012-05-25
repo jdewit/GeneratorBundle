@@ -30,10 +30,11 @@
 
         avro.owner = {{ "{{ app.user.owner | serialize | raw }}" }};
 
+        avro.{{ entityCC }}Model = new {{ entityCC }}Model();
         avro.{{ entityCC }}ListModel = new {{ entityCC }}ListModel({
             {{ entityCC }}s: {{ "{{ "~ entityCC ~"s | serialize | raw }}" }}
         });
-        avro.{{ entityCC }}Model = new {{ entityCC }}Model();
+
     }(window.avro = window.avro || {}, jQuery)); 
 
     ko.applyBindings(avro.{{ entityCC }}ListModel, $("#{{ entityCC }}ListContainer")[0]);
