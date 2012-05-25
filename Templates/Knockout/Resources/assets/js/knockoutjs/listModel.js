@@ -2,6 +2,10 @@ function {{ entityCC }}ListModel(options) {
     var self = this;
 
     self.{{ entityCC }}s = ko.observableArray(options ? options.{{ entityCC }}s : []);
+    if (self.{{ entityCC }}s().length === 1) {
+        avro.{{ entityCC }}Model.set{{ entityCC }}(self.{{ entityCC }}s()[0]);
+    }
+
     self.checkAll = ko.observable(false);
     self.filter = ko.observable('Active');
     self.orderBy = ko.observable();

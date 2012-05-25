@@ -276,13 +276,21 @@ class {{ entity }}Manager
         $qb->where('{{ entityCC }}.owner = ?1')->setParameter('1', $this->owner);
 {% endif %}
 
-        switch($query['filter']) {
-            case 'Deleted':
-                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, true);
-            break;
-            default:
-                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
-            break;
+        $filter = $query['filter'];
+        if (is_numeric($filter)) {
+            $qb->andWhere('{{ entityCC }}.id = ?2')->setParameter(2, $filter);
+        } else {
+            switch($filter) {
+                case 'All':
+                    $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
+                break;
+                case 'Deleted':
+                    $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, true);
+                break;
+                default:
+                    $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
+                break;
+            }
         }
 
         $index = 3;
