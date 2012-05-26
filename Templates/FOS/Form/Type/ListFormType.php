@@ -2,7 +2,7 @@
 namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 {% if style == 'knockout' %}
 use Symfony\Component\Routing\RouterInterface;
@@ -30,7 +30,7 @@ class {{ entity }}SearchFormType extends AbstractType
 
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $owner = $this->owner;
 

@@ -2,7 +2,7 @@
 namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 {% if avro_generator.use_owner %}
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -29,7 +29,7 @@ class {{ entity }}SearchFormType extends AbstractType
 {% endif %}
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $owner = $this->owner;
 

@@ -2,7 +2,7 @@
 namespace {{ bundleNamespace }}\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 {% if style == 'knockout' %}
@@ -43,7 +43,7 @@ class {{ entity }}FormType extends AbstractType
 {% endfor %}
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $owner = $this->owner;
 
