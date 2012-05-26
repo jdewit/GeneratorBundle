@@ -136,7 +136,7 @@ parameters:
             filename: 'DependencyInjection/Configuration.php'
             template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/Configuration.php'
         extension:
-            filename: 'DependencyInjection/{{ bundleVendor }}/{{ bundleCoreName }}Extension.php'
+            filename: 'DependencyInjection/{{ bundleVendor }}{{ bundleCoreName }}Extension.php'
             template: 'AvroGeneratorBundle:Templates/Knockout/DependencyInjection/Extension.php'
         readme:
             filename: 'README.md'
