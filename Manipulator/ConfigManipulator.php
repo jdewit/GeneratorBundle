@@ -81,9 +81,13 @@ class ConfigManipulator extends Manipulator
 
         //check if resource exists
         $resourceExists = false;
-        foreach($config['imports'] as $k => $v) {
-            if ($v['resource'] == $resource) {
-                $resourceExists = true;
+        if (is_array($config)) {
+            if (array_key_exists('imports', $config)) {
+                foreach($config['imports'] as $k => $v) {
+                    if ($v['resource'] == $resource) {
+                        $resourceExists = true;
+                    }
+                }
             }
         }
 
