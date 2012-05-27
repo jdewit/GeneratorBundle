@@ -102,7 +102,7 @@
             ->add('{{ field.fieldName }}', 'collection', array(
                 'label' => 'false',
                 'required' => false,
-                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType($this->context, $this->router),
+                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
@@ -115,7 +115,7 @@
             ->add('{{ field.fieldName }}', 'collection', array(
                 'label' => 'false',
                 'required' => false,
-                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType($this->context, $this->router),
+                'type' => new \{{ field.targetVendor }}\{{ field.targetBundle }}\Form\Type\{{ field.targetEntityName | ucFirst }}FormType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,

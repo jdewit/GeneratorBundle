@@ -1,6 +1,6 @@
 {{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
 {{ "{% block content %}" }}
-    <div class="page-heading">
+    <div class="page-header">
         <h1>Edit {{ entity }}</h1>
     </div>
     <form id="{{ bundleAlias }}_{{ entityCC }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit', { 'id': "~ entityCC ~".id }) }}" }}" {{ "{{ form_enctype("~ entityCC ~"Form) }}" }}>  
@@ -8,7 +8,7 @@
         <div class="form-actions">
             <a id="delete{{ entity }}" class="btn pull-left confirm btn-danger" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to delete this {{ entityCC }}?">Delete</a>
             <a class="btn" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_list') }}" }}">Back to list</a>
-            <button class="btn" title="Update the {{ entityCC }}"><i class="sprite-tick"></i> Update {{ entity }}</button>
+            <button class="btn btn-primary" title="Update the {{ entityCC }}">Update {{ entity }}</button>
         </div>
     </form>
 {{ "{% endblock %}" }}

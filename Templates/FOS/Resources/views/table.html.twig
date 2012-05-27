@@ -1,8 +1,8 @@
 <form method="post" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batch') }}" }}">  
-    <table id="tableSorter" class="table-condensed table-bordered table-striped">
+    <table class="table-condensed table-bordered table-striped">
         <thead>
             <tr>
-                <th class="{sorter: false}" title="Select All"><input id="checkAll" type="checkbox"/></th>
+                <th title="Select All"><input id="checkAll" type="checkbox"/></th>
 {% for field in fields %}
                 <th>{{ field.fieldName | capitalize }}</th>
 {% endfor %}
@@ -11,7 +11,7 @@
         <tbody>
             {{ "{% for "~ entityCC ~" in "~ entityCC ~"s %}" }}
                 <tr>
-                    <td class="center_align"><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entityCC ~".id }}" }}"/></td>
+                    <td><input class="selector" type="checkbox" name="selected[]" value="{{ "{{ "~ entityCC ~".id }}" }}"/></td>
                     <td class="showSpriteOnHover"><a title="Edit this {{ entityCC }}" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit', {'id': "~ entityCC ~".id }) }}" }}"><i class="sprite-pencil"></i>{{ "{{ "~ entityCC ~".id }}" }}</a></td>
 {% for field in fields %}
 {% endfor %}
@@ -26,7 +26,7 @@
             <tr>
                 <td colspan="100%">
                     {{ "{% if "~ entityCC ~"s %}" }}
-                        <i class="sprite-arrow_left_up"></i>
+                        <i class="sprite-arrow-left-up"></i>
                        {{ "{% if filter != 'Deleted' %}" }}
                             <button type="submit" name="form_action" value="Delete" class="btn btn-danger confirm" title="Are you sure you want to delete these {{ entityCC }}s?">Delete</button>
                         {{ "{% else %}" }}

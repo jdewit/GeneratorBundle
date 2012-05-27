@@ -5,17 +5,14 @@ services:
         
     {{ bundleAlias }}.{{ entityCC }}.form.type:
         class: "{{ bundleNamespace }}\Form\Type\{{ entity }}FormType"
-        scope: request
         tags:
             - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }} }
-        arguments: ["@router"]
        
     {{ bundleAlias }}.{{ entityCC }}.form:
         factory_method: createNamed
         factory_service: form.factory
-        scope: request
         class: "Symfony\Component\Form\Form"
-        arguments: ["@{{ bundleAlias }}.{{ entityCC }}.form.type", {{ bundleAlias }}_{{ entityCC }}]
+        arguments: [{{ bundleAlias }}_{{ entityCC }}, "@{{ bundleAlias }}.{{ entityCC }}.form.type"]
         
     {{ bundleAlias }}.{{ entityCC }}.form.handler:
         class: "{{ bundleNamespace }}\Form\Handler\{{ entity }}FormHandler"

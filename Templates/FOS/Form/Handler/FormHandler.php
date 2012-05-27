@@ -47,19 +47,7 @@ class {{ entity }}FormHandler
                 $this->onSuccess(${{ entityCC }});
 
                 return true;
-{% if style == 'knockout' %}
-            } else { 
-                $response = array();
-                foreach ($this->form->getChildren() as $field) {
-                    $errors = $field->getErrors();
-                    if ($errors) {
-                        $response[$field->getName()] = strtr($errors[0]->getMessageTemplate(), $errors[0]->getMessageParameters());
-                    }
-                }
-
-                return $response;
             }
-{% endif %}
         }
 
         return false;

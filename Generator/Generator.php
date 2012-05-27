@@ -128,7 +128,7 @@ class Generator
         }
 
         // change filename if overwrite is true
-        if ($this->container->getParameter('avro_generator.overwrite')) {
+        if (true === $this->container->getParameter('avro_generator.overwrite')) {
             $this->renderFile($template, $filename);
         } else {
             $filename1 = 'Temp/split/'.$this->parameters['entity'].'/'.$filename;
@@ -278,6 +278,9 @@ class Generator
     * @return string $str Translated into underscore format
     */
     public function toTitle($str) {
+        if (is_array($str)) {
+            $str = $str[0];
+        }
         $str = ucfirst($str);
         $func = create_function('$c', 'return " " . ucfirst($c[1]);');
 

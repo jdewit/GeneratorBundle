@@ -23,7 +23,6 @@ class Configuration implements ConfigurationInterface
        
         $rootNode
             ->children()
-                ->scalarNode('db_driver')->cannotBeOverwritten()->defaultValue('orm')->cannotBeEmpty()->end()
             ->end();
 
         return $treeBuilder;

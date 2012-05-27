@@ -3,17 +3,15 @@ namespace {{ bundleNamespace }}\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 {% for field in fields %}
-{%- if (field.type == "oneToMany") or (field.type == "manyToMany") -%}
-{%- if stop is not defined -%}
+{%- if (field.type == "oneToMany") or (field.type == "manyToMany") %}
+{%- if stop is not defined %}
 use Doctrine\Common\Collections\ArrayCollection;
 {%- set stop = true -%}
-{%- endif -%}
-{%- endif -%}
+{%- endif %}
+{%- endif %}
 {% endfor %}
 use JMS\SerializerBundle\Annotation\Exclude;
-{% if style == 'default' %}
 use Symfony\Component\Validator\Constraints as Assert;
-{% endif %}
 
 /**
  * {{ bundleNamespace }}\Entity\{{ entity }}
@@ -34,13 +32,6 @@ class {{ entity }}
      * @ORM\GeneratedValue(strategy="AUTO")
      */    
     protected $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(type="integer", nullable=true)
-     */    
-    protected $legacyId;
 
 {% for field in fields %}
 {% if field.type == "manyToOne" %}
@@ -72,7 +63,7 @@ class {{ entity }}
     /**
      * @var string
      *
-     * @ORM\Column(type="string"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     * @ORM\Column(type="string"{% if field.length is defined and field.length is not empty %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -83,12 +74,12 @@ class {{ entity }}
      * @ORM\Column(type="text"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
-
+    
 {% elseif field.type == "integer" %}
     /**
      * @var integer
      *
-     * @ORM\Column(type="integer"{% if field.length is defined %}, length={{ field.length }}{% endif %}{% if field.nullable %}, nullable=true{% endif %})
+     * @ORM\Column(type="integer"{% if field.nullable %}, nullable=true{% endif %})
      */
     protected ${{ field.fieldName }};
 
@@ -133,8 +124,8 @@ class {{ entity }}
      * @exclude
      */
     protected $owner;
-{% endif %}
 
+{% endif %}
     /**
      * @var \DateTime
      *
@@ -199,27 +190,8 @@ class {{ entity }}
         return $this->id;
     }
 
-    /**
-     * Get legacyId
-     * 
-     * @return string 
-     */
-    public function getLegacyId()
-    {
-        return $this->legacyId;
-    }
-    
-    /**
-     * Set legacyId
-     *
-     * @param string $legacyId
-     */
-    public function setLegacyId($legacyId)
-    {
-        $this->legacyId = $legacyId;
-    }  
-
 {% for field in fields %}
+{% set adjustedFieldName = field.fieldName|slice(0, -1) %} 
 {% if field.type == "manyToOne" %}
     /**
      * Get {{ field.fieldName }}
@@ -240,8 +212,7 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     }     
-{% elseif (field.type == "oneToMany" or field.type == "manyToMany") %}
-{% set adjustedFieldName = field.fieldName|slice(0, -1) %} 
+{% elseif field.type == "oneToMany" %}
     /**
      * Get {{ field.fieldName }}
      * 
@@ -261,7 +232,7 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }} = ${{ field.fieldName }};
     } 
-    
+
 {% if false %}
     /**
      * Add {{ adjustedFieldName }} to the collection
@@ -285,8 +256,55 @@ class {{ entity }}
     {
         $this->{{ field.fieldName }}->removeElement(${{ adjustedFieldName }});
     }
+
 {% endif %}
 
+{% elseif field.type == "manyToMany" %}
+    /**
+     * Get {{ field.fieldName }}
+     * 
+     * @return {{ field.targetEntity }} 
+     */
+    public function get{{ field.fieldName|ucFirst }}()
+    {
+        return $this->{{ field.fieldName }};
+    }
+
+    /**
+     * Set {{ field.fieldName }}
+     *
+     * @param ArrayCollection ${{ field.fieldName }}
+     */
+    public function set{{ field.fieldName|ucFirst }}(${{ field.fieldName }})
+    {
+        $this->{{ field.fieldName }} = ${{ field.fieldName }};
+    } 
+
+{% if false %}
+    /**
+     * Add {{ adjustedFieldName }} to the collection
+     *
+     * @param \{{ field.targetEntity }} ${{ adjustedFieldName }}   
+     */
+    public function add{{ adjustedFieldName|ucFirst }}(\{{ field.targetEntity }} ${{ adjustedFieldName }})
+    {
+        $this->{{ field.fieldName }}->add(${{ adjustedFieldName }});
+{% if field.mappedBy %}
+        ${{ adjustedFieldName }}->set{{ entity }}($this);
+{% endif %}
+    }  
+
+    /**
+     * Remove {{ field.fieldName }} from the collection of related items
+     *
+     * @param \{{ field.targetEntity }} ${{ field.fieldName  }} 
+     */
+    public function remove{{ adjustedFieldName|ucFirst }}(\{{ field.targetEntity }} ${{ adjustedFieldName }})
+    {
+        $this->{{ field.fieldName }}->removeElement(${{ adjustedFieldName }});
+    }
+
+{% endif %}
 {% else %}
     /**
      * Get {{ field.fieldName }}
@@ -311,26 +329,26 @@ class {{ entity }}
 {% endif %}{% endfor %}
 {% if avro_generator.use_owner %}
     /**
-     * Get owner
-     * 
-     * @return Avro\UserBundle\Entity\Owner 
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
-     * Set owner
-     *
-     * @param manyToOne $owner
-     */
+    * Set owner
+    *
+    * @param \Avro\UserBundle\Entity\Owner $owner
+    */
     public function setOwner(\Avro\UserBundle\Entity\Owner $owner)
     {
         $this->owner = $owner;
-    }  
-{% endif %}
+    }
 
+    /**
+     * Get owner
+     *
+     * @return \Avro\UserBundle\Entity\Owner $owner
+     */
+    public function getOwner()
+    {
+       return $this->owner;
+    }
+
+{% endif %}
     /**
     * Set createdAt
     *

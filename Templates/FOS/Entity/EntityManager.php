@@ -230,13 +230,27 @@ class {{ entity }}Manager
     }
 
     /**
+     * Find active {{ entityCC }}s
+     *
+     * @return array {{ entity }}s
+     */
+    public function findAllActive()
+    {
+        $criteria['isDeleted'] = false;
+{% if avro_generator.use_owner %}
+        $criteria['owner'] = $this->owner->getId();
+{% endif %}
+
+        return $this->repository->findBy($criteria);
+    }
+
+    /**
      * Search {{ entityCC }}s
      * 
      * @param array $query Search criteria
-     * @param string $offset 
      * @return array {{ entity }}s
      */
-    public function search(array $query = array())
+    public function search(array $query = array(), $asArray = false)
     {
         if (!array_key_exists('orderBy', $query)) {
             $query['orderBy'] = 'updatedAt';
@@ -251,7 +265,7 @@ class {{ entity }}Manager
             $query['offset'] = '0';
         }
         if (!array_key_exists('filter', $query)) {
-            $query['filter'] = 'Active';
+            $query['filter'] = 'All';
         }
 
         $qb = $this->em->createQueryBuilder()->select('{{ entityCC }}')->from($this->class, '{{ entityCC }}');
@@ -262,13 +276,21 @@ class {{ entity }}Manager
         $qb->where('{{ entityCC }}.owner = ?1')->setParameter('1', $this->owner);
 {% endif %}
 
-        switch($query['filter']) {
-            case 'Active':
-                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
-            break;
-            case 'Deleted':
-                $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, true);
-            break;
+        $filter = $query['filter'];
+        if (is_numeric($filter)) {
+            $qb->andWhere('{{ entityCC }}.id = ?2')->setParameter(2, $filter);
+        } else {
+            switch($filter) {
+                case 'All':
+                    $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
+                break;
+                case 'Deleted':
+                    $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, true);
+                break;
+                default:
+                    $qb->andWhere('{{ entityCC }}.isDeleted = ?2')->setParameter(2, false);
+                break;
+            }
         }
 
         $index = 3;
@@ -295,7 +317,12 @@ class {{ entity }}Manager
                 $index = $index +1;
             }
         }
-        $results = $qb->getQuery()->getResult();
+
+        if (true === $asArray) {
+            $results = $qb->getQuery()->getArrayResult();
+        } else {
+            $results = $qb->getQuery()->getResult();
+        }
 
         return $results; 
     }

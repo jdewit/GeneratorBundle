@@ -23,17 +23,9 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('avro_generator');
 
-        $supportedStyles = array('avro', 'knockout', false);
-
         $rootNode
             ->children()
-                ->scalarNode('style')
-                    ->validate()
-                        ->ifNotInArray($supportedStyles)
-                        ->thenInvalid('The style %s is not supported. Please choose one of '.json_encode($supportedStyles))
-                    ->end()
-                    ->defaultValue(false)
-                ->end()
+                ->scalarNode('style')->cannotBeEmpty()->end()
                 ->booleanNode('overwrite')->defaultFalse()->end()
                 ->booleanNode('add_fields')->defaultTrue()->end()
                 ->booleanNode('use_owner')->defaultFalse()->end()

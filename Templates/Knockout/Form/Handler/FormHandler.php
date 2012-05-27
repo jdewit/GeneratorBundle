@@ -7,7 +7,7 @@ use {{ bundleNamespace }}\Entity\{{ entity }};
 use {{ bundleNamespace }}\Entity\{{ entity }}Manager;
 
 /*
- * {{ entity | camelCaseToTitle }} Form Handler
+ * {{ entityTitle }} Form Handler
  *
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
@@ -47,16 +47,6 @@ class {{ entity }}FormHandler
                 $this->onSuccess(${{ entityCC }});
 
                 return true;
-            } else { 
-                $response = array();
-                foreach ($this->form->getChildren() as $field) {
-                    $errors = $field->getErrors();
-                    if ($errors) {
-                        $response[$field->getName()] = strtr($errors[0]->getMessageTemplate(), $errors[0]->getMessageParameters());
-                    }
-                }
-
-                return $response;
             }
         }
 
