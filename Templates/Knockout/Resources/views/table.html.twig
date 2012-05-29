@@ -39,7 +39,7 @@
                     {{ "{% if is_granted('ROLE_ADMIN') %}" }}
                         |
                         <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batchDelete') }}" }}" class="btn-delete" title="Batch delete" data-bind="click: batchDelete, visible: filter() != 'Deleted'"><i class="sprite-delete"></i>Delete</a>
-                        <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow_refresh"></i>Restore</a>
+                        <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_batchRestore') }}" }}" class="btn-restore" title="Batch restore" data-bind="click: batchRestore, visible: filter() == 'Deleted'"><i class="sprite-arrow-refresh"></i>Restore</a>
                         <button name="action" value="Export" class="no-style"><i class="sprite-table_go"></i>Export</button>
                         <span class="pull-right">
                             <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_import') }}" }}"><i class="sprite-table_add"></i>Import</a>
