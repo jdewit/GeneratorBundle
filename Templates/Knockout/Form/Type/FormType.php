@@ -47,14 +47,15 @@ class {{ entity }}FormType extends AbstractType
 {% elseif field.type == 'oneToMany' or field.type == 'manyToMany' %}
 //TODO
 {% endif %}
+{% endfor %}
  
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function getDefaultOptions()
     {
-        $resolver->setDefaults(array(
+        return array(
             'data_class' => '{{ bundleNamespace }}\Entity\{{ entity }}'
-        ));
+        );
     }
 
     public function getName()
