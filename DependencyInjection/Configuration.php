@@ -25,10 +25,12 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('db_driver')->cannotBeEmpty()->end()
                 ->scalarNode('style')->cannotBeEmpty()->end()
                 ->booleanNode('overwrite')->defaultFalse()->end()
                 ->booleanNode('add_fields')->defaultTrue()->end()
                 ->booleanNode('use_owner')->defaultFalse()->end()
+                ->scalarNode('bundle_folder')->defaultValue('src')->end()
                 ->arrayNode('files')
                     ->useAttributeAsKey('file')->prototype('array')
                         ->children()

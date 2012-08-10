@@ -1,0 +1,6 @@
+parameters:
+
+{{ bundleAlias }}:
+    db_driver: {{ db_driver }}
+
+

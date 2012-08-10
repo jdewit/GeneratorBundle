@@ -8,9 +8,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\Alias;
 
-class AvroGeneratorExtension extends Extension 
+class AvroGeneratorExtension extends Extension
 {
-    public function load(array $configs, ContainerBuilder $container) 
+    public function load(array $configs, ContainerBuilder $container)
     {
         $processor = new Processor();
         $configuration = new Configuration();
@@ -19,33 +19,35 @@ class AvroGeneratorExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services/manipulator.yml');
 
+        $container->setParameter('avro_generator.db_driver', $config['db_driver']);
         $container->setParameter('avro_generator.style', $config['style']);
         $container->setParameter('avro_generator.overwrite', $config['overwrite']);
         $container->setParameter('avro_generator.add_fields', $config['add_fields']);
         $container->setParameter('avro_generator.use_owner', $config['use_owner']);
+        $container->setParameter('avro_generator.bundle_folder', $config['bundle_folder']);
 
 
         $loader->load(sprintf('templates/%s.yml', $config['style']));
 
         if ($container->hasParameter('avro_generator.files')) {
-            $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.files'), $config['files'])); 
+            $container->setParameter('avro_generator.files', array_merge($container->getParameter('avro_generator.files'), $config['files']));
         } else {
-            $container->setParameter('avro_generator.files', $config['files']); 
+            $container->setParameter('avro_generator.files', $config['files']);
         }
         if ($container->hasParameter('avro_generator.standalone_files')) {
-            $container->setParameter('avro_generator.standalone_files', array_merge($container->getParameter('avro_generator.standalone_files'), $config['standalone_files'])); 
+            $container->setParameter('avro_generator.standalone_files', array_merge($container->getParameter('avro_generator.standalone_files'), $config['standalone_files']));
         } else {
-            $container->setParameter('avro_generator.standalone_files', $config['standalone_files']); 
+            $container->setParameter('avro_generator.standalone_files', $config['standalone_files']);
         }
         if ($container->hasParameter('avro_generator.bundle_folders')) {
-            $container->setParameter('avro_generator.bundle_folders', array_merge($container->getParameter('avro_generator.bundle_folders'), $config['bundle_folders'])); 
+            $container->setParameter('avro_generator.bundle_folders', array_merge($container->getParameter('avro_generator.bundle_folders'), $config['bundle_folders']));
         } else {
-            $container->setParameter('avro_generator.bundle_folders', $config['bundle_folders']); 
+            $container->setParameter('avro_generator.bundle_folders', $config['bundle_folders']);
         }
         if ($container->hasParameter('avro_generator.bundle_files')) {
-            $container->setParameter('avro_generator.bundle_files', array_merge($container->getParameter('avro_generator.bundle_files'), $config['bundle_files'])); 
+            $container->setParameter('avro_generator.bundle_files', array_merge($container->getParameter('avro_generator.bundle_files'), $config['bundle_files']));
         } else {
-            $container->setParameter('avro_generator.bundle_files', $config['bundle_files']); 
+            $container->setParameter('avro_generator.bundle_files', $config['bundle_files']);
         }
     }
 }

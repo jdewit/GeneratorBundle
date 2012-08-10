@@ -1,0 +1,35 @@
+#{{ entityTitle }} services config     
+services:
+    {{ bundleAlias }}.{{ entityCC }}_manager:
+        class: {{ bundleNamespace }}\Entity\{{ entity }}Manager
+        arguments: ["@doctrine.orm.entity_manager", {{ bundleNamespace }}\Entity\{{ entity }}, "@security.context"]
+        
+    {{ bundleAlias }}.{{ entityCC }}.form.type:
+        class: {{ bundleNamespace }}\Form\Type\{{ entity }}FormType
+        tags: 
+            - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }} }
+        arguments: ["@router"{% if avro_generator.use_owner %}, "@security.context"{% endif %}]
+       
+    {{ bundleAlias }}.{{ entityCC }}.form:
+        factory_method: createNamed 
+        factory_service: form.factory
+        class: Symfony\Component\Form\Form
+        arguments: ["@{{ bundleAlias }}.{{ entityCC }}.form.type", {{ bundleAlias }}_{{ entityCC }}]
+        
+    {{ bundleAlias }}.{{ entityCC }}.form.handler:
+        class: {{ bundleNamespace }}\Form\Handler\{{ entity }}FormHandler
+        scope: request
+        arguments: ["@{{ bundleAlias }}.{{ entityCC }}.form", "@request", "@{{ bundleAlias }}.{{ entityCC }}_manager"]
+
+    {{ bundleAlias }}.{{ entityCC }}Search.form.type:
+        class: {{ bundleNamespace }}\Form\Type\{{ entity }}SearchFormType
+        tags: 
+            - { name: form.type, alias: {{ bundleAlias }}_{{ entityCC }}_search }
+        arguments: ["@security.context", "@router"]
+       
+    {{ bundleAlias }}.{{ entityCC }}Search.form:
+        factory_method: createNamed 
+        factory_service: form.factory
+        class: Symfony\Component\Form\Form
+        arguments: ["@{{ bundleAlias }}.{{ entityCC }}Search.form.type", {{ bundleAlias }}_{{ entityCC }}_search]
+

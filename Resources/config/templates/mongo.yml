@@ -1,0 +1,147 @@
+parameters:
+    avro_generator.use_owner: false
+    avro_generator.files:
+        controller: 
+            filename: 'Controller/{{ entity }}Controller.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Controller/Controller.php'
+            parameters:
+                actions: ['list', 'new', 'edit', 'show', 'delete', 'restore', 'processForm']
+            tags: ['controller', 'crud']
+#            manipulator:
+#                service: 'avro_generator.routing.manipulator'
+#                method: 'updateBundleRouting'
+#                filename: 'Resources/config/routing.yml'
+#                setters: 
+#                    format: 'yml'
+        list_view:
+            filename: 'Resources/views/{{ entity }}/list.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/list.html.twig'
+            tags: ['view', 'crud']
+
+        new_view:
+            filename: 'Resources/views/{{ entity }}/new.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/new.html.twig'
+            tags: ['view', 'crud']
+
+        edit_view:
+            filename: 'Resources/views/{{ entity }}/edit.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/edit.html.twig'
+            tags: ['view', 'crud']
+
+        table_view:
+            filename: 'Resources/views/{{ entity }}/table.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/table.html.twig'
+            tags: ['view', 'crud']
+
+        form_view:
+            filename: 'Resources/views/{{ entity }}/form.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/form.html.twig'
+            tags: ['view', 'crud']
+
+        features: 
+            filename: 'Features/{{ entity }}.feature'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Features/feature.feature'
+            tags: ['test', 'feature']
+
+#        document: 
+#            filename: 'Document/{{ entity }}.php'
+#            template: 'AvroGeneratorBundle:Templates/Mongo/Document/Document.php'
+#            tags: ['entity', 'crud']
+
+#        entity_manager: 
+#            filename: 'Entity/{{ entity }}Manager.php'
+#            template: 'AvroGeneratorBundle:Templates/Mongo/Entity/EntityManager.php'
+#            tags: ['entity', 'crud']
+#
+        form_type: 
+            filename: 'Form/Type/{{ entity }}FormType.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Form/Type/FormType.php'
+            tags: ['form', 'crud']
+#
+#        form_handler: 
+#            filename: 'Form/Handler/{{ entity }}FormHandler.php'
+#            template: 'AvroGeneratorBundle:Templates/Mongo/Form/Handler/FormHandler.php'
+#            tags: ['form', 'crud']
+
+#        service_config: 
+#            filename: 'Resources/config/services/{{ entityCC }}.yml'
+#            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/services/service.yml'
+#            tags: ['service', 'crud']
+#            manipulator:
+#                service: 'avro_generator.config.manipulator'
+#                method: 'addResource'
+#                filename: 'Resources/config/config.yml'
+#                setters: 
+#                    format: 'yml'
+
+
+    avro_generator.bundle_folders:
+        controller:
+            path: 'Controller'
+        document:
+            path: 'Document'
+        form:
+            path: 'Form'
+        form_type:
+            path: 'Form/Type'
+        form_handler:
+            path: 'Form/Handler'
+        features:
+            path: 'Features'
+        listener: 
+            path: 'Listener'
+        resources: 
+            path: 'Resources'
+        views:
+            path: 'Resources/views'
+        doc:
+            path: 'Resources/doc'
+        meta:
+            path: 'Resources/meta'
+        css:
+            path: 'Resources/public/css'
+        images:
+            path: 'Resources/public/images'
+        js:
+            path: 'Resources/public/js'
+        uploads:
+            path: 'Resources/public/uploads'
+        translations:
+            path: 'Resources/translations'
+        config: 
+            path: 'Resources/config'
+        services:
+            path: 'Resources/config/services'
+
+    avro_generator.bundle_files:
+        bundle:
+            filename: '{{ bundleName }}.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Bundle.php'
+        configuration:
+            filename: 'DependencyInjection/Configuration.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/DependencyInjection/Configuration.php'
+        extension:
+            filename: 'DependencyInjection/{{ bundleVendor }}{{ bundleCoreName }}Extension.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/DependencyInjection/Extension.php'
+        readme:
+            filename: 'README.md'
+            template: 'AvroGeneratorBundle:Templates/Mongo/README.md'
+        layout:
+            filename: 'Resources/views/layout.html.twig'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/layout.html.twig'
+        routing:
+            filename: 'Resources/config/routing.yml'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/routing.yml'
+        config:
+            filename: 'Resources/config/config.yml'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/config.yml'
+        license:
+            filename: 'Resources/meta/LICENSE'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/meta/LICENSE'
+        git_ignore:
+            filename: '.gitignore'
+            template: 'AvroGeneratorBundle:Templates/Mongo/gitignore.html.twig'
+        composer:
+            filename: 'composer.json'
+            template: 'AvroGeneratorBundle:Templates/Mongo/composer.json'
+

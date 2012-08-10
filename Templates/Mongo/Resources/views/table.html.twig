@@ -1,0 +1,37 @@
+<table class="table-condensed table-bordered table-striped">
+    <thead>
+        <tr>
+{% for field in fields %}
+{% if loop.first %}
+            <th>{{ field.fieldName | capitalize }}</th>
+{% endif %}
+{% endfor %}
+            <th style="width: 125px;">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ "{% for "~ entityCC ~" in "~ entityCC ~"s %}" }}
+            <tr>
+{% for field in fields %}
+{% if loop.first %}
+                <td>{{ "{{ "~ entityCC ~"."~ field.fieldName ~" }}" }}</td>
+{% endif %}
+{% endfor %}
+                <td class="center-align">
+                    <div class="btn-group" style="display: inline-block;">
+                        <a class="btn btn-primary" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</button>
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href=""><i class="icon-pencil"></i> Edit</a></li>
+                            <li><a href="#"><i class="icon-remove"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {{ "{% else %}" }}
+            <tr>
+                <td colspan="0" class="left-align">0 {{ entityTitle }}s Found</td>
+            </tr>
+        {{" {% endfor %}" }}
+    </tbody>
+</table>

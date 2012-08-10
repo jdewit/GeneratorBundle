@@ -1,0 +1,16 @@
+{{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
+{{ "{% block content %}" }}
+<div class="page-header">
+    <h1>{{ entity }}</h1>
+</div>
+    <table>
+        <tbody>
+{% for field in fields %}
+        <tr>
+            <td>{{ field.fieldName|camelCaseToTitle }}:</td>
+            <td>{{ "{{ "~ entityCC ~"."~ field.fieldName ~" }}" }}</td>
+        </tr>
+{% endfor %}
+    </table>            
+{{ "{% endblock %}" }}
+
