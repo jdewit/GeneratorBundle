@@ -3,10 +3,10 @@
         <tr>
 {% for field in fields %}
 {% if loop.first %}
-            <th>{{ field.fieldName | capitalize }}</th>
+            <th>{{ "{{ paginator.link('"~ field.fieldName ~"') | raw }}" }}</th>
 {% endif %}
 {% endfor %}
-            <th style="width: 125px;">Actions</th>
+            <th style="width: 190px;">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -19,11 +19,16 @@
 {% endfor %}
                 <td class="center-align">
                     <div class="btn-group" style="display: inline-block;">
-                        <a class="btn btn-primary" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</button>
+                        <a class="btn btn-primary" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</a>
                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href=""><i class="icon-pencil"></i> Edit</a></li>
-                            <li><a href="#"><i class="icon-remove"></i> Delete</a></li>
+                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil"></i> Edit</a></li>
+                            {{ "{% if "~ entityCC ~".isDeleted %}" }}
+                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-refresh"></i> Restore</a></li>
+
+                            {{ "{% else %}" }}
+                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-remove"></i> Delete</a></li>
+                            {{ "{% endif %}" }}
                         </ul>
                     </div>
                 </td>
@@ -34,4 +39,11 @@
             </tr>
         {{" {% endfor %}" }}
     </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="100%" class="center-align">
+                {{ "{{ paginator.render | raw }}" }}
+            </td>
+        </tr>
+    </tfoot>
 </table>

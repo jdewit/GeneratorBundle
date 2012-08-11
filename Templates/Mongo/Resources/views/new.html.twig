@@ -6,7 +6,7 @@
     <form id="{{ bundleAlias }}_{{ entityCC }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}" {{ "{{ form_enctype(form) }}" }}>
         {{ "{% include '"~ bundleName ~":"~ entity ~":form.html.twig' %}" }}
         <div class="form-actions">
-            <a href="#" type="submit" class="btn btn-primary" title="Create this {{ entityCC }}."><i class="icon-ok icon-white"></i> Create {{ entity }}</a>
+            <button href="#" type="submit" class="btn btn-primary" title="Create this {{ entityCC }}."><i class="icon-ok icon-white"></i> Create {{ entity }}</button>
             <a class="btn" title="Close this form." href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_list') }}" }}"><i class="icon-arrow-left"></i> Back to List</a>
         </div>
     </form>

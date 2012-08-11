@@ -9,7 +9,7 @@
             <button class="btn btn-primary" title="Update the {{ entityCC }}"><i class="icon-ok icon-white"></i> Update {{ entity }}</button>
             <a class="btn" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_list') }}" }}"><i class="icon-arrow-left"></i> Back to list</a>
             {{ "{% if "~ entityCC ~".isDeleted %}" }}
-                <a class="btn confirm btn-success" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to restore this {{ entityTitle }}?"><i class="icon-refresh icon-white"></i> Restore</a>
+                <a class="btn confirm btn-success" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to restore this {{ entityTitle }}?"><i class="icon-refresh icon-white"></i> Restore</a>
             {{ "{% else %}" }}
                 <a class="btn confirm btn-danger" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to delete this {{ entityTitle }}?"><i class="icon-remove icon-white"></i> Delete</a>
             {{ "{% endif %}" }}

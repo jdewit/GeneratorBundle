@@ -12,7 +12,7 @@
         if (true === $this->processForm($form)) {
             $this->get('session')->getFlashBag()->set('success', '{{ entity }} created.');
 
-            return $this->redirect($this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_edit', array('id' => ${{ entityCC }}->getId())), 301);
+            return $this->redirect($this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list'), 301);
         }
 
         return array(

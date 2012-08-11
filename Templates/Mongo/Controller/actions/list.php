@@ -1,18 +1,18 @@
     /**
      * List {{ entityTitle }}s.
      *
-     * @Route("/list/{filter}", name="{{ bundleAlias }}_{{ entityCC }}_list", defaults={"filter" = "All"})
+     * @Route("/list", name="{{ bundleAlias }}_{{ entityCC }}_list")
      * @Template()
      */
-    public function listAction($filter)
+    public function listAction()
     {
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
-        $qb = $dm->createQueryBuilder('{{ bundleName }}:{{ entity }}');
+        $paginator = $this->get('application_core.paginator');
+        $paginator->setClass('{{ bundleName }}:{{ entity }}');
+        ${{ entityCC }}s = $paginator->getResults();
 
-        ${{ entityCC }}s = $qb->getQuery()->execute();
 
         return array(
             '{{ entityCC }}s' => ${{ entityCC }}s,
-            'filter' => $filter
+            'paginator' => $paginator
         );
     }

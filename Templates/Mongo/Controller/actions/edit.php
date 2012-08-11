@@ -1,7 +1,7 @@
     /**
      * Edit one {{ entityTitle }}, show the edit form.
      *
-     * @Route("/edit/{id}", name="{{ bundleAlias }}_{{ entityCC }}_edit", defaults={"id" = false})
+     * @Route("/edit/{id}", name="{{ bundleAlias }}_{{ entityCC }}_edit")
      * @Template()
      */
     public function editAction($id)
@@ -20,7 +20,7 @@
 
             $this->get('session')->getFlashBag()->set('success', '{{ entity }} updated.');
 
-            return $this->redirect($this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_edit', array('id' => ${{ entityCC }}->getId())), 301);
+            return $this->redirect($this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list'), 301);
         }
 
         return array(

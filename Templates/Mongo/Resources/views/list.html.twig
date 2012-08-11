@@ -4,7 +4,7 @@
         <h1>
             {{ entity }} List
 
-            <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}" class="btn btn-primary btn-large pull-right"><i class="icon-plus icon-white"></i> New {{ entity }}</a>
+            <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}" class="btn btn-success btn-large pull-right"><i class="icon-plus icon-white"></i> New {{ entity }}</a>
         </h1>
     </div>
     {{ "{% include '"~ bundleName~":"~ entity ~":table.html.twig' %}" }}

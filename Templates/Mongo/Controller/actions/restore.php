@@ -16,6 +16,8 @@
         $dm->persist(${{ entityCC }});
         $dm->flush();
 
+        $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} restored.');
+
         return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'), 301);
     }
 
