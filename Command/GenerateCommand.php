@@ -186,7 +186,7 @@ Or just press <enter> to generate all files.'
         foreach($entitiesArray as $entity) {
             $fields = $entity['fields'];
             $entity = $entity['name'];
-
+//print_r($fields); exit;
             $this->setEntityParameters($entity, $fields);
 
             // add fields
@@ -816,7 +816,7 @@ Or just press <enter> to generate all files.'
         $str = ucfirst($str);
         $func = create_function('$c', 'return " " . ucfirst($c[1]);');
 
-        return preg_replace_callback('/([A-Z])/', $func, $str);
+        return trim(preg_replace_callback('/([A-Z])/', $func, $str));
     }
 
     /**

@@ -1,7 +1,7 @@
     /**
-     * Delete one {{ entityTitle }}.
+     * Delete one{{ entityTitle }}.
      *
-     * @Route("/delete/{id}", name="{{ bundleAlias }}_{{ entityCC }}_delete", defaults={"id" = false})
+     * @Route("/delete/{id}", name="{{ bundleAlias }}_{{ entityCC }}_delete")
      */
     public function deleteAction($id)
     {
@@ -17,6 +17,8 @@
 
         $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} deleted.');
 
-        return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'), 301);
+        $uri = $this->get('request')->headers->get('referer');
+
+        return $this->redirect($uri);
     }
 

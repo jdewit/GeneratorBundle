@@ -1,17 +1,13 @@
-{{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
-{{ "{% block content %}" }}
-    <div class="page-header">
-        <h1>New {{ entity }}</h1>
+<form id="{{ entityCC }}Form" class="horizontal-form modal hide" action="{{ "{{ app.request.requestUri }}" }}" method="POST">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>New {{ entity }}</h3>
     </div>
-    <form id="{{ bundleAlias }}_{{ entityCC }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}" {{ "{{ form_enctype(form) }}" }}>
+    <div class="modal-body">
         {{ "{% include '"~ bundleName ~":"~ entity ~":form.html.twig' %}" }}
-        <div class="form-actions">
-            <button href="#" type="submit" class="btn btn-primary" title="Create this {{ entityCC }}."><i class="icon-ok icon-white"></i> Create {{ entity }}</button>
-            <a class="btn" title="Close this form." href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_list') }}" }}"><i class="icon-arrow-left"></i> Back to List</a>
-        </div>
-    </form>
-{{ "{% endblock %}" }}
-{{ "{% block css %}" }}
-{{ "{% endblock %}" }}
-{{ "{% block js %}" }}
-{{ "{% endblock %}" }}
+    </div>
+    <div class="modal-footer">
+        <button href="#" class="btn btn-primary btn-large" type="submit"><i class="icon-ok icon-white"></i> Create {{ entity }}</button>
+        <a href="#" class="btn close-modal" data-dismiss="modal"><i class="icon-remove"></i> Close</a>
+    </div>
+</form>

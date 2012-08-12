@@ -15,7 +15,7 @@ class {{ entity }}FormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-{% include 'FOS/Form/Type/Fields.html.twig' %}
+{% include 'Mongo/Form/Type/Fields.html.twig' %}
         ;
 {% for field in fields %}
 {% if field.type == 'manyToOne' %}

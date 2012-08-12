@@ -16,15 +16,18 @@
 
         $form = $this->createForm(new {{ entity }}FormType(), ${{ entityCC }});
 
-        if (true === $this->processForm($form)) {
+        $formAction = $this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list').'?id='.$id;
 
-            $this->get('session')->getFlashBag()->set('success', '{{ entity }} updated.');
-
-            return $this->redirect($this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list'), 301);
+        parse_str(parse_url($this->get('request')->headers->get('referer'), PHP_URL_QUERY), $params);
+        foreach($params as $k => $v) {
+            if (!empty($v)) {
+                $formAction = $formAction.'&'.$k.'='.$v;
+            }
         }
 
         return array(
             'form' => $form->createView(),
+            'formAction' => $formAction,
             '{{ entityCC }}' => ${{ entityCC }}
         );
     }

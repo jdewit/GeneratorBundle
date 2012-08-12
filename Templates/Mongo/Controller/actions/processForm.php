@@ -8,7 +8,7 @@
     {
         $request = $this->get('request');
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->bind($request);
             if (true === $form->isValid()) {
                 $dm = $this->get('doctrine.odm.mongodb.document_manager');
 

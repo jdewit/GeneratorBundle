@@ -5,17 +5,17 @@
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => 'email',
                 )
-            ))          
+            ))
 {% elseif field.fieldName == 'date' %}
             ->add('{{ field.fieldName }}', 'date', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'widget' => 'single_text',
                 'input' => 'string',
-                'format' => 'yyyy-MM-dd', 
+                'format' => 'yyyy-MM-dd',
                 'attr' => array(
                     'title' => 'Pick a date',
                 ),
@@ -25,28 +25,28 @@
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => '',
                 )
-            ))   
+            ))
 {% elseif field.fieldName == 'zipCode' %}
             ->add('{{ field.fieldName }}', 'text', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => 'zipCode',
                 )
-            ))   
+            ))
 {% else %}
             ->add('{{ field.fieldName }}', 'text', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => 'capitalize',
                 )
-            ))   
+            ))
 {% endif %}
 {% elseif field.type == 'decimal' %}
             ->add('{{ field.fieldName }}', 'number', array(
@@ -54,27 +54,27 @@
                 'required' => false,
                 'precision' => {{ field.precision }},
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => 'number',
 
                 )
-            ))      
+            ))
 {% elseif field.type == 'text' %}
             ->add('{{ field.fieldName }}', 'textarea', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => '',
                 )
-            ))          
+            ))
 {% elseif field.type == 'datetime' %}
             ->add('{{ field.fieldName }}', 'date', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'widget' => 'single_text',
                 'input' => 'datetime',
-                'format' => 'yyyy-MM-dd', 
+                'format' => 'yyyy-MM-dd',
                 'attr' => array(
                     'title' => 'Pick a date',
                 ),
@@ -92,10 +92,10 @@
                 'required' => false,
                 'class' =>'{{ field.targetEntity }}',
                 'attr' => array(
-                    'title' => 'Choose a {{ field.fieldName }}',  
+                    'title' => 'Choose a {{ field.fieldName }}',
                     'class' => '',
                 )
-            ))  
+            ))
 {% endif %}
 {% elseif field.type == 'oneToMany' %}
 {% if ignoreManyFields is not defined %}
@@ -107,7 +107,7 @@
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'), 
+                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'),
             ))
 {% endif %}
 {% elseif field.type == 'manyToMany' %}
@@ -120,26 +120,43 @@
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false,
-                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'), 
+                'options' => array('data_class' => '{{ field.targetVendor }}\{{ field.targetBundle }}\Entity\{{ field.targetEntityName | ucFirst }}'),
             ))
 {% endif %}
-{% elseif field.type == 'boolean' %}  
+{% elseif field.type == 'boolean' %}
             ->add('{{ field.fieldName }}', 'checkbox', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                 'attr' => array(
-                    'title' => '{{ field.fieldName | camelCaseToTitle }}?',  
+                    'title' => '{{ field.fieldName | camelCaseToTitle }}?',
                 )
-            ))   
+            ))
+
+{% elseif field.type == 'one' %}
+            ->add('{{ field.fieldName }}', 'document', array(
+                'label' => '{{ field.fieldName | camelCaseToTitle }}',
+                'class' => '{{ field.targetDocument }}',
+                'error_bubbling' => true,
+//                'query_builder' => function($repo) {
+//                    return $repo->createQueryBuilder()
+//                        ->sort('name', 'asc');
+//                },
+                'attr' => array(
+                    'class' => 'add-option',
+                    'data-text' => 'Create a new {{ field.fieldName | camelCaseToTitle | lower }}',
+                    'data-route' => '{{ bundleAlias }}_{{ field.fieldName | camelCaseToUnderscore }}_new',
+                )
+            ))
+
 {% else %}
             ->add('{{ field.fieldName }}', '{{ field.type }}', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
                  'attr' => array(
-                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',  
+                    'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => '',
                 )
-           ))            
+           ))
 {% endif %}
 {% endfor %}
 

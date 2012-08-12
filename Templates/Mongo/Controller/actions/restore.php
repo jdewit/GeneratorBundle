@@ -18,6 +18,8 @@
 
         $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} restored.');
 
-        return new RedirectResponse($this->container->get('router')->generate('{{ bundleAlias }}_{{ entityCC }}_list'), 301);
+        $uri = $this->get('request')->headers->get('referer');
+
+        return $this->redirect($uri);
     }
 

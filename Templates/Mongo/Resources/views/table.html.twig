@@ -19,10 +19,10 @@
 {% endfor %}
                 <td class="center-align">
                     <div class="btn-group" style="display: inline-block;">
-                        <a class="btn btn-primary" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</a>
+                        <a class="btn btn-primary get-modal" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</a>
                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu pull-right">
-                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil"></i> Edit</a></li>
+                            <li><a class="get-modal" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil"></i> Edit</a></li>
                             {{ "{% if "~ entityCC ~".isDeleted %}" }}
                             <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-refresh"></i> Restore</a></li>
 

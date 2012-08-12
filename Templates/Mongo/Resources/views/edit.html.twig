@@ -1,22 +1,18 @@
-{{ "{% extends '"~ bundleName ~"::layout.html.twig' %}" }}
-{{ "{% block content %}" }}
-    <div class="page-header">
-        <h1>Edit {{ entity }}</h1>
+<form id="editFormModal" class="horizontal-form modal hide" action="{{ "{{ formAction }}" }}" data-backdrop="true" method="POST">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Edit {{ entity }}</h3>
     </div>
-    <form id="{{ bundleAlias }}_{{ entityCC }}_form" class="form-horizontal" method="post" action="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit', { 'id': "~ entityCC ~".id }) }}" }}" {{ "{{ form_enctype(form) }}" }}>
+    <div class="modal-body">
         {{ "{% include '"~ bundleName ~":"~ entity ~":form.html.twig' %}" }}
-        <div class="form-actions">
-            <button class="btn btn-primary" title="Update the {{ entityCC }}"><i class="icon-ok icon-white"></i> Update {{ entity }}</button>
-            <a class="btn" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_list') }}" }}"><i class="icon-arrow-left"></i> Back to list</a>
-            {{ "{% if "~ entityCC ~".isDeleted %}" }}
-                <a class="btn confirm btn-success" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to restore this {{ entityTitle }}?"><i class="icon-refresh icon-white"></i> Restore</a>
-            {{ "{% else %}" }}
-                <a class="btn confirm btn-danger" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to delete this {{ entityTitle }}?"><i class="icon-remove icon-white"></i> Delete</a>
-            {{ "{% endif %}" }}
-        </div>
-    </form>
-{{ "{% endblock %}" }}
-{{ "{% block css %}" }}
-{{ "{% endblock %}" }}
-{{ "{% block js %}" }}
-{{ "{% endblock %}" }}
+    </div>
+    <div class="modal-footer">
+        <button href="#" class="btn btn-primary btn-large" type="submit"><i class="icon-ok icon-white"></i> Update {{ entity }}</button>
+        <a href="#" class="btn close-modal" data-dismiss="modal"><i class="icon-remove"></i>Close</a>
+        {{ "{% if "~ entityCC ~".isDeleted %}" }}
+            <a class="btn confirm btn-success" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to restore this {{ entityTitle }}?"><i class="icon-refresh icon-white"></i>Restore</a>
+        {{ "{% else %}" }}
+            <a class="btn confirm btn-danger" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete', { 'id': "~ entityCC ~".id }) }}" }}" title="Are you sure you want to delete this {{ entityTitle }}?"><i class="icon-trash icon-white"></i>Delete</a>
+        {{ "{% endif %}" }}
+    </div>
+</form>

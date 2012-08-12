@@ -8,6 +8,7 @@
     {
         ${{ entityCC }} = new {{ entity }}();
         $form = $this->createForm(new {{ entity }}FormType(), ${{ entityCC }});
+        $form->setData(${{ entityCC }});
 
         if (true === $this->processForm($form)) {
             $this->get('session')->getFlashBag()->set('success', '{{ entity }} created.');
