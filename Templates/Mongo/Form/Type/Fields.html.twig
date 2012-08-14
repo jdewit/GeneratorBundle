@@ -48,11 +48,11 @@
                 )
             ))
 {% endif %}
-{% elseif field.type == 'decimal' %}
+{% elseif field.type == 'decimal' or field.type == 'int' %}
             ->add('{{ field.fieldName }}', 'number', array(
                 'label' => '{{ field.fieldName | camelCaseToTitle }}',
                 'required' => false,
-                'precision' => {{ field.precision }},
+                'precision' => 2,
                 'attr' => array(
                     'title' => 'Enter the {{ field.fieldName | camelCaseToTitle | lower }}',
                     'class' => 'number',
