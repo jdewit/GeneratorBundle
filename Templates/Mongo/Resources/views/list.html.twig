@@ -3,18 +3,8 @@
     <div class="page-header">
         <h1>
             {{ entity }} List
-            <a href="#{{ entityCC }}Form" class="btn btn-success btn-large pull-right" data-toggle="modal"><i class="icon-plus icon-white"></i> New {{ entity }}</a>
+            <a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_new') }}" }}" class="get-modal btn btn-success btn-large pull-right" data-target="#{{ entityCC }}Form" data-toggle="modal"><i class="icon-plus icon-white"></i> New {{ entity }}</a>
         </h1>
     </div>
-    {{ "{% include '"~ bundleName~":"~ entity ~":table.html.twig' %}" }}
-    {{ "{% if "~ entityCC ~".id %}" }}
-        {{ "{% include '"~ bundleName~":"~ entity ~":edit.html.twig' %}" }}
-    {{ "{% else %}" }}
-        {{ "{% include '"~ bundleName~":"~ entity ~":new.html.twig' %}" }}
-    {{ "{% endif %}" }}
-{{ "{% endblock %}" }}
-{{ "{% block js %}" }}
-{{ "{% if app.request.method == 'POST' %}" }}
-    $('#cityForm').modal('show');
-{{ "{% endif %}" }}
+    {{ "{% include '"~ bundleName ~":"~ entity ~":table.html.twig' %}" }}
 {{ "{% endblock %}" }}

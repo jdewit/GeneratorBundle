@@ -19,15 +19,15 @@
 {% endfor %}
                 <td class="center-align">
                     <div class="btn-group" style="display: inline-block;">
-                        <a class="btn btn-primary get-modal" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</a>
+                        <a class="btn btn-primary get-modal" data-target="#{{ entityCC }}Form" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil icon-white"></i> Edit</a>
                         <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
                         <ul class="dropdown-menu pull-right">
-                            <li><a class="get-modal" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil"></i> Edit</a></li>
+                            <li><a class="get-modal" data-target="#{{ entityCC }}Form" href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_edit',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-pencil"></i> Edit</a></li>
                             {{ "{% if "~ entityCC ~".isDeleted %}" }}
-                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-refresh"></i> Restore</a></li>
+                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_restore',{'id': "~ entityCC ~".id}) }}" }}" title="Are you sure you want to restore this {{ entityTitle | lower }}"><i class="icon-refresh"></i> Restore</a></li>
 
                             {{ "{% else %}" }}
-                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete',{'id': "~ entityCC ~".id}) }}" }}"><i class="icon-remove"></i> Delete</a></li>
+                            <li><a href="{{ "{{ path('"~ bundleAlias ~"_"~ entityCC ~"_delete',{'id': "~ entityCC ~".id}) }}" }}" title="Are you sure you want to restore this {{ entityTitle | lower }}"><i class="icon-remove"></i> Delete</a></li>
                             {{ "{% endif %}" }}
                         </ul>
                     </div>
@@ -35,7 +35,7 @@
             </tr>
         {{ "{% else %}" }}
             <tr>
-                <td colspan="0" class="left-align">0 {{ entityTitle }}s Found</td>
+                <td colspan="100%" class="left-align">0 {{ entityTitle }}s Found</td>
             </tr>
         {{" {% endfor %}" }}
     </tbody>

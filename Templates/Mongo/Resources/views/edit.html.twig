@@ -1,4 +1,4 @@
-<form id="editFormModal" class="form-horizontal modal hide" action="{{ "{{ formAction }}" }}" data-backdrop="true" method="POST">
+<form id="editFormModal" class="form-horizontal modal hide" action="{{ "{{ formAction }}" }}" data-backdrop="true" method="POST" {{ "{{ form_enctype(form) }}" }}>
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">×</button>
         <h3>Edit {{ entity }}</h3>
