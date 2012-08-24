@@ -5,7 +5,7 @@ parameters:
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Templates/Mongo/Controller/Controller.php'
             parameters:
-                actions: ['list', 'new', 'edit', 'processForm', 'delete', 'restore']
+                actions: ['list', 'new', 'edit', 'processForm', 'delete', 'restore', 'getDocument']
             tags: ['controller', 'crud']
 #            manipulator:
 #                service: 'avro_generator.routing.manipulator'

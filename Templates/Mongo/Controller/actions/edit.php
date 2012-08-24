@@ -6,13 +6,7 @@
      */
     public function editAction($id)
     {
-        ${{ entityCC }} = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('{{ bundleName }}:{{ entity }}')
-            ->find($id);
-
-        if (!${{ entityCC }}) {
-            throw $this->createNotFoundException('No {{ entityCC }} found');
-        }
+        ${{ entityCC }} = $this->get{{ entity }}($id);
 
         $form = $this->createForm(new {{ entity }}FormType(), ${{ entityCC }});
         if (true === $this->processForm($form)) {
