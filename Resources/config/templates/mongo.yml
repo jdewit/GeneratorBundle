@@ -43,6 +43,11 @@ parameters:
             template: 'AvroGeneratorBundle:Templates/Mongo/Features/feature.feature'
             tags: ['test', 'feature']
 
+        model_interface: 
+            filename: 'Model/{{ entity }}Interface.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Model/Interface.php'
+            tags: ['model_interface']
+
 #        document: 
 #            filename: 'Document/{{ entity }}.php'
 #            template: 'AvroGeneratorBundle:Templates/Mongo/Document/Document.php'
