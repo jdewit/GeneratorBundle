@@ -37,7 +37,6 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
  */
 class GenerateCommand extends ContainerAwareCommand
 {
-    protected $registry;
     protected $input;
     protected $output;
     protected $dialog;
@@ -82,7 +81,6 @@ EOT
         $this->dialog = $this->getDialogHelper();
         $this->dbDriver = $this->container->getParameter('avro_generator.db_driver');
         $this->bundleFolder = $this->container->getParameter('avro_generator.bundle_folder');
-        $this->registry = $this->container->get('doctrine');
         $this->filesystem = $this->container->get('filesystem');
 
         foreach ($this->container->getParameterBag()->all() as $k => $v) {
