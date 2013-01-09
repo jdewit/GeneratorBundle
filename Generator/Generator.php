@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
 use Avro\GeneratorBundle\Twig\GeneratorExtension;
+use Avro\CaseBundle\Util\CaseConverter;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
@@ -35,6 +36,7 @@ class Generator
     public function __construct($container, $output)
     {
         $this->container = $container;
+        $this->converter = $container->get('avro_converter');
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
@@ -53,7 +55,7 @@ class Generator
      *
      * @param array $parameters
      */
-    public function setParameters(array $parameters) 
+    public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
     }
@@ -61,7 +63,7 @@ class Generator
     /*
      * Initialize bundle parameters
      *
-     * @param string $bundleName 
+     * @param string $bundleName
      */
     public function initializeBundleParameters($bundleName)
     {
@@ -70,10 +72,10 @@ class Generator
         $bundleVendor = array_shift($arr);
         $bundleBaseName = implode("", $arr);
 
-        $bundlePath = $this->container->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($bundleVendor).'/'.strtolower(str_replace('Bundle', '', $bundleBaseName).'-bundle').'/'.$bundleVendor.'/'.$bundleBaseName.'/';       
+        $bundlePath = $this->container->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($bundleVendor).'/'.strtolower(str_replace('Bundle', '', $bundleBaseName).'-bundle').'/'.$bundleVendor.'/'.$bundleBaseName.'/';
         $bundleNamespace = $bundleVendor.'\\'.$bundleBaseName;
-        $bundleAlias = strtolower($bundleVendor.'_'.str_replace('Bundle', '', $bundleBaseName));   
-        $bundleAliasCC = $bundleVendor.str_replace('Bundle', '', $bundleBaseName); 
+        $bundleAlias = strtolower($bundleVendor.'_'.str_replace('Bundle', '', $bundleBaseName));
+        $bundleAliasCC = $bundleVendor.str_replace('Bundle', '', $bundleBaseName);
         $bundleCoreName = str_replace(strtolower($bundleVendor).'_','',$bundleAlias);
 
         $parameters = array(
@@ -82,8 +84,8 @@ class Generator
             'bundleName' => $bundleName,
             'bundleCoreName' => $bundleCoreName,
             'bundlePath' => $bundlePath,
-            'bundleNamespace' => $bundleNamespace,  
-            'bundleAlias' => $bundleAlias,          
+            'bundleNamespace' => $bundleNamespace,
+            'bundleAlias' => $bundleAlias,
         );
 
         $this->parameters = array_merge($this->parameters, $parameters);
@@ -99,10 +101,10 @@ class Generator
     {
         $parameters = array(
             'entity' => $entity,
-            'entityCC' => $this->toCamelCase($entity),
-            'entityUS' => $this->toUnderscore($entity),
-            'entityTitle' => $this->toTitle($entity),
-            'entityTitleLC' => strtolower($this->toTitle($entity)),
+            'entityCC' => $this->converter->toCamelCaseCase($entity),
+            'entityUS' => $this->converter->toUnderscoreCase($entity),
+            'entityTitle' => $this->toTitleCase($entity),
+            'entityTitleLC' => strtolower($this->toTitleCase($entity)),
             'fields' => $this->customizeFields($fields),
             'uniqueManyToOneRelations' => $this->uniqueManyToOneRelations($this->customizeFields($fields)),
         );
@@ -162,34 +164,34 @@ class Generator
 
     /*
      * Renders a new file
-     * 
+     *
      * @param $template The file to use as a template
      * @param $filename The location of the new file
      */
     public function renderFile($template, $filename)
-    {   
+    {
         if (strpos($template, ':')) {
-            $arr = explode(":", $template); 
+            $arr = explode(":", $template);
             $template = $this->container->get('kernel')->getBundle($arr[0])->getPath().'/'.$arr[1];
-        } 
+        }
 
         $filename = $this->parameters['bundlePath'].$filename;
 
         // replace any placeholders in the filename
         $filename = str_replace(
             array(
-                '{{ entity }}', 
+                '{{ entity }}',
                 '{{ entityCC }}',
                 '{{ bundleVendor }}',
                 '{{ bundleName }}',
                 '{{ bundleCoreName }}'
             ), array(
-                array_key_exists('entity', $this->parameters) ? $this->parameters['entity'] : '', 
+                array_key_exists('entity', $this->parameters) ? $this->parameters['entity'] : '',
                 array_key_exists('entityCC', $this->parameters) ? $this->parameters['entityCC'] : '',
                 array_key_exists('bundleVendor', $this->parameters) ? $this->parameters['bundleVendor'] : '',
                 array_key_exists('bundleName', $this->parameters) ? $this->parameters['bundleName'] : '',
                 array_key_exists('bundleCoreName', $this->parameters) ? ucFirst($this->parameters['bundleCoreName']) : ''
-            ), 
+            ),
             $filename
         );
 
@@ -217,16 +219,16 @@ class Generator
                 $e->getMessage(),
                 ''
             ));
-        }   
+        }
     }
 
     /*
      * Renders a new folder
-     * 
+     *
      * @param $path The path of the new folder
      */
     public function renderFolder($path)
-    {   
+    {
         $this->output->write('Creating '.$path.': ');
 
         try {
@@ -238,7 +240,7 @@ class Generator
                 $e->getMessage(),
                 ''
             ));
-        }   
+        }
     }
 
     /*
@@ -250,7 +252,7 @@ class Generator
     public function runConsole($command, Array $options = array())
     {
         $application = new Application($this->container->get('kernel'));
-        $application->setAutoExit(false);        
+        $application->setAutoExit(false);
         if (empty($options["-e"])) {
             $options["-e"] = "dev";
         }
@@ -258,53 +260,11 @@ class Generator
         $application->run(new ArrayInput($options));
     }
 
-    /**
-    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
-    *
-    * @param  string $str String in camel case format
-    * @return string $str Translated into underscore format
-    */
-    public function toUnderscore($str) {
-        $str[0] = strtolower($str[0]);
-        $func = create_function('$c', 'return "_" . strtolower($c[1]);');
-
-        return preg_replace_callback('/([A-Z])/', $func, $str);
-    }
-
-    /**
-    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
-    *
-    * @param string $str String in camel case format
-    * @return string $str Translated into underscore format
-    */
-    public function toTitle($str) {
-        if (is_array($str)) {
-            $str = $str[0];
-        }
-        $str = ucfirst($str);
-        $func = create_function('$c', 'return " " . ucfirst($c[1]);');
-
-        return preg_replace_callback('/([A-Z])/', $func, $str);
-    }
-
-    /**
-    * Translates a string with underscores into camel case (e.g. first_name -&gt; firstName)
-    *
-    * @param string $str String in underscore format
-    * @return string $str translated into camel caps
-    */
-    public function toCamelCase($str) {
-        $str = lcfirst($str);
-        $func = create_function('$c', 'return strtoupper($c[1]);');
-
-        return preg_replace_callback('/_([a-z])/', $func, $str);
-    }
-
     /*
      * Add custom attributes to fields
      *
      * @param array $fields
-     * @return array $customizedFields 
+     * @return array $customizedFields
      */
     public function customizeFields($fields)
     {
@@ -329,9 +289,9 @@ class Generator
      * Returns an array of the entities unique manyToOne relations
      *
      * @param array $fields
-     * @return array $uniqueManyToOneRelations 
+     * @return array $uniqueManyToOneRelations
      */
-    public function uniqueManyToOneRelations($fields) 
+    public function uniqueManyToOneRelations($fields)
     {
         $relations = array();
         $result = array();
@@ -343,11 +303,11 @@ class Generator
                 if (!in_array($target, $relations) && $target != 'Avro\AssetBundle\Entity\Image') {
                     $relations[] = $target;
                     $result[] = $field;
-                } 
+                }
             }
         }
 
         return $result;
     }
-    
+
 }
