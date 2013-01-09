@@ -55,7 +55,7 @@ class Validators
         //TODO: validate vendor
         return $vendor;
     }
-    
+
     static public function validateBundleName($bundle)
     {
         if (!preg_match('/Bundle$/', $bundle)) {
@@ -90,11 +90,11 @@ class Validators
         if (!in_array($dbDriver, array('orm'))) {
             throw new \RuntimeException(sprintf('DB "%s" is not supported.', $dbDriver));
         }
-        
+
 
         return $dbDriver;
-    }    
-    
+    }
+
     static public function validateEntityName($entity)
     {
         if (false === $pos = strpos($entity, ':')) {

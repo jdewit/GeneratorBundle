@@ -7,10 +7,10 @@ use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
-* Contains the configuration information for the bundle
-*
-* @author Joris de Wit <joris.w.dewit@gmail.com>
-*/
+ * Contains the configuration information for the bundle
+ *
+ * @author Joris de Wit <joris.w.dewit@gmail.com>
+ */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -76,8 +76,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
              ->end();
 
-
         return $treeBuilder;
     }
-
 }

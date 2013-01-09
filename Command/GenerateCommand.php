@@ -10,27 +10,28 @@
 
 namespace Avro\GeneratorBundle\Command;
 
+use Avro\GeneratorBundle\Command\Validators;
+use Avro\GeneratorBundle\Generator\Generator;
+use Avro\GeneratorBundle\Twig\GeneratorExtension;
+use Avro\GeneratorBundle\Command\Helper\DialogHelper;
+
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Mapping\MappingException;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
 use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use Avro\GeneratorBundle\Command\Helper\DialogHelper;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\DBAL\Types\Type;
-use Avro\GeneratorBundle\Command\Validators;
-use Symfony\Component\Console\Command\Command;
-use Avro\GeneratorBundle\Generator\Generator;
 
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
-use Avro\GeneratorBundle\Twig\GeneratorExtension;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-/*
+/**
  * Generator Command class
  *
  * @author Joris de Wit <joris.w.dewit@gmail.com>
@@ -62,7 +63,7 @@ class GenerateCommand extends ContainerAwareCommand
             ->setAliases(array('avro:generate'))
             ->setDescription('Generates code from an entity.')
             ->setHelp(<<<EOT
-The <info>generate:avro:all</info> command generates code in a bundle.
+The <info>avro:generate</info> command helps you generate Symfony2 code.
 EOT
         );
     }
@@ -78,6 +79,7 @@ EOT
         $this->input = $input;
         $this->output = $output;
         $this->container = $this->getContainer();
+        $this->converter = $this->container->get('avro_csv.converter');
         $this->dialog = $this->getDialogHelper();
         $this->dbDriver = $this->container->getParameter('avro_generator.db_driver');
         $this->bundleFolder = $this->container->getParameter('avro_generator.bundle_folder');
@@ -147,12 +149,12 @@ Or just press <enter> to generate all files.'
         $this->dialog->writeSection($this->output, 'Code generation successful!');
     }
 
-    /*
+    /**
      * Generate code for an array of entities
      *
-     * @param $bundle The bundle to generate code for
-     * @param array $entities array of entities to base code from
-     * @param string $tag The tag for the files you wish to generate
+     * @param string $bundle   The bundle to generate code for
+     * @param array  $entities array of entities to base code from
+     * @param string $tag      The tag for the files you wish to generate
      */
     public function generateCodeFromEntities($bundle, $entities, $tag)
     {
@@ -218,7 +220,7 @@ Or just press <enter> to generate all files.'
         }
     }
 
-    /*
+    /**
      * Generate Standalone Files
      *
      * @param $bundle
@@ -243,7 +245,7 @@ Or just press <enter> to generate all files.'
         }
     }
 
-    /*
+    /**
      * Parse shortcut notation
      *
      * @param string $shortcut
@@ -274,7 +276,7 @@ Or just press <enter> to generate all files.'
         return array($bundleName, $entities);
     }
 
-    /*
+    /**
      * Get Entity Metadata
      *
      * @param $entity
@@ -287,7 +289,7 @@ Or just press <enter> to generate all files.'
         return $cmf->getMetadataFor($entity);
     }
 
-    /*
+    /**
      * Get fields from metadata
      *
      * @param $metadata
@@ -345,7 +347,7 @@ Or just press <enter> to generate all files.'
         return $dialog;
     }
 
-    /*
+    /**
      * Field Generator
      * Prompt user to add more fields
      *
@@ -546,6 +548,7 @@ Or just press <enter> to generate all files.'
         }
 
         $files = $this->container->getParameter('avro_generator.bundle_files');
+        ld($files); exit;
         if (is_array($files)) {
             foreach($files as $file) {
                 if ($tag && array_key_exists('tags', $file)) {
@@ -560,7 +563,7 @@ Or just press <enter> to generate all files.'
 
     }
 
-    /*
+    /**
      * Parse bundle name
      *
      * @param string $bundleName The bundles name
@@ -573,7 +576,7 @@ Or just press <enter> to generate all files.'
         return array($arr[0], $arr[1].$arr[2]);
     }
 
-    /*
+    /**
      * Set Parameters
      *
      * @param array $parameters
@@ -583,7 +586,7 @@ Or just press <enter> to generate all files.'
         $this->parameters = $parameters;
     }
 
-    /*
+    /**
      * Set bundle parameters
      *
      * @param string $bundleName
@@ -619,7 +622,7 @@ Or just press <enter> to generate all files.'
         $this->parameters = array_merge($this->parameters, $bundleParameters);
     }
 
-    /*
+    /**
      * Set entity parameters
      *
      * @param string $entity The entity name
@@ -629,10 +632,10 @@ Or just press <enter> to generate all files.'
     {
         $parameters = array(
             'entity' => $entity,
-            'entityCC' => $this->toCamelCase($entity),
-            'entityUS' => $this->toUnderscore($entity),
+            'entityCC' => $this->converter->toCamelCase($entity),
+            'entityUS' => $this->converter->toUnderscore($entity),
             'entityTitle' => $this->toTitle($entity),
-            'entityTitleLC' => strtolower($this->toTitle($entity)),
+            'entityTitleLC' => strtolower($this->converter->toTitle($entity)),
             'fields' => $this->customizeFields($fields),
             'uniqueManyToOneRelations' => $this->uniqueManyToOneRelations($this->customizeFields($fields)),
         );
@@ -671,7 +674,7 @@ Or just press <enter> to generate all files.'
         $this->executeManipulators($file);
     }
 
-    /*
+    /**
      * Execute code manipulators
      */
     public function executeManipulators($file)
@@ -690,7 +693,7 @@ Or just press <enter> to generate all files.'
         }
     }
 
-    /*
+    /**
      * Renders a new file
      *
      * @param $template The file to use as a template
@@ -750,7 +753,7 @@ Or just press <enter> to generate all files.'
         }
     }
 
-    /*
+    /**
      * Renders a new folder
      *
      * @param $path The path of the new folder
@@ -771,7 +774,7 @@ Or just press <enter> to generate all files.'
         }
     }
 
-    /*
+    /**
      * Run a console command
      *
      * @param string $command Command
@@ -789,48 +792,6 @@ Or just press <enter> to generate all files.'
     }
 
     /**
-    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
-    *
-    * @param  string $str String in camel case format
-    * @return string $str Translated into underscore format
-    */
-    public function toUnderscore($str) {
-        $str[0] = strtolower($str[0]);
-        $func = create_function('$c', 'return "_" . strtolower($c[1]);');
-
-        return preg_replace_callback('/([A-Z])/', $func, $str);
-    }
-
-    /**
-    * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
-    *
-    * @param string $str String in camel case format
-    * @return string $str Translated into underscore format
-    */
-    public function toTitle($str) {
-        if (is_array($str)) {
-            $str = $str[0];
-        }
-        $str = ucfirst($str);
-        $func = create_function('$c', 'return " " . ucfirst($c[1]);');
-
-        return trim(preg_replace_callback('/([A-Z])/', $func, $str));
-    }
-
-    /**
-    * Translates a string with underscores into camel case (e.g. first_name -&gt; firstName)
-    *
-    * @param string $str String in underscore format
-    * @return string $str translated into camel caps
-    */
-    public function toCamelCase($str) {
-        $str = lcfirst($str);
-        $func = create_function('$c', 'return strtoupper($c[1]);');
-
-        return preg_replace_callback('/_([a-z])/', $func, $str);
-    }
-
-    /*
      * Add custom attributes to fields
      *
      * @param array $fields
@@ -855,7 +816,7 @@ Or just press <enter> to generate all files.'
         return $customFields;
     }
 
-    /*
+    /**
      * Returns an array of the entities unique manyToOne relations
      *
      * @param array $fields
@@ -870,7 +831,7 @@ Or just press <enter> to generate all files.'
             $type = $field['type'];
             if ($type == 'manyToOne' || $type == 'oneToMany' || $type == 'manyToMany') {
                 $target = $field['targetEntity'];
-                if (!in_array($target, $relations) && $target != 'Avro\AssetBundle\Entity\Image') {
+                if (!in_array($target, $relations)) {
                     $relations[] = $target;
                     $result[] = $field;
                 }

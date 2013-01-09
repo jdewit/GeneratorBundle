@@ -1,28 +1,25 @@
 <?php
+
 /*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace Avro\GeneratorBundle\Generator;
 
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Avro\CaseBundle\Util\CaseConverter;
+use Avro\GeneratorBundle\Twig\GeneratorExtension;
+
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
-use Avro\GeneratorBundle\Twig\GeneratorExtension;
-use Avro\CaseBundle\Util\CaseConverter;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Generator is the base class for all generators.
  *
- * @author Fabien Potencier <fabien@symfony.com>
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
 class Generator
@@ -33,13 +30,20 @@ class Generator
     public $output;
     public $parameters = array();
 
+    /**
+     * Constructor
+     *
+     * @param Container $container The container object
+     * @param Output    $output    The console output
+     */
     public function __construct($container, $output)
     {
         $this->container = $container;
-        $this->converter = $container->get('avro_converter');
+        $this->converter = $container->get('avro_case.converter');
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;
+
         $parameters = $container->getParameterBag()->all();
         foreach ($parameters as $k => $v) {
             $pos = strpos($k, '.');
@@ -50,7 +54,7 @@ class Generator
         }
     }
 
-    /*
+    /**
      * Set Parameters
      *
      * @param array $parameters
@@ -60,14 +64,14 @@ class Generator
         $this->parameters = $parameters;
     }
 
-    /*
+    /**
      * Initialize bundle parameters
      *
-     * @param string $bundleName
+     * @param string $bundleName The bundle name
      */
     public function initializeBundleParameters($bundleName)
     {
-        $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x',$bundleName);
+        $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x', $bundleName);
 
         $bundleVendor = array_shift($arr);
         $bundleBaseName = implode("", $arr);
@@ -76,7 +80,7 @@ class Generator
         $bundleNamespace = $bundleVendor.'\\'.$bundleBaseName;
         $bundleAlias = strtolower($bundleVendor.'_'.str_replace('Bundle', '', $bundleBaseName));
         $bundleAliasCC = $bundleVendor.str_replace('Bundle', '', $bundleBaseName);
-        $bundleCoreName = str_replace(strtolower($bundleVendor).'_','',$bundleAlias);
+        $bundleCoreName = str_replace(strtolower($bundleVendor).'_', '', $bundleAlias);
 
         $parameters = array(
             'bundleVendor' => $bundleVendor,
@@ -91,11 +95,11 @@ class Generator
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    /*
+    /**
      * Initialize parameters
      *
      * @param string $entity The entity name
-     * @param array $fields Array of the entities fields
+     * @param array  $fields Array of the entities fields
      */
     public function initializeEntityParameters($entity, $fields)
     {
@@ -115,7 +119,7 @@ class Generator
     /**
      * Generates a file if it does not exist.
      *
-     * @param $file
+     * @param string $file The filename
      */
     public function generate($file)
     {
@@ -143,8 +147,10 @@ class Generator
         $this->executeManipulators($file);
     }
 
-    /*
+    /**
      * Execute code manipulators
+     *
+     * @param string $file The filename
      */
     public function executeManipulators($file)
     {
@@ -162,11 +168,11 @@ class Generator
         }
     }
 
-    /*
+    /**
      * Renders a new file
      *
-     * @param $template The file to use as a template
-     * @param $filename The location of the new file
+     * @param string $template The file to use as a template
+     * @param string $filename The location of the new file
      */
     public function renderFile($template, $filename)
     {
@@ -222,10 +228,10 @@ class Generator
         }
     }
 
-    /*
+    /**
      * Renders a new folder
      *
-     * @param $path The path of the new folder
+     * @param string $path The path of the new folder
      */
     public function renderFolder($path)
     {
@@ -243,11 +249,11 @@ class Generator
         }
     }
 
-    /*
+    /**
      * Run a console command
      *
      * @param string $command Command
-     * @param array $options Command options
+     * @param array  $options Command options
      */
     public function runConsole($command, Array $options = array())
     {
@@ -260,10 +266,11 @@ class Generator
         $application->run(new ArrayInput($options));
     }
 
-    /*
+    /**
      * Add custom attributes to fields
      *
      * @param array $fields
+     *
      * @return array $customizedFields
      */
     public function customizeFields($fields)
@@ -285,10 +292,11 @@ class Generator
         return $customFields;
     }
 
-    /*
+    /**
      * Returns an array of the entities unique manyToOne relations
      *
      * @param array $fields
+     *
      * @return array $uniqueManyToOneRelations
      */
     public function uniqueManyToOneRelations($fields)
@@ -309,5 +317,4 @@ class Generator
 
         return $result;
     }
-
 }
