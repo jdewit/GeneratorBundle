@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mongo-mapping xmlns="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping"
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                        xsi:schemaLocation="http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping
+http://doctrine-project.org/schemas/odm/doctrine-mongo-mapping.xsd">
+
+    <document name="{{ bundleNamespace }}\Document\{{ entity }}" collection="{{ bundleAlias }}_{{ entityCC }}">
+
+        <field name="id" type="string" id="true" strategy="NONE" />
+
+{% for field in fields %}
+        <field name="{{ field.name }}" fieldName="{{ field.name }}" type="{{ field.type }}" />
+{% endfor %}
+
+    </document>
+
+</doctrine-mongo-mapping>

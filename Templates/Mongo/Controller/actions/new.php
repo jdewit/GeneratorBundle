@@ -1,23 +1,30 @@
     /**
      * Create a new {{ entityTitle }}.
-     *
-     * @Route("/new", name="{{ bundleAlias }}_{{ entityCC }}_new")
-     * @Template()
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
-        ${{ entityCC }} = new {{ entity }}();
-        $form = $this->createForm(new {{ entity }}FormType(), ${{ entityCC }});
+        ${{ entityCC }}Manager = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager');
+        $dispatcher = $this->container->get('event_dispatcher');
 
-        if (true === $this->processForm($form)) {
-            $this->get('session')->getFlashBag()->set('success', '{{ entityTitle }} created.');
+        ${{ entityCC }} = ${{ entityCC }}Manager->create();
+        $dispatcher->dispatch('{{ bundleAlias }}.{{ entity }}.create', new {{ entity }}Event(${{ entityCC }}, $request));
 
-            return $this->redirect($this->get('request')->headers->get('referer'), 301);
-            return $this->redirect($this->generateUrl('application_core_vendor_list'), 301);
+        $form = $this->container->get('form.factory')->create(new {{ entity }}FormType(), ${{ entityCC }});
+
+        if ('POST' == $request->getMethod()) {
+            $form->bind($request);
+            if ($form->isValid()) {
+                ${{ entityCC }}Manager->update(${{ entityCC }});
+
+                $dispatcher->dispatch('{{ bundleAlias }}.{{ entity }}.created', new {{ entity }}Event(${{ entityCC }}, $request));
+
+                $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} created.');
+            }
+            return new RedirectResponse($this->container->get('router')->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list'));
         }
 
-        return array(
+        return $this->container->get('templating')->renderResponse('{{ bundleName }}:{{ entity }}:new.html.twig', array(
             'form' => $form->createView()
-        );
+        ));
     }
 

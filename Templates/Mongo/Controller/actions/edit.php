@@ -1,32 +1,33 @@
     /**
      * Edit one {{ entityTitle }}, show the edit form.
-     *
-     * @Route("/edit/{id}", name="{{ bundleAlias }}_{{ entityCC }}_edit")
-     * @Template()
      */
-    public function editAction($id)
+    public function editAction(Request $request, $id)
     {
-        ${{ entityCC }} = $this->get{{ entity }}($id);
+        ${{ entityCC }}Manager = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager');
+        $dispatcher = $this->container->get('event_dispatcher');
 
-        $form = $this->createForm(new {{ entity }}FormType(), ${{ entityCC }});
-        if (true === $this->processForm($form)) {
-            $this->get('session')->getFlashBag()->set('success', '{{ entityTitle }} updated.');
+        ${{ entityCC }} = ${{ entityCC }}Manager->find($id);
 
-            return $this->redirect($this->get('request')->headers->get('referer'), 301);
+        $dispatcher->dispatch('{{ bundleAlias }}.{{ entity }}.update', new {{ entity }}Event(${{ entityCC }}, $request));
+
+        $form = $this->container->get('form.factory')->create(new {{ entity }}FormType(), ${{ entityCC }});
+
+        if ('POST' == $request->getMethod()) {
+            $form->bind($request);
+            if ($form->isValid()) {
+                ${{ entityCC }}Manager->update(${{ entityCC }});
+
+                $dispatcher->dispatch('{{ bundleAlias }}.{{ entity }}.updated', new {{ entity }}Event(${{ entityCC }}, $request));
+
+                $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} updated.');
+
+                return new RedirectResponse($this->container->get('router')->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list'));
+            }
         }
 
-//        $formAction = $this->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list').'?id='.$id;
-//
-//        parse_str(parse_url($this->get('request')->headers->get('referer'), PHP_URL_QUERY), $params);
-//        foreach($params as $k => $v) {
-//            if (!empty($v)) {
-//                $formAction = $formAction.'&'.$k.'='.$v;
-//            }
-//        }
-
-        return array(
+        return $this->container->get('templating')->renderResponse('{{ bundleName }}:{{ entity }}:edit.html.twig', array(
             'form' => $form->createView(),
             '{{ entityCC }}' => ${{ entityCC }}
-        );
+        ));
     }
 

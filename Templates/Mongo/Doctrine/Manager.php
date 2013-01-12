@@ -1,31 +1,32 @@
 <?php
-namespace {{ bundleNamespace }}\Entity;
 
-use Doctrine\ORM\EntityManager;
+namespace {{ bundleNamespace }}\Doctrine;
+
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-/*
- * Managing class for {{ entity }} entity
+/**
+ * Managing class for {{ entity }}
  *
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
-class {{ entity }}Manager 
+class {{ entity }}Manager
 {
-    protected $em;
     protected $class;
-    protected $repository;
 {% if avro_generator.use_owner %}
-    protected $context;
     protected $owner;
+    protected $context;
 {% endif %}
+    protected $repository;
+    protected $objectManager;
 
-    public function __construct(EntityManager $em, $class{% if avro_generator.use_owner %}, SecurityContextInterface $context{% endif %})
+    public function __construct(ObjectManager $objectManager, $class{% if avro_generator.use_owner %}, SecurityContextInterface $context{% endif %})
     {
-        $this->em = $em;
-        $metadata = $em->getClassMetadata($class);
+        $this->objectManager = $objectManager;
+        $metadata = $objectManager->getClassMetadata($class);
         $this->class = $metadata->name;
-        $this->repository = $em->getRepository($class);
+        $this->repository = $objectManager->getRepository($class);
 {% if avro_generator.use_owner %}
         $this->context = $context;
         if ($context->getToken()) {
@@ -47,14 +48,14 @@ class {{ entity }}Manager
     /*
      * Flush the entity manager
      *
-     * @param boolean $andClear Clears instances of this class from the entity manager 
+     * @param boolean $andClear Clears instances of this class from the entity manager
      */
     public function flush($andClear)
     {
-        $this->em->flush();
+        $this->objectManager->flush();
 
         if ($andClear) {
-            $this->em->clear($this->getClass());
+            $this->objectManager->clear($this->getClass());
         }
     }
 
@@ -66,7 +67,7 @@ class {{ entity }}Manager
     public function create()
     {
         $class = $this->getClass();
-        
+
         ${{ entityCC }} = new $class();
 {% if avro_generator.use_owner %}
         ${{ entityCC }}->setOwner($this->owner);
@@ -74,13 +75,13 @@ class {{ entity }}Manager
 
         return ${{ entityCC }};
     }
-           
+
     /**
      * Updates a {{ entity }}
      *
      * @param {{ entity }} ${{ entityCC }}
-     * @param boolean $andFlush Flush em if true
-     * @param boolean $andClear Clear em if true
+     * @param boolean $andFlush Flush objectManager if true
+     * @param boolean $andClear Clear objectManager if true
      */
     public function update({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
@@ -94,7 +95,7 @@ class {{ entity }}Manager
         }
 {% endif %}
 {% endfor %}
-        $this->em->persist(${{ entityCC }});
+        $this->objectManager->persist(${{ entityCC }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -105,15 +106,15 @@ class {{ entity }}Manager
      * Soft delete one {{ entity }}
      *
      * @param {{ entity }} ${{ entityCC }}
-     * @param boolean $andFlush Flush em if true
-     * @param boolean $andClear Clear em if true
-     */  
+     * @param boolean $andFlush Flush objectManager if true
+     * @param boolean $andClear Clear objectManager if true
+     */
     public function softDelete({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
         ${{ entityCC }}->setIsDeleted(true);
         ${{ entityCC }}->setDeletedAt(new \Datetime('now'));
-       
-        $this->em->persist(${{ entityCC }});
+
+        $this->objectManager->persist(${{ entityCC }});
 
         if ($andFlush) {
             $this->flush($andClear);
@@ -128,12 +129,12 @@ class {{ entity }}Manager
      * @param {{ entity }} ${{ entityCC }}
      * @param boolean $andFlush Flush em if true
      * @param boolean $andClear Clear em if true
-     */  
+     */
     public function restore({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
         ${{ entityCC }}->setIsDeleted(false);
         ${{ entityCC }}->setDeletedAt(null);
-       
+
         $this->em->persist(${{ entityCC }});
 
         if ($andFlush) {
@@ -149,7 +150,7 @@ class {{ entity }}Manager
      * @param {{ entity }} ${{ entityCC }}
      * @param boolean $andFlush Flush em if true
      * @param boolean $andClear Clear em if true
-     */  
+     */
     public function delete({{ entity }} ${{ entityCC }}, $andFlush = true, $andClear = false)
     {
         $this->em->remove(${{ entityCC }});
@@ -164,7 +165,7 @@ class {{ entity }}Manager
     /**
      * Find one {{ entityCC }} by id
      *
-     * @param string $id 
+     * @param string $id
      * @return {{ entity }}
      */
     public function find($id)
@@ -195,7 +196,7 @@ class {{ entity }}Manager
 
         $result = $qb->getQuery()->getArrayResult();
 
-        return current($result); 
+        return current($result);
     }
 
     /**
@@ -209,7 +210,7 @@ class {{ entity }}Manager
 {% if avro_generator.use_owner %}
         $criteria['owner'] = $this->owner->getId();
 {% endif %}
-        
+
         return $this->repository->findOneBy($criteria);
     }
 
@@ -230,13 +231,16 @@ class {{ entity }}Manager
     }
 
     /**
-     * Find active {{ entityCC }}s
+     * Find all {{ entityCC }}s
      *
      * @return array {{ entity }}s
      */
-    public function findAllActive()
+    public function findAll($showDeleted = false)
     {
-        $criteria['isDeleted'] = false;
+        $criteria = array();
+        if ($showDeleted) {
+            $criteria['isDeleted'] = false;
+        }
 {% if avro_generator.use_owner %}
         $criteria['owner'] = $this->owner->getId();
 {% endif %}
@@ -246,7 +250,7 @@ class {{ entity }}Manager
 
     /**
      * Search {{ entityCC }}s
-     * 
+     *
      * @param array $query Search criteria
      * @return array {{ entity }}s
      */
@@ -305,7 +309,7 @@ class {{ entity }}Manager
 
         foreach ($query as $key => $value) {
             if ((!empty($value)) && ($key != '_token')) {
-                if (is_object($value)) { 
+                if (is_object($value)) {
                     $qb->andWhere('{{ entityCC }}.'.$key.' = ?'.$index)->setParameter($index, $value->getId());
                 } elseif ($key == 'startDate') {
                     $qb->andWhere('{{ entityCC }}.date >= ?'.$index)->setParameter($index, $value);
@@ -324,7 +328,7 @@ class {{ entity }}Manager
             $results = $qb->getQuery()->getResult();
         }
 
-        return $results; 
+        return $results;
     }
 }
 

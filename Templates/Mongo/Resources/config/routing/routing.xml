@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<routes xmlns="http://symfony.com/schema/routing"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+{% for action in actions %}
+{% if action == 'list' %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_list" pattern="/{{ entityCC }}/list">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:list</default>
+        <requirement key="_method">GET</requirement>
+    </route>
+{% elseif action == 'new' %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_new" pattern="/{{ entityCC }}/new">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:new</default>
+    </route>
+{% elseif action == 'edit' %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_edit" pattern="/{{ entityCC }}/edit/{id}">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:edit</default>
+    </route>
+{% elseif action == 'delete' %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_delete" pattern="/{{ entityCC }}/delete/{id}">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:delete</default>
+        <requirement key="_method">GET</requirement>
+    </route>
+{% elseif action == 'restore' %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_restore" pattern="/{{ entityCC }}/restore/{id}">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:restore</default>
+        <requirement key="_method">GET</requirement>
+    </route>
+{% elseif action == 'show' %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_edit" pattern="/{{ entityCC }}/edit/{id}">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:edit</default>
+        <requirement key="_method">GET</requirement>
+    </route>
+{% else %}
+    <route id="{{ bundleAlias }}_{{ entityCC }}_{{ action }}" pattern="/{{ entityCC }}/{{ action }}">
+        <default key="_controller">{{ bundleName }}:{{ entity }}:{{ action }}</default>
+    </route>
+{% endif %}
+{% endfor %}
+</routes>

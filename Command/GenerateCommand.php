@@ -1,9 +1,6 @@
 <?php
+
 /*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -15,9 +12,10 @@ use Avro\GeneratorBundle\Generator\Generator;
 use Avro\GeneratorBundle\Twig\GeneratorExtension;
 use Avro\GeneratorBundle\Command\Helper\DialogHelper;
 
+use Avro\CaseBundle\Util\CaseConverter;
+
 use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Bundle\DoctrineBundle\Mapping\MetadataFactory;
 use Doctrine\Bundle\DoctrineBundle\Command\DoctrineCommand;
 
@@ -56,6 +54,9 @@ class GenerateCommand extends ContainerAwareCommand
     protected $bundleAliasCC;
     protected $bundleCoreName;
 
+    /**
+     * Configure the command
+     */
     protected function configure()
     {
         $this
@@ -65,21 +66,21 @@ class GenerateCommand extends ContainerAwareCommand
             ->setHelp(<<<EOT
 The <info>avro:generate</info> command helps you generate Symfony2 code.
 EOT
-        );
+            );
     }
 
     /**
      * Begin console command
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param InputInterface  $input  The input interface
+     * @param OutputInterface $output The output interface
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
         $this->container = $this->getContainer();
-        $this->converter = $this->container->get('avro_csv.converter');
+        $this->converter = new CaseConverter();
         $this->dialog = $this->getDialogHelper();
         $this->dbDriver = $this->container->getParameter('avro_generator.db_driver');
         $this->bundleFolder = $this->container->getParameter('avro_generator.bundle_folder');
@@ -95,11 +96,11 @@ EOT
 
         switch($this->dbDriver) {
             case 'orm':
-                $this->manager = $this->container->get('doctrine.orm.entity_manager');
-            break;
+                $this->objectManager = $this->container->get('doctrine.orm.entity_manager');
+                break;
             case 'mongodb':
-                $this->manager = $this->container->get('doctrine.odm.mongodb.document_manager');
-            break;
+                $this->objectManager = $this->container->get('doctrine.odm.mongodb.document_manager');
+                break;
         }
 
         $this->dialog->writeSection($this->output, 'Welcome to the Avro code generator!');
@@ -131,10 +132,7 @@ EOT
             $bundleExists = false;
         }
 
-        $tag = $this->dialog->ask($this->output, $this->dialog->getQuestion(
-'Enter the tag for the files you wish to generate.
-Or just press <enter> to generate all files.'
-        , '', ':'));
+        $tag = $this->dialog->ask($this->output, $this->dialog->getQuestion('Enter the tag for the files you wish to generate. Or just press <enter> to generate all files.', '', ':'));
 
         if ($bundleExists) {
             if ($fromEntity) {
@@ -165,11 +163,11 @@ Or just press <enter> to generate all files.'
                 case 'orm':
                     $entityPath = $this->bundlePath.'/Entity/'.str_replace('\\', '/', $entity).'.php';
                     $entityNamespace = $this->bundleNamespace.'\\Entity\\'.str_replace('/', '\\', $entity);
-                break;
+                    break;
                 case 'mongodb':
                     $entityPath = $this->bundlePath.'/Document/'.str_replace('\\', '/', $entity).'.php';
                     $entityNamespace = $this->bundleNamespace.'\\Document\\'.str_replace('/', '\\', $entity);
-                break;
+                    break;
             }
 
             if (file_exists($entityPath)) {
@@ -194,10 +192,10 @@ Or just press <enter> to generate all files.'
                 switch($this->dbDriver) {
                     case 'orm':
                         $fields = $this->fieldGenerator($entity, $fields);
-                    break;
+                        break;
                     case 'mongodb':
                         //TODO:
-                    break;
+                        break;
                 }
             }
 
@@ -223,8 +221,8 @@ Or just press <enter> to generate all files.'
     /**
      * Generate Standalone Files
      *
-     * @param $bundle
-     * @param $tag
+     * @param string $bundle The bundle name
+     * @param string $tag    A tag name to filter files
      */
     public function generateStandaloneFiles($bundle, $tag)
     {
@@ -248,7 +246,8 @@ Or just press <enter> to generate all files.'
     /**
      * Parse shortcut notation
      *
-     * @param string $shortcut
+     * @param string $shortcut A bundles shortcut name
+     *
      * @return array($bundleName, $entities)
      */
     protected function parseShortcutNotation($shortcut)
@@ -256,7 +255,7 @@ Or just press <enter> to generate all files.'
         if (false === $pos = strpos($shortcut, ':')) {
             $bundleName = Validators::validateBundleName($shortcut);
 
-            $cmf = $this->manager->getMetadataFactory();
+            $cmf = $this->objectManager->getMetadataFactory();
             $metadatas = $cmf->getAllMetadata();
             $entities = array();
             foreach($metadatas as $metadata) {
@@ -279,12 +278,13 @@ Or just press <enter> to generate all files.'
     /**
      * Get Entity Metadata
      *
-     * @param $entity
+     * @param string $entity The entities name
+     *
      * @return array Metadata
      */
     protected function getEntityMetadata($entity)
     {
-        $cmf = $this->manager->getMetadataFactory();
+        $cmf = $this->objectManager->getMetadataFactory();
 
         return $cmf->getMetadataFor($entity);
     }
@@ -292,10 +292,11 @@ Or just press <enter> to generate all files.'
     /**
      * Get fields from metadata
      *
-     * @param $metadata
+     * @param MetadataInfo $metadata The objects metadata
+     *
      * @return array $fields
      */
-    protected function getFieldsFromMetadata($metadata)
+    protected function getFieldsFromMetadata(ClassMetadata $metadata)
     {
         $fieldMappings = $metadata->fieldMappings;
         foreach ($fieldMappings as $mapping) {
@@ -308,16 +309,16 @@ Or just press <enter> to generate all files.'
                 switch ($mapping['type']) {
                     case "1":
                         $associationMappings[$mapping['fieldName']]['type'] = 'oneToOne';
-                    break;
+                        break;
                     case "2":
                         $associationMappings[$mapping['fieldName']]['type'] = 'manyToOne';
-                    break;
+                        break;
                     case "4":
                         $associationMappings[$mapping['fieldName']]['type'] = 'oneToMany';
-                    break;
+                        break;
                     case "8":
                         $associationMappings[$mapping['fieldName']]['type'] = 'manyToMany';
-                    break;
+                        break;
                 }
             }
 
@@ -351,12 +352,13 @@ Or just press <enter> to generate all files.'
      * Field Generator
      * Prompt user to add more fields
      *
-     * @param $entity
-     * @param $oldFields
+     * @param string $entity    The entity name
+     * @param array  $oldFields The entities existing fields
+     *
      * @return array $fields
      */
-    protected function fieldGenerator($entity, $oldFields) {
-        // fields
+    protected function fieldGenerator($entity, $oldFields)
+    {
         $fields = array();
 
         $this->dialog->writeSection($this->output, 'Add some fields to your '.$entity.' entity');
@@ -489,11 +491,13 @@ Or just press <enter> to generate all files.'
         return $fields;
     }
 
-    /*
+    /**
      * Create a new bundle
      *
      * @param string $bundleName The bundle name
-     * @param string $tag The tag for the files you wish to generate
+     * @param string $tag        The tag for the files you wish to generate
+     *
+     * @return false If command is aborted
      */
     public function generateBundle($bundleName, $tag)
     {
@@ -532,23 +536,20 @@ Or just press <enter> to generate all files.'
         //bundleNamespace
         $bundleNamespace = Validators::validateBundleNamespace($vendor.'\\'.$basename);
 
-        $bundlePath = $this->getContainer()->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($vendor).'/'.strtolower(str_replace('Bundle', '', $basename).'-bundle').'/'.$vendor.'/'.$basename.'/';
-
         $folders = $this->container->getParameter('avro_generator.bundle_folders');
         if (is_array($folders)) {
             foreach($folders as $folder) {
                 if ($tag && array_key_exists('tags', $folder)) {
                     if (in_array($tag, $folder['tags'])) {
-                        $this->renderFolder($bundlePath.$folder['path']);
+                        $this->renderFolder($this->bundlePath.$folder['path']);
                     }
                 } else {
-                    $this->renderFolder($bundlePath.$folder['path']);
+                    $this->renderFolder($this->bundlePath.$folder['path']);
                 }
             }
         }
 
         $files = $this->container->getParameter('avro_generator.bundle_files');
-        ld($files); exit;
         if (is_array($files)) {
             foreach($files as $file) {
                 if ($tag && array_key_exists('tags', $file)) {
@@ -560,18 +561,18 @@ Or just press <enter> to generate all files.'
                 }
             }
         }
-
     }
 
     /**
      * Parse bundle name
      *
      * @param string $bundleName The bundles name
-     * @return array
+     *
+     * @return array The bundles separated name
      */
     public function parseBundleName($bundleName)
     {
-        $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x',$bundleName);
+        $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x', $bundleName);
 
         return array($arr[0], $arr[1].$arr[2]);
     }
@@ -589,25 +590,30 @@ Or just press <enter> to generate all files.'
     /**
      * Set bundle parameters
      *
-     * @param string $bundleName
+     * @param string $bundleName The bundle name
      */
     public function setBundleParameters($bundleName)
     {
         $this->bundleName = $bundleName;
 
-        $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x',$bundleName);
+        $arr = preg_split('/(?<=[a-z])(?=[A-Z])/x', $bundleName);
 
         $this->bundleVendor = array_shift($arr);
+
         $this->bundleBaseName = implode("", $arr);
-        if ($this->bundleFolder == 'src') {
-            $this->bundlePath = $this->container->getParameter('kernel.root_dir').'/../src/'.$this->bundleVendor.'/'.$this->bundleBaseName.'/';
-        } else {
-            $this->bundlePath = $this->container->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($this->bundleVendor).'/'.strtolower(str_replace('Bundle', '', $this->bundleBaseName).'-bundle').'/'.$this->bundleVendor.'/'.$this->bundleBaseName.'/';
-        }
+
+        $this->bundlePath = $this->container->getParameter('kernel.root_dir').'/../src/'.$this->bundleVendor.'/'.$this->bundleBaseName.'/';
+
+        // vendor dir
+        //$this->bundlePath = $this->container->getParameter('kernel.root_dir').'/../vendor/'.lcfirst($this->bundleVendor).'/'.strtolower(str_replace('Bundle', '', $this->bundleBaseName).'-bundle').'/'.$this->bundleVendor.'/'.$this->bundleBaseName.'/';
+
         $this->bundleNamespace = $this->bundleVendor.'\\'.$this->bundleBaseName;
+
         $this->bundleAlias = strtolower($this->bundleVendor.'_'.str_replace('Bundle', '', $this->bundleBaseName));
+
         $this->bundleAliasCC = $this->bundleVendor.str_replace('Bundle', '', $this->bundleBaseName);
-        $this->bundleCoreName = str_replace(strtolower($this->bundleVendor).'_','',$this->bundleAlias);
+
+        $this->bundleCoreName = str_replace(strtolower($this->bundleVendor).'_', '', $this->bundleAlias);
 
         $bundleParameters = array(
             'bundleVendor' => $this->bundleVendor,
@@ -626,16 +632,16 @@ Or just press <enter> to generate all files.'
      * Set entity parameters
      *
      * @param string $entity The entity name
-     * @param array $fields Array of the entities fields
+     * @param array  $fields Array of the entities fields
      */
     public function setEntityParameters($entity, $fields)
     {
         $parameters = array(
             'entity' => $entity,
             'entityCC' => $this->converter->toCamelCase($entity),
-            'entityUS' => $this->converter->toUnderscore($entity),
-            'entityTitle' => $this->toTitle($entity),
-            'entityTitleLC' => strtolower($this->converter->toTitle($entity)),
+            'entityUS' => $this->converter->toUnderscoreCase($entity),
+            'entityTitle' => $this->converter->toTitleCase($entity),
+            'entityTitleLC' => strtolower($this->converter->toTitleCase($entity)),
             'fields' => $this->customizeFields($fields),
             'uniqueManyToOneRelations' => $this->uniqueManyToOneRelations($this->customizeFields($fields)),
         );
@@ -646,7 +652,7 @@ Or just press <enter> to generate all files.'
     /**
      * Generates a file if it does not exist.
      *
-     * @param $file
+     * @param string $file The filename
      */
     public function generate($file)
     {
@@ -676,6 +682,8 @@ Or just press <enter> to generate all files.'
 
     /**
      * Execute code manipulators
+     *
+     * @param string $file The filename
      */
     public function executeManipulators($file)
     {
@@ -696,8 +704,8 @@ Or just press <enter> to generate all files.'
     /**
      * Renders a new file
      *
-     * @param $template The file to use as a template
-     * @param $filename The location of the new file
+     * @param string $template The file to use as a template
+     * @param string $filename The location of the new file
      */
     public function renderFile($template, $filename)
     {
@@ -756,7 +764,7 @@ Or just press <enter> to generate all files.'
     /**
      * Renders a new folder
      *
-     * @param $path The path of the new folder
+     * @param string $path The path of the new folder
      */
     public function renderFolder($path)
     {
@@ -778,7 +786,7 @@ Or just press <enter> to generate all files.'
      * Run a console command
      *
      * @param string $command Command
-     * @param array $options Command options
+     * @param array  $options Command options
      */
     public function runConsole($command, Array $options = array())
     {
@@ -794,7 +802,8 @@ Or just press <enter> to generate all files.'
     /**
      * Add custom attributes to fields
      *
-     * @param array $fields
+     * @param array $fields An array of the entities current fields
+     *
      * @return array $customizedFields
      */
     public function customizeFields($fields)
@@ -820,7 +829,8 @@ Or just press <enter> to generate all files.'
      * Returns an array of the entities unique manyToOne relations
      *
      * @param array $fields
-     * @return array $uniqueManyToOneRelations
+     *
+     * @return array Unique ManyToOne relations
      */
     public function uniqueManyToOneRelations($fields)
     {

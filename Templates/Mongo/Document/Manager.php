@@ -7,13 +7,14 @@
 
 namespace {{ bundleNamespace }}\Document;
 
-use {{ bundleNamespace}}\Model\{{ entity }} as Base{{ entity }};
+use {{ bundleNamespace }}\Doctrine\{{ entity }}Manager as Base{{ entity }}Manager;
 
 /**
- * {{ entity }} document
+ * Managing class for {{ entity }}
  *
  * @author Joris de Wit <joris.w.dewit@gmail.com>
  */
-class {{ entity }} extends Base{{ entity }}
+class {{ entity }}Manager extends Base{{ entity }}Manager
 {
+
 }

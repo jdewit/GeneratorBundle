@@ -7,8 +7,9 @@
 
 namespace Avro\GeneratorBundle\Generator;
 
-use Avro\CaseBundle\Util\CaseConverter;
 use Avro\GeneratorBundle\Twig\GeneratorExtension;
+
+use Avro\CaseBundle\Util\CaseConverter;
 
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Dumper;
@@ -39,7 +40,7 @@ class Generator
     public function __construct($container, $output)
     {
         $this->container = $container;
-        $this->converter = $container->get('avro_case.converter');
+        $this->converter = new CaseConverter();
         $this->registry = $container->get('doctrine');
         $this->filesystem = $container->get('filesystem');
         $this->output = $output;

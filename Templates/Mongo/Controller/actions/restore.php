@@ -1,25 +1,24 @@
     /**
      * Restore one {{ entityTitle }}.
-     *
-     * @Route("/restore/{id}", name="{{ bundleAlias }}_{{ entityCC }}_restore")
      */
     public function restoreAction($id)
     {
-        ${{ entityCC }} = $this->get('doctrine.odm.mongodb.document_manager')
-            ->getRepository('{{ bundleName }}:{{ entity }}')
-            ->find($id);
+        ${{ entityCC }}Manager = $this->container->get('{{ bundleAlias }}.{{ entityCC }}_manager');
+        $dispatcher = $this->container->get('event_dispatcher');
+
+        ${{ entityCC }} = ${{ entityCC }}Manager->find($id);
+
+        $dispatcher->dispatch('{{ bundleAlias }}.{{ entityCC }}.restore', new {{ entity }}Event(${{ entityCC }}, $request));
 
         ${{ entityCC }}->setIsDeleted(false);
         ${{ entityCC }}->setDeletedAt(null);
 
-        $dm = $this->get('doctrine.odm.mongodb.document_manager');
-        $dm->persist(${{ entityCC }});
-        $dm->flush();
+        ${{ entityCC }}Manager->update(${{ entityCC }});
+
+        $dispatcher->dispatch('{{ bundleAlias }}.{{ entityCC }}.restored', new {{ entity }}Event(${{ entityCC }}, $request));
 
         $this->container->get('session')->getFlashBag()->set('success', '{{ entityTitle }} restored.');
 
-        $uri = $this->get('request')->headers->get('referer');
-
-        return $this->redirect($uri);
+        return new RedirectResponse($this->container->get('router')->generateUrl('{{ bundleAlias }}_{{ entityCC }}_list'));
     }
 

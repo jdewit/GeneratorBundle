@@ -24,6 +24,7 @@ class AvroGeneratorExtension extends Extension
         $container->setParameter('avro_generator.overwrite', $config['overwrite']);
         $container->setParameter('avro_generator.add_fields', $config['add_fields']);
         $container->setParameter('avro_generator.use_owner', $config['use_owner']);
+        $container->setParameter('avro_generator.config_format', $config['config_format']);
         $container->setParameter('avro_generator.bundle_folder', $config['bundle_folder']);
 
 

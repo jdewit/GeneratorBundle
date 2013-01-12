@@ -1,0 +1,29 @@
+{% for action in actions %}
+{% if action == 'list' %}
+{{ bundleAlias }}_{{ entityCC }}_list:
+    pattern:   /{{ entityCC }}/list
+    defaults:  { _controller: {{ bundleName }}:{{ entity }}:list }
+{% elseif action == 'new' %}
+{{ bundleAlias }}_{{ entityCC }}_new:
+    pattern:   /{{ entityCC }}/new
+    defaults:  { _controller: {{ bundleName }}:{{ entity }}:new }
+{% elseif action == 'edit' %}
+{{ bundleAlias }}_{{ entityCC }}_edit:
+    pattern:   /{{ entityCC }}/edit/{id}
+    defaults:  { _controller: {{ bundleName }}:{{ entity }}:edit }
+{% elseif action == 'delete' %}
+{{ bundleAlias }}_{{ entityCC }}_delete:
+    pattern:   /{{ entityCC }}/delete/{id}
+    defaults:  { _controller: {{ bundleName }}:{{ entity }}:delete }
+{% elseif action == 'restore' %}
+{{ bundleAlias }}_{{ entityCC }}_restore:
+    pattern:   /{{ entityCC }}/restore/{id}
+    defaults:  { _controller: {{ bundleName }}:{{ entity }}:restore }
+{% else %}
+{{ bundleAlias }}_{{ entityCC }}_{{ action }}:
+    pattern:   /{{ entityCC }}/{{ action }}
+    defaults:  { _controller: {{ bundleName }}:{{ entity }}:{{ action }} }
+{% endif %}
+{% endfor %}
+
+

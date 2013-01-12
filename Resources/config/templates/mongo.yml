@@ -5,7 +5,7 @@ parameters:
             filename: 'Controller/{{ entity }}Controller.php'
             template: 'AvroGeneratorBundle:Templates/Mongo/Controller/Controller.php'
             parameters:
-                actions: ['list', 'new', 'edit', 'processForm', 'delete', 'restore', 'getDocument']
+                actions: ['list', 'new', 'edit', 'delete', 'restore']
             tags: ['controller', 'crud']
 #            manipulator:
 #                service: 'avro_generator.routing.manipulator'
@@ -13,6 +13,13 @@ parameters:
 #                filename: 'Resources/config/routing.yml'
 #                setters: 
 #                    format: 'yml'
+        routing:
+            filename: 'Resources/config/routing/{{ entityCC }}.yml'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/routing/routing.yml'
+            parameters:
+                actions: ['list', 'new', 'edit', 'delete', 'restore']
+            tags: ['routing', 'crud']
+
         list_view:
             filename: 'Resources/views/{{ entity }}/list.html.twig'
             template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/list.html.twig'
@@ -43,21 +50,41 @@ parameters:
             template: 'AvroGeneratorBundle:Templates/Mongo/Features/feature.feature'
             tags: ['test', 'feature']
 
+        model: 
+            filename: 'Model/{{ entity }}.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Model/Model.php'
+            tags: ['model', 'document']
+
         model_interface: 
             filename: 'Model/{{ entity }}Interface.php'
             template: 'AvroGeneratorBundle:Templates/Mongo/Model/Interface.php'
             tags: ['model_interface']
 
-#        document: 
-#            filename: 'Document/{{ entity }}.php'
-#            template: 'AvroGeneratorBundle:Templates/Mongo/Document/Document.php'
-#            tags: ['entity', 'crud']
+        document: 
+            filename: 'Document/{{ entity }}.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Document/Document.php'
+            tags: ['document', 'crud']
 
-#        entity_manager: 
-#            filename: 'Entity/{{ entity }}Manager.php'
-#            template: 'AvroGeneratorBundle:Templates/Mongo/Entity/EntityManager.php'
-#            tags: ['entity', 'crud']
-#
+        document_mapping: 
+            filename: 'Resources/config/doctrine/{{ entity }}.mongodb.xml'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/doctrine/mongodb.xml'
+            tags: ['document', 'crud']
+
+        doctrine_document_manager: 
+            filename: 'Doctrine/{{ entity }}Manager.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Doctrine/Manager.php'
+            tags: ['document', 'crud']
+
+        document_manager: 
+            filename: 'Document/{{ entity }}Manager.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Document/Manager.php'
+            tags: ['document', 'crud']
+
+        event: 
+            filename: 'Event/{{ entity }}Event.php'
+            template: 'AvroGeneratorBundle:Templates/Mongo/Event/Event.php'
+            tags: ['event', 'crud']
+
         form_type: 
             filename: 'Form/Type/{{ entity }}FormType.php'
             template: 'AvroGeneratorBundle:Templates/Mongo/Form/Type/FormType.php'
@@ -134,9 +161,6 @@ parameters:
         layout:
             filename: 'Resources/views/layout.html.twig'
             template: 'AvroGeneratorBundle:Templates/Mongo/Resources/views/layout.html.twig'
-        routing:
-            filename: 'Resources/config/routing.yml'
-            template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/routing.yml'
         config:
             filename: 'Resources/config/config.yml'
             template: 'AvroGeneratorBundle:Templates/Mongo/Resources/config/config.yml'

@@ -27,6 +27,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('db_driver')->cannotBeEmpty()->end()
                 ->scalarNode('style')->cannotBeEmpty()->end()
+                ->scalarNode('config_format')->defaultValue('yaml')->cannotBeEmpty()->end()
                 ->booleanNode('overwrite')->defaultFalse()->end()
                 ->booleanNode('add_fields')->defaultTrue()->end()
                 ->booleanNode('use_owner')->defaultFalse()->end()
